@@ -1,0 +1,52 @@
+.hero {
+  position: relative;
+  padding-block: var(--space-9) var(--space-8);
+
+  &__inner {
+    position: relative;
+    z-index: 1;
+    max-width: var(--content-max);
+    margin-inline: auto;
+    padding-inline: var(--space-5);
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: var(--space-5);
+  }
+
+  &__eyebrow { margin: 0; }
+
+  &__name {
+    font-size: var(--step-display);
+    margin: 0;
+
+    em {
+      font-style: italic;
+      color: var(--accent);
+    }
+  }
+
+  &__lede { color: var(--muted); }
+
+  &__stats {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 1px;
+    width: 100%;
+    max-width: 720px;
+    background: var(--line);
+    border: 1px solid var(--line);
+    border-radius: var(--radius-md);
+    overflow: hidden;
+
+    @media (max-width: 640px) {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+  }
+
+  &__cta {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-3);
+  }
+}
