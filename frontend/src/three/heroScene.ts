@@ -11,15 +11,15 @@ interface TierSettings {
 }
 
 const TIERS: Record<QualityTier, TierSettings> = {
-  high: { segmentsX: 96, segmentsZ: 64, stars: 300 },
-  low: { segmentsX: 48, segmentsZ: 32, stars: 150 },
-  still: { segmentsX: 48, segmentsZ: 32, stars: 150 },
+  high: { segmentsX: 116, segmentsZ: 104, stars: 230 },
+  low: { segmentsX: 62, segmentsZ: 56, stars: 120 },
+  still: { segmentsX: 62, segmentsZ: 56, stars: 120 },
 }
 
-const TERRAIN_WIDTH = 90
-const TERRAIN_DEPTH = 70
-const AMPLITUDE = 2.6
-const FREQUENCY = 0.09
+const TERRAIN_WIDTH = 210
+const TERRAIN_DEPTH = 200
+const AMPLITUDE = 6.4
+const FREQUENCY = 0.16
 const SEED = 20260910
 /** Grid rows the landscape travels per second. */
 const FLOW = 1.6
@@ -28,13 +28,19 @@ const FLOW = 1.6
 // Spread through depth, perspective made near stars large and far ones specks,
 // and the links between them stretched clear across the screen; at one depth
 // every dot is the same size and every link is the same short hop.
-const SKY_Z = -26
-const SKY_JITTER = 1.2
-const SKY_HALF_WIDTH = 42
-const SKY_BOTTOM = -6
-const SKY_TOP = 30
-/** World units, roughly 85px on a desktop viewport. */
-const LINK_RADIUS = 4
+//
+// That slab has to sit beyond the far end of the landscape. Closer in, the
+// stars share the depth range of the hills and their links get drawn across
+// the ground. Everything up here is therefore sized for SKY_Z, and SKY_BOTTOM
+// keeps the whole field above the horizon, which sits at the camera's own
+// height however far away it is.
+const SKY_Z = -150
+const SKY_JITTER = 5
+const SKY_HALF_WIDTH = 168
+const SKY_BOTTOM = 10
+const SKY_TOP = 105
+/** World units at SKY_Z, roughly 85px on a desktop viewport. */
+const LINK_RADIUS = 16
 
 const FALLBACK = {
   bg: '#F3F5F2',
@@ -85,12 +91,12 @@ export function createHeroScene(canvas: HTMLCanvasElement, tier: QualityTier) {
   const scene = new THREE.Scene()
   // Fog in the page's own background colour is what dissolves the far edge of
   // the landscape into the sky, so no hard rectangle edge is ever visible.
-  const fog = new THREE.Fog(readToken('bg'), 26, 68)
+  const fog = new THREE.Fog(readToken('bg'), 55, 175)
   scene.fog = fog
 
   const camera = new THREE.PerspectiveCamera(55, 1, 0.1, 200)
-  camera.position.set(0, 3.2, 15)
-  camera.lookAt(0, -1.1, -16)
+  camera.position.set(0, 8.5, 14)
+  camera.lookAt(0, 14.1, -40)
 
   // --- Landscape -----------------------------------------------------------
   const terrain: TerrainOptions = {
@@ -126,11 +132,10 @@ export function createHeroScene(canvas: HTMLCanvasElement, tier: QualityTier) {
 
   const surfaceMaterial = new THREE.MeshBasicMaterial({
     color: new THREE.Color(readToken('hero-terrain')),
-    transparent: true,
-    opacity: 0.78,
   })
   const surface = new THREE.Mesh(groundGeometry, surfaceMaterial)
-  surface.position.y = -8.7
+  surface.position.z = -72
+  surface.position.y = -2
 
   const wireMaterial = new THREE.MeshBasicMaterial({
     color: new THREE.Color(readToken('hero-wire')),
@@ -139,7 +144,8 @@ export function createHeroScene(canvas: HTMLCanvasElement, tier: QualityTier) {
     opacity: 0.32,
   })
   const wire = new THREE.Mesh(groundGeometry, wireMaterial)
-  wire.position.y = -8.65
+  wire.position.z = -72
+  wire.position.y = -1.95
 
   scene.add(surface, wire)
 
@@ -158,7 +164,7 @@ export function createHeroScene(canvas: HTMLCanvasElement, tier: QualityTier) {
   const starMaterial = new THREE.PointsMaterial({
     color: new THREE.Color(readToken('hero-star')),
     map: starTexture,
-    size: 0.34,
+    size: 1.36,
     transparent: true,
     opacity: 0.75,
     depthWrite: false,
@@ -187,10 +193,10 @@ export function createHeroScene(canvas: HTMLCanvasElement, tier: QualityTier) {
   // --- Taurus --------------------------------------------------------------
   // A real figure among the scattered stars, rather than one more random mesh.
   const taurus = projectTaurus({
-    centreX: -23,
-    centreY: 7,
-    scale: 0.7,
-    sizeRange: [0.36, 1.25],
+    centreX: -92,
+    centreY: 55,
+    scale: 2.8,
+    sizeRange: [1.45, 5],
   })
 
   const figureMaterial = new THREE.SpriteMaterial({
@@ -206,7 +212,7 @@ export function createHeroScene(canvas: HTMLCanvasElement, tier: QualityTier) {
   // cloud, and Aldebaran has to outshine the faint stars of the Hyades.
   const figureStars = TAURUS_STARS.map((_, i) => {
     const sprite = new THREE.Sprite(figureMaterial)
-    sprite.position.set(taurus.positions[i * 3], taurus.positions[i * 3 + 1], SKY_Z + 0.4)
+    sprite.position.set(taurus.positions[i * 3], taurus.positions[i * 3 + 1], SKY_Z + 2)
     sprite.scale.setScalar(taurus.sizes[i])
     return sprite
   })
@@ -215,7 +221,7 @@ export function createHeroScene(canvas: HTMLCanvasElement, tier: QualityTier) {
   for (let i = 0; i < taurus.linePositions.length; i += 3) {
     figureLinePositions[i] = taurus.linePositions[i]
     figureLinePositions[i + 1] = taurus.linePositions[i + 1]
-    figureLinePositions[i + 2] = SKY_Z + 0.4
+    figureLinePositions[i + 2] = SKY_Z + 2
   }
   const figureLineGeometry = new THREE.BufferGeometry()
   figureLineGeometry.setAttribute('position', new THREE.BufferAttribute(figureLinePositions, 3))
@@ -227,8 +233,30 @@ export function createHeroScene(canvas: HTMLCanvasElement, tier: QualityTier) {
   })
   const figureLines = new THREE.LineSegments(figureLineGeometry, figureLineMaterial)
 
+  const glowMaterial = new THREE.SpriteMaterial({
+    map: starTexture,
+    color: new THREE.Color(readToken('hero-figure')),
+    transparent: true,
+    opacity: 0.14,
+    depthWrite: false,
+    fog: false,
+  })
+
+  // A handful of out-of-focus lights. They read as depth rather than as stars,
+  // which is what stops the sky looking like a flat sheet of dots.
+  const glows = Array.from({ length: 9 }, () => {
+    const sprite = new THREE.Sprite(glowMaterial)
+    sprite.position.set(
+      (Math.random() - 0.5) * SKY_HALF_WIDTH * 2,
+      SKY_BOTTOM + Math.random() * (SKY_TOP - SKY_BOTTOM),
+      SKY_Z + 4
+    )
+    sprite.scale.setScalar(9 + Math.random() * 16)
+    return sprite
+  })
+
   const sky = new THREE.Group()
-  sky.add(stars, constellation, figureLines, ...figureStars)
+  sky.add(stars, constellation, figureLines, ...figureStars, ...glows)
   scene.add(sky)
 
   // --- Interaction ---------------------------------------------------------
@@ -264,8 +292,8 @@ export function createHeroScene(canvas: HTMLCanvasElement, tier: QualityTier) {
 
     // A shallow drift, not a swivel: the horizon has to stay level.
     camera.position.x = pointer.x * 1.1
-    camera.position.y = 3.2 - pointer.y * 0.5
-    camera.lookAt(0, -1.1, -16)
+    camera.position.y = 8.5 - pointer.y * 0.5
+    camera.lookAt(0, 14.1, -40)
 
     renderer.render(scene, camera)
   }
@@ -302,6 +330,7 @@ export function createHeroScene(canvas: HTMLCanvasElement, tier: QualityTier) {
       starMaterial.color.set(readToken('hero-star'))
       linkMaterial.color.set(readToken('hero-line'))
       figureMaterial.color.set(readToken('hero-figure'))
+      glowMaterial.color.set(readToken('hero-figure'))
       figureLineMaterial.color.set(readToken('hero-figure'))
       fog.color.set(readToken('bg'))
 
@@ -325,6 +354,7 @@ export function createHeroScene(canvas: HTMLCanvasElement, tier: QualityTier) {
       starMaterial.dispose()
       linkMaterial.dispose()
       figureMaterial.dispose()
+      glowMaterial.dispose()
       figureLineMaterial.dispose()
       renderer.dispose()
     },
