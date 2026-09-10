@@ -1,0 +1,22 @@
+.stat {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-1);
+  padding: var(--space-4) var(--space-5);
+  background: var(--surface);
+
+  &__value {
+    font-size: var(--step-h3);
+    font-weight: 600;
+    letter-spacing: -.02em;
+    font-variant-numeric: tabular-nums;
+  }
+
+  &__label {
+    font-family: var(--font-mono);
+    font-size: var(--step-label);
+    letter-spacing: .1em;
+    text-transform: uppercase;
+    color: var(--muted);
+  }
+}

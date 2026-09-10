@@ -1,0 +1,25 @@
+.section {
+  padding-block: var(--space-9);
+
+  &__inner {
+    max-width: var(--content-max);
+    margin-inline: auto;
+    padding-inline: var(--space-5);
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-7);
+  }
+
+  &__head {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-3);
+  }
+
+  &__title {
+    font-size: var(--step-h2);
+    margin: 0;
+  }
+
+  &__lede { color: var(--muted); }
+}
