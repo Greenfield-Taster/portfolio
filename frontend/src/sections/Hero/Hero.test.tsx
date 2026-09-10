@@ -63,7 +63,7 @@ describe('Hero', () => {
 
   it('links to the work section', () => {
     render(<Hero />)
-    expect(screen.getByRole('link', { name: /view selected work/i })).toHaveAttribute(
+    expect(screen.getByRole('link', { name: /view projects/i })).toHaveAttribute(
       'href',
       '#work'
     )
@@ -74,7 +74,7 @@ describe('Hero', () => {
     const cta = within(screen.getByTestId('hero-cta')).getAllByRole('link')
 
     expect(cta.map((link) => link.textContent)).toEqual([
-      'View selected work',
+      'View projects',
       'Download CV',
     ])
   })

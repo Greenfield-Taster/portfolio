@@ -51,7 +51,7 @@ export function Hero() {
         </div>
 
         <div className="hero__cta" data-testid="hero-cta">
-          <Button href="#work">View selected work</Button>
+          <Button href="#work">View projects</Button>
           <Button variant="ghost" href={profile.cvPath} download>
             Download CV
           </Button>
