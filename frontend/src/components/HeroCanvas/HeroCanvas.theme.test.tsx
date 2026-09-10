@@ -1,0 +1,84 @@
+import { waitFor } from '@testing-library/react'
+import userEvent from '@testing-library/user-event'
+import { render, screen } from '../../test/renderWithTheme'
+import { HeroCanvas } from './HeroCanvas'
+import { ThemeToggle } from '../ThemeToggle/ThemeToggle'
+
+// jsdom has no WebGL, so `createHeroScene` cannot run for real here. This file
+// mocks the `heroScene` module entirely and asserts the thing that is actually
+// testable at this seam: that a theme change made by a *different* component
+// reaches the scene's `refreshAccent()`. That cross-component reach is exactly
+// what the old per-instance `useTheme` could not do — HeroCanvas had to watch
+// `document.documentElement`'s `data-theme` with a MutationObserver instead.
+// It does not (and cannot) verify that the accent colour changes on screen.
+const refreshAccent = vi.fn()
+const setPaused = vi.fn()
+const destroy = vi.fn()
+const mockCreateHeroScene = vi.fn(() => ({ destroy, setPaused, refreshAccent }))
+
+vi.mock('../../three/heroScene', () => ({
+  createHeroScene: mockCreateHeroScene,
+}))
+
+describe('HeroCanvas theme sync', () => {
+  beforeEach(() => {
+    refreshAccent.mockClear()
+    setPaused.mockClear()
+    destroy.mockClear()
+    mockCreateHeroScene.mockClear()
+    localStorage.clear()
+    document.documentElement.removeAttribute('data-theme')
+  })
+
+  it('refreshes the accent when another component toggles the theme', async () => {
+    const user = userEvent.setup()
+    render(
+      <>
+        <ThemeToggle />
+        <HeroCanvas />
+      </>
+    )
+
+    // The scene import is deferred to idle, so wait for it to settle first.
+    await waitFor(() => expect(mockCreateHeroScene).toHaveBeenCalled())
+    expect(refreshAccent).not.toHaveBeenCalled()
+
+    await user.click(screen.getByRole('button', { name: /switch to .* theme/i }))
+
+    await waitFor(() => expect(refreshAccent).toHaveBeenCalledTimes(1))
+  })
+
+  it('has the theme attribute already updated by the time it refreshes', async () => {
+    const user = userEvent.setup()
+    // The scene reads `--accent` off the document element, so `data-theme` has
+    // to be the new value *before* refreshAccent runs, not after.
+    const seen: (string | undefined)[] = []
+    refreshAccent.mockImplementation(() => {
+      seen.push(document.documentElement.dataset.theme)
+    })
+
+    render(
+      <>
+        <ThemeToggle />
+        <HeroCanvas />
+      </>
+    )
+    await waitFor(() => expect(mockCreateHeroScene).toHaveBeenCalled())
+
+    await user.click(screen.getByRole('button', { name: /switch to .* theme/i }))
+
+    await waitFor(() => expect(seen).toEqual(['dark']))
+    refreshAccent.mockImplementation(() => {})
+  })
+
+  it('does not refresh the accent when nothing about the theme changed', async () => {
+    render(<HeroCanvas />)
+    await waitFor(() => expect(mockCreateHeroScene).toHaveBeenCalled())
+
+    document.documentElement.setAttribute('lang', 'uk')
+
+    // Give any stray asynchronous callback a chance to fire, then confirm none did.
+    await new Promise((resolve) => setTimeout(resolve, 10))
+    expect(refreshAccent).not.toHaveBeenCalled()
+  })
+})
