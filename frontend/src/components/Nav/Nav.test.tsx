@@ -71,7 +71,7 @@ describe('Nav', () => {
     expect(screen.getByRole('link', { name: 'Work' })).not.toHaveAttribute('aria-current')
   })
 
-  it('marks no section while the hero is still on screen', () => {
+  it('marks Home while the hero is still on screen', () => {
     const hero = document.createElement('section')
     hero.id = 'top'
     hero.getBoundingClientRect = () => ({ top: -50 }) as DOMRect
@@ -84,10 +84,10 @@ describe('Nav', () => {
 
     render(<Nav />)
 
-    const marked = screen
-      .getAllByRole('link')
-      .filter((link) => link.hasAttribute('aria-current'))
-    expect(marked).toEqual([])
+    expect(screen.getByRole('link', { name: 'Home' })).toHaveAttribute('aria-current', 'true')
+    expect(
+      screen.getAllByRole('link').filter((link) => link.hasAttribute('aria-current'))
+    ).toHaveLength(1)
   })
 
   it('opens and closes the menu on a narrow screen', async () => {

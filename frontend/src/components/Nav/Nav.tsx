@@ -6,6 +6,7 @@ import { profile } from '../../data/profile'
 import './Nav.scss'
 
 export const NAV_ITEMS = [
+  { id: 'top', label: 'Home' },
   { id: 'about', label: 'About' },
   { id: 'experience', label: 'Experience' },
   { id: 'work', label: 'Work' },
@@ -13,17 +14,13 @@ export const NAV_ITEMS = [
   { id: 'contact', label: 'Contact' },
 ] as const
 
-/** The hero has no nav item; it is tracked so no link is marked while it is read. */
-const HERO_ID = 'top'
-
 // Hoisted so the identity stays stable across renders: useActiveSection keeps
 // it in an effect dependency list, and a fresh array every render would tear
 // the scroll listener down and rebuild it on each state change.
-const TRACKED_IDS = [HERO_ID, ...NAV_ITEMS.map((item) => item.id)]
+const TRACKED_IDS = NAV_ITEMS.map((item) => item.id)
 
 export function Nav() {
-  const read = useActiveSection(TRACKED_IDS)
-  const active = read === HERO_ID ? null : read
+  const active = useActiveSection(TRACKED_IDS)
   const [menuOpen, setMenuOpen] = useState(false)
 
   return (
