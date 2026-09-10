@@ -16,13 +16,7 @@
   &:hover { transform: translateY(-1px); }
   &:active { transform: translateY(0); }
 
-  // The hero drops this button straight onto the orange landscape, so it
-  // carries its own edge rather than relying on a colour difference.
-  &--fill {
-    background: var(--accent);
-    color: var(--on-accent);
-    box-shadow: 0 0 0 1px color-mix(in srgb, var(--on-accent) 30%, transparent);
-  }
+  &--fill { background: var(--accent); color: var(--on-accent); }
   &--ghost { background: var(--surface); border-color: var(--line); color: var(--ink); }
   &--ghost:hover { border-color: var(--accent); }
   &--quiet { background: transparent; color: var(--muted); padding-inline: var(--space-2); }
