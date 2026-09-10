@@ -96,3 +96,17 @@
 }
 
 .u-prose { max-width: 65ch; }
+
+// Read by screen readers, never painted. Used where a moving or graphical
+// element carries meaning that needs a plain-text equivalent.
+.u-visually-hidden {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  margin: -1px;
+  padding: 0;
+  border: 0;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+}

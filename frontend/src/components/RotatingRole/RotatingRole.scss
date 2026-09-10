@@ -1,0 +1,36 @@
+.rotating-role {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-3);
+  min-height: 2.4em;
+  font-size: clamp(1.25rem, 2.6vw, 1.9rem);
+  font-weight: 600;
+  letter-spacing: -.01em;
+  color: var(--muted);
+
+  &__bar {
+    width: 3px;
+    height: 1.15em;
+    border-radius: 2px;
+    background: var(--accent);
+  }
+
+  // Fixed box so the line above and below never shift as the roles swap.
+  &__text {
+    display: grid;
+    place-items: center start;
+    min-height: 1.4em;
+
+    span { animation: role-in var(--dur) var(--ease) both; }
+  }
+}
+
+@keyframes role-in {
+  from { opacity: 0; transform: translateY(.35em); }
+  to { opacity: 1; transform: none; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .rotating-role__text span { animation: none; }
+}
