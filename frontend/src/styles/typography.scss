@@ -1,0 +1,98 @@
+// `as *` avoids the default-namespace derived from the filename: Sass can't
+// turn a leading digit like "400" into a valid identifier, and these are
+// side-effect-only CSS imports, so no namespaced access is needed anyway.
+@use '@fontsource/instrument-serif/400.css' as *;
+@use '@fontsource/instrument-serif/400-italic.css' as *;
+@use '@fontsource-variable/instrument-sans/index.css' as *;
+@use '@fontsource/jetbrains-mono/400.css' as *;
+@use '@fontsource/jetbrains-mono/500.css' as *;
+
+// Metric-matched stand-in for the display face, so the pre-swap layout has the
+// same line boxes and the same line breaks as the real one. `local()` only —
+// no extra network request, no build change; if Georgia is not installed the
+// face has no usable source and the chain simply falls through to the plain
+// Georgia / Times entries it used before.
+//
+// How the numbers were derived (all measured, not guessed):
+//   size-adjust      Advance-width ratio of Instrument Serif to Georgia,
+//                    measured in Chrome over every string this page actually
+//                    paints in the display face, each weighted by the CSS
+//                    pixels it occupies: 0.751 upright (per-string spread
+//                    0.668–0.779) and 0.775 italic. The OS/2 xAvgCharWidth
+//                    ratio disagrees badly here (0.96) because the two fonts
+//                    average it over very different glyph sets, so the
+//                    rendered measurement is the one to trust.
+//   ascent/descent   Instrument Serif's own hhea metrics, 990 / -310 per a
+//                    1000-unit em (read out of the woff2 in
+//                    @fontsource/instrument-serif; sTypo and usWin agree, and
+//                    the italic face carries the same pair), divided by the
+//                    size-adjust above, which scales overridden metrics too.
+//                       990 / 1000 / 0.751 = 131.82%   310 / 1000 / 0.751 = 41.28%
+//                       990 / 1000 / 0.775 = 127.74%   310 / 1000 / 0.775 = 40.00%
+@font-face {
+  font-family: 'Instrument Serif Fallback';
+  font-style: normal;
+  font-weight: 400;
+  src: local('Georgia');
+  size-adjust: 75.1%;
+  ascent-override: 131.82%;
+  descent-override: 41.28%;
+  line-gap-override: 0%;
+}
+
+@font-face {
+  font-family: 'Instrument Serif Fallback';
+  font-style: italic;
+  font-weight: 400;
+  src: local('Georgia Italic'), local('Georgia');
+  size-adjust: 77.5%;
+  ascent-override: 127.74%;
+  descent-override: 40%;
+  line-gap-override: 0%;
+}
+
+// Same treatment for the body face, derived the same way. Chrome resolves
+// Instrument Sans Variable to ascent 970 / descent 250 per a 1000-unit em
+// (measured via TextMetrics.fontBoundingBox*, which agrees with the woff2's
+// hhea table rather than its usWin pair — the two disagree for this font, and
+// the serif face, where they agree, validated the method).
+//
+// size-adjust is the pixel-weighted advance-width ratio of Instrument Sans to
+// the fallback across all 109 text runs the page paints in the body face, at
+// their real sizes and weights (400/500/600/700): 1.033 against Segoe UI —
+// which is what `system-ui` resolves to on Windows — and 1.023 against Arial,
+// so one number serves both. Then 970 / 1000 / 1.033 = 93.90% and
+// 250 / 1000 / 1.033 = 24.20%.
+//
+// The overrides are absolute, so the line box matches the real face exactly
+// whichever local the browser ends up picking; only the width match depends on
+// that choice. If none of them exist the face has no usable source and the
+// chain falls through to the generics behind it.
+@font-face {
+  font-family: 'Instrument Sans Fallback';
+  font-style: normal;
+  font-weight: 400 700;
+  src: local('Segoe UI'), local('Helvetica Neue'), local('Arial'), local('Roboto');
+  size-adjust: 103.3%;
+  ascent-override: 93.9%;
+  descent-override: 24.2%;
+  line-gap-override: 0%;
+}
+
+.u-display {
+  font-family: var(--font-display);
+  font-weight: 400;
+  line-height: 1.02;
+  letter-spacing: -.02em;
+  text-wrap: balance;
+}
+
+.u-label {
+  font-family: var(--font-mono);
+  font-size: var(--step-label);
+  letter-spacing: .14em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+
+.u-prose { max-width: 65ch; }
