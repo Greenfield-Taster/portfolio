@@ -138,9 +138,12 @@ test('jumping to a far section travels through the ones in between', async ({ pa
   // Sample the marked link while the page is on its way. A jump that lands
   // instantly only ever shows Contact; a scroll that travels shows the
   // sections it passes, which is the whole point of the smooth scroll.
+  // Sampling a fixed number of frames raced the scroll itself: the window
+  // ended around the point the mark reached Work, so the test passed or failed
+  // on timing. Watch until the journey is over instead.
   const seen = await page.evaluate(async () => {
     const marks = new Set<string>()
-    for (let i = 0; i < 60; i += 1) {
+    for (let i = 0; i < 300 && !marks.has('Contact'); i += 1) {
       const current = document.querySelector('nav a[aria-current]')
       if (current?.textContent) marks.add(current.textContent)
       await new Promise((resolve) => requestAnimationFrame(resolve))
@@ -148,6 +151,11 @@ test('jumping to a far section travels through the ones in between', async ({ pa
     return [...marks]
   })
 
-  expect(seen).toContain('Work')
+  // Not any one section by name: the scroll is fastest in the middle, and a
+  // short section there can pass between two frames. What matters is that the
+  // mark visits the sections on the way at all — a jump reports only Contact.
+  const passed = seen.filter((label) => label !== 'Contact')
+  expect(passed.length).toBeGreaterThanOrEqual(2)
+
   await expect(nav.getByRole('link', { name: 'Contact' })).toHaveAttribute('aria-current', 'true')
 })
