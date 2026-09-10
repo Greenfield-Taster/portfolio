@@ -102,3 +102,28 @@ test('the contact form reports every empty field', async ({ page }) => {
   ).toBeVisible()
   await expect(page.getByText('Please write a short message.')).toBeVisible()
 })
+
+test('the header follows the reader down the page', async ({ page }) => {
+  await page.setViewportSize({ width: 1440, height: 900 })
+  await page.goto('/')
+
+  const nav = page.getByRole('navigation')
+
+  // Nothing is marked while the hero fills the screen: the hero has no nav
+  // item of its own, and marking "About" there would point at the wrong place.
+  await expect(nav.locator('a[aria-current]')).toHaveCount(0)
+
+  await page.locator('#work').scrollIntoViewIfNeeded()
+  await expect(nav.getByRole('link', { name: 'Work' })).toHaveAttribute('aria-current', 'true')
+  await expect(nav.locator('a[aria-current]')).toHaveCount(1)
+})
+
+test('the header downloads the CV without leaving the page', async ({ page }) => {
+  await page.goto('/')
+
+  const download = page.waitForEvent('download')
+  await page.getByRole('navigation').getByRole('link', { name: 'Resume' }).click()
+
+  expect((await download).suggestedFilename()).toBe('Anastasiia_Horbachova_FullStack.pdf')
+  await expect(page.getByRole('heading', { level: 1 })).toBeVisible()
+})
