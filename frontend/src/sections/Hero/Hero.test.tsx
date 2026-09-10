@@ -1,6 +1,7 @@
-import { render, screen } from '../../test/renderWithTheme'
+import { render, screen, within } from '../../test/renderWithTheme'
 import { Hero } from './Hero'
 import { projects } from '../../data/projects'
+import { profile } from '../../data/profile'
 
 // Deliberately a different length than the real data (11 entries): if Hero
 // ever hard-codes the projects stat instead of calling projectCount(), this
@@ -17,18 +18,29 @@ describe('Hero', () => {
     ).toBeInTheDocument()
   })
 
-  it('renders the surname in italic accent, keeping the full name as the heading text', () => {
+  it('breaks the name onto its own two lines', () => {
     render(<Hero />)
-    const heading = screen.getByRole('heading', { level: 1 })
-    expect(heading).toHaveTextContent('Anastasiia Horbachova')
-    const em = heading.querySelector('em')
-    expect(em).not.toBeNull()
-    expect(em).toHaveTextContent('Horbachova')
+    const lines = within(screen.getByRole('heading', { level: 1 })).getAllByTestId('name-line')
+
+    expect(lines.map((line) => line.textContent)).toEqual(['Anastasiia', 'Horbachova'])
   })
 
   it('says she is available', () => {
     render(<Hero />)
     expect(screen.getByText(/available for work/i)).toBeInTheDocument()
+  })
+
+  it('cycles her titles under the name', () => {
+    render(<Hero />)
+    expect(profile.roles.length).toBeGreaterThan(1)
+    expect(screen.getByTestId('rotating-role')).toHaveTextContent(profile.roles[0])
+  })
+
+  it('carries the tagline in the terminal line', () => {
+    render(<Hero />)
+    expect(
+      screen.getByText(profile.tagline, { selector: '.u-visually-hidden' })
+    ).toBeInTheDocument()
   })
 
   it('shows four stat tiles', () => {
@@ -45,7 +57,7 @@ describe('Hero', () => {
     render(<Hero />)
     expect(screen.getByRole('link', { name: /download cv/i })).toHaveAttribute(
       'href',
-      '/Anastasiia_Horbachova_FullStack.pdf'
+      profile.cvPath
     )
   })
 
@@ -55,5 +67,15 @@ describe('Hero', () => {
       'href',
       '#work'
     )
+  })
+
+  it('offers those two calls to action and nothing else', () => {
+    render(<Hero />)
+    const cta = within(screen.getByTestId('hero-cta')).getAllByRole('link')
+
+    expect(cta.map((link) => link.textContent)).toEqual([
+      'View selected work',
+      'Download CV',
+    ])
   })
 })

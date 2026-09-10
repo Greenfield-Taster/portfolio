@@ -3,6 +3,8 @@ import type { Profile } from './types'
 export const profile: Profile = {
   name: 'Anastasiia Horbachova',
   role: 'Full-stack developer',
+  roles: ['Full-Stack Developer', 'React Developer', 'Node.js Developer'],
+  tagline: 'Building React and Node applications',
   availability: 'Available for work',
   workAuthorization: 'EU work authorization',
   lede:

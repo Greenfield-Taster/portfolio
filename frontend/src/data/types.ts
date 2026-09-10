@@ -41,6 +41,10 @@ export interface StackGroup {
 export interface Profile {
   name: string
   role: string
+  /** Titles cycled under the name in the hero; the first one is shown at rest. */
+  roles: string[]
+  /** Short line typed out in the hero terminal chip. */
+  tagline: string
   availability: string
   workAuthorization: string
   lede: string
