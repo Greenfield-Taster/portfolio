@@ -3,7 +3,12 @@
 // Native widget chrome (scrollbars, form controls, autofill) must follow the
 // visitor's explicit choice, not the OS. Mirrors the three-way structure that
 // themes.scss uses for every colour token.
-:root { color-scheme: light; }
+:root {
+  color-scheme: light;
+  // Anchor jumps have to clear the nav pill, which is fixed and so contributes
+  // no height of its own for the browser to scroll past.
+  scroll-padding-top: 104px;
+}
 
 @media (prefers-color-scheme: dark) {
   :root:not([data-theme='light']) { color-scheme: dark; }
