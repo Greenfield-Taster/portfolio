@@ -109,9 +109,9 @@ test('the header follows the reader down the page', async ({ page }) => {
 
   const nav = page.getByRole('navigation')
 
-  // Nothing is marked while the hero fills the screen: the hero has no nav
-  // item of its own, and marking "About" there would point at the wrong place.
-  await expect(nav.locator('a[aria-current]')).toHaveCount(0)
+  // Home owns the hero, so it is what the header marks before any scrolling.
+  await expect(nav.getByRole('link', { name: 'Home' })).toHaveAttribute('aria-current', 'true')
+  await expect(nav.locator('a[aria-current]')).toHaveCount(1)
 
   await page.locator('#work').scrollIntoViewIfNeeded()
   await expect(nav.getByRole('link', { name: 'Work' })).toHaveAttribute('aria-current', 'true')
@@ -126,4 +126,28 @@ test('the header downloads the CV without leaving the page', async ({ page }) =>
 
   expect((await download).suggestedFilename()).toBe('Anastasiia_Horbachova_FullStack.pdf')
   await expect(page.getByRole('heading', { level: 1 })).toBeVisible()
+})
+
+test('jumping to a far section travels through the ones in between', async ({ page }) => {
+  await page.setViewportSize({ width: 1440, height: 900 })
+  await page.goto('/')
+
+  const nav = page.getByRole('navigation')
+  await nav.getByRole('link', { name: 'Contact' }).click()
+
+  // Sample the marked link while the page is on its way. A jump that lands
+  // instantly only ever shows Contact; a scroll that travels shows the
+  // sections it passes, which is the whole point of the smooth scroll.
+  const seen = await page.evaluate(async () => {
+    const marks = new Set<string>()
+    for (let i = 0; i < 60; i += 1) {
+      const current = document.querySelector('nav a[aria-current]')
+      if (current?.textContent) marks.add(current.textContent)
+      await new Promise((resolve) => requestAnimationFrame(resolve))
+    }
+    return [...marks]
+  })
+
+  expect(seen).toContain('Work')
+  await expect(nav.getByRole('link', { name: 'Contact' })).toHaveAttribute('aria-current', 'true')
 })
