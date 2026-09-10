@@ -2,6 +2,7 @@ import * as THREE from 'three'
 import { constellationLinks } from './constellation'
 import type { QualityTier } from './quality'
 import { terrainHeights, type TerrainOptions } from './terrain'
+import { TAURUS_STARS, projectTaurus } from './taurus'
 
 interface TierSettings {
   segmentsX: number
@@ -10,9 +11,9 @@ interface TierSettings {
 }
 
 const TIERS: Record<QualityTier, TierSettings> = {
-  high: { segmentsX: 96, segmentsZ: 64, stars: 260 },
-  low: { segmentsX: 48, segmentsZ: 32, stars: 130 },
-  still: { segmentsX: 48, segmentsZ: 32, stars: 130 },
+  high: { segmentsX: 96, segmentsZ: 64, stars: 300 },
+  low: { segmentsX: 48, segmentsZ: 32, stars: 150 },
+  still: { segmentsX: 48, segmentsZ: 32, stars: 150 },
 }
 
 const TERRAIN_WIDTH = 90
@@ -23,12 +24,25 @@ const SEED = 20260910
 /** Grid rows the landscape travels per second. */
 const FLOW = 1.6
 
+// The sky sits on one shallow slab rather than filling the depth of the scene.
+// Spread through depth, perspective made near stars large and far ones specks,
+// and the links between them stretched clear across the screen; at one depth
+// every dot is the same size and every link is the same short hop.
+const SKY_Z = -26
+const SKY_JITTER = 1.2
+const SKY_HALF_WIDTH = 42
+const SKY_BOTTOM = -6
+const SKY_TOP = 30
+/** World units, roughly 85px on a desktop viewport. */
+const LINK_RADIUS = 4
+
 const FALLBACK = {
   bg: '#F3F5F2',
   'hero-terrain': '#A9C7B4',
   'hero-wire': '#7CA189',
   'hero-star': '#BCC9C0',
   'hero-line': '#D3DFD7',
+  'hero-figure': '#8FA89A',
 }
 
 function readToken(name: keyof typeof FALLBACK): string {
@@ -36,6 +50,31 @@ function readToken(name: keyof typeof FALLBACK): string {
     .getPropertyValue(`--${name}`)
     .trim()
   return value || FALLBACK[name]
+}
+
+/**
+ * A soft round dot. Points render as squares by default, which reads as pixel
+ * dust rather than stars; a radial falloff is what makes them look like light.
+ */
+function createStarTexture(): THREE.Texture {
+  const size = 64
+  const canvas = document.createElement('canvas')
+  canvas.width = size
+  canvas.height = size
+
+  const context = canvas.getContext('2d')
+  if (context) {
+    const centre = size / 2
+    const glow = context.createRadialGradient(centre, centre, 0, centre, centre, centre)
+    glow.addColorStop(0, 'rgba(255, 255, 255, 1)')
+    glow.addColorStop(0.3, 'rgba(255, 255, 255, 0.75)')
+    glow.addColorStop(0.65, 'rgba(255, 255, 255, 0.18)')
+    glow.addColorStop(1, 'rgba(255, 255, 255, 0)')
+    context.fillStyle = glow
+    context.fillRect(0, 0, size, size)
+  }
+
+  return new THREE.CanvasTexture(canvas)
 }
 
 export function createHeroScene(canvas: HTMLCanvasElement, tier: QualityTier) {
@@ -52,7 +91,6 @@ export function createHeroScene(canvas: HTMLCanvasElement, tier: QualityTier) {
   const camera = new THREE.PerspectiveCamera(55, 1, 0.1, 200)
   camera.position.set(0, 3.2, 15)
   camera.lookAt(0, -1.1, -16)
-
 
   // --- Landscape -----------------------------------------------------------
   const terrain: TerrainOptions = {
@@ -105,27 +143,31 @@ export function createHeroScene(canvas: HTMLCanvasElement, tier: QualityTier) {
 
   scene.add(surface, wire)
 
-  // --- Sky -----------------------------------------------------------------
+  // --- Scattered stars -----------------------------------------------------
+  const starTexture = createStarTexture()
+
   const starPositions = new Float32Array(settings.stars * 3)
   for (let i = 0; i < settings.stars; i += 1) {
-    starPositions[i * 3] = (Math.random() - 0.5) * 80
-    starPositions[i * 3 + 1] = 2 + Math.random() * 24
-    starPositions[i * 3 + 2] = -40 + Math.random() * 34
+    starPositions[i * 3] = (Math.random() - 0.5) * SKY_HALF_WIDTH * 2
+    starPositions[i * 3 + 1] = SKY_BOTTOM + Math.random() * (SKY_TOP - SKY_BOTTOM)
+    starPositions[i * 3 + 2] = SKY_Z + (Math.random() - 0.5) * SKY_JITTER
   }
 
   const starGeometry = new THREE.BufferGeometry()
   starGeometry.setAttribute('position', new THREE.BufferAttribute(starPositions, 3))
   const starMaterial = new THREE.PointsMaterial({
     color: new THREE.Color(readToken('hero-star')),
-    size: 0.13,
+    map: starTexture,
+    size: 0.34,
     transparent: true,
-    opacity: 0.85,
+    opacity: 0.75,
+    depthWrite: false,
     sizeAttenuation: true,
     fog: false,
   })
   const stars = new THREE.Points(starGeometry, starMaterial)
 
-  const links = constellationLinks(starPositions, { radius: 9, maxPerPoint: 2 })
+  const links = constellationLinks(starPositions, { radius: LINK_RADIUS, maxPerPoint: 3 })
   const linkPositions = new Float32Array(links.length * 6)
   links.forEach(([a, b], i) => {
     linkPositions.set(starPositions.subarray(a * 3, a * 3 + 3), i * 6)
@@ -137,13 +179,56 @@ export function createHeroScene(canvas: HTMLCanvasElement, tier: QualityTier) {
   const linkMaterial = new THREE.LineBasicMaterial({
     color: new THREE.Color(readToken('hero-line')),
     transparent: true,
-    opacity: 0.9,
+    opacity: 0.55,
     fog: false,
   })
   const constellation = new THREE.LineSegments(linkGeometry, linkMaterial)
 
+  // --- Taurus --------------------------------------------------------------
+  // A real figure among the scattered stars, rather than one more random mesh.
+  const taurus = projectTaurus({
+    centreX: -23,
+    centreY: 7,
+    scale: 0.7,
+    sizeRange: [0.36, 1.25],
+  })
+
+  const figureMaterial = new THREE.SpriteMaterial({
+    map: starTexture,
+    color: new THREE.Color(readToken('hero-figure')),
+    transparent: true,
+    opacity: 0.95,
+    depthWrite: false,
+    fog: false,
+  })
+
+  // Sprites rather than Points: PointsMaterial carries one size for the whole
+  // cloud, and Aldebaran has to outshine the faint stars of the Hyades.
+  const figureStars = TAURUS_STARS.map((_, i) => {
+    const sprite = new THREE.Sprite(figureMaterial)
+    sprite.position.set(taurus.positions[i * 3], taurus.positions[i * 3 + 1], SKY_Z + 0.4)
+    sprite.scale.setScalar(taurus.sizes[i])
+    return sprite
+  })
+
+  const figureLinePositions = new Float32Array(taurus.linePositions.length)
+  for (let i = 0; i < taurus.linePositions.length; i += 3) {
+    figureLinePositions[i] = taurus.linePositions[i]
+    figureLinePositions[i + 1] = taurus.linePositions[i + 1]
+    figureLinePositions[i + 2] = SKY_Z + 0.4
+  }
+  const figureLineGeometry = new THREE.BufferGeometry()
+  figureLineGeometry.setAttribute('position', new THREE.BufferAttribute(figureLinePositions, 3))
+  const figureLineMaterial = new THREE.LineBasicMaterial({
+    color: new THREE.Color(readToken('hero-figure')),
+    transparent: true,
+    opacity: 0.62,
+    fog: false,
+  })
+  const figureLines = new THREE.LineSegments(figureLineGeometry, figureLineMaterial)
+
   const sky = new THREE.Group()
-  sky.add(stars, constellation)
+  sky.add(stars, constellation, figureLines, ...figureStars)
   scene.add(sky)
 
   // --- Interaction ---------------------------------------------------------
@@ -175,7 +260,6 @@ export function createHeroScene(canvas: HTMLCanvasElement, tier: QualityTier) {
 
     if (tier !== 'still') {
       applyHeights(seconds * FLOW)
-      sky.rotation.z = Math.sin(seconds * 0.04) * 0.02
     }
 
     // A shallow drift, not a swivel: the horizon has to stay level.
@@ -217,6 +301,8 @@ export function createHeroScene(canvas: HTMLCanvasElement, tier: QualityTier) {
       wireMaterial.color.set(readToken('hero-wire'))
       starMaterial.color.set(readToken('hero-star'))
       linkMaterial.color.set(readToken('hero-line'))
+      figureMaterial.color.set(readToken('hero-figure'))
+      figureLineMaterial.color.set(readToken('hero-figure'))
       fog.color.set(readToken('bg'))
 
       // The running loop redraws every tick and picks this up on its own. The
@@ -232,10 +318,14 @@ export function createHeroScene(canvas: HTMLCanvasElement, tier: QualityTier) {
       groundGeometry.dispose()
       starGeometry.dispose()
       linkGeometry.dispose()
+      figureLineGeometry.dispose()
+      starTexture.dispose()
       surfaceMaterial.dispose()
       wireMaterial.dispose()
       starMaterial.dispose()
       linkMaterial.dispose()
+      figureMaterial.dispose()
+      figureLineMaterial.dispose()
       renderer.dispose()
     },
   }
