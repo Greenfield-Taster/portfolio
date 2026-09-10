@@ -1,0 +1,682 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<style>
+  html { color-scheme: light dark; }
+  body { margin: 0; font: 14px system-ui, sans-serif; }
+  img { max-width: 100%; }
+  [hidden] { display: none !important; }
+</style>
+<title>Horbachova Design Directions</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter+Tight:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&family=Instrument+Serif:ital@0;1&family=Instrument+Sans:wght@400;500;600&family=Archivo:wght@500;600;700&family=Fraunces:opsz,wght@9..144,400;9..144,600&display=swap">
+<style>
+  /* ── page chrome tokens: light (default) ─────────────────────── */
+  :root {
+    --page-bg:      #F4F4F2;
+    --page-panel:   #FFFFFF;
+    --page-ink:     #191B18;
+    --page-muted:   #63675E;
+    --page-line:    #DEDFD8;
+    --page-line-sf: #EBECE6;
+    --page-accent:  #3D5442;
+    --shadow: 0 1px 2px rgba(25,27,24,.04), 0 8px 24px -12px rgba(25,27,24,.14);
+    --sans: "Inter Tight", ui-sans-serif, system-ui, -apple-system, "Segoe UI", sans-serif;
+    --mono: "JetBrains Mono", ui-monospace, "SFMono-Regular", Consolas, monospace;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) {
+      --page-bg:      #141614;
+      --page-panel:   #1C1F1C;
+      --page-ink:     #ECEEE9;
+      --page-muted:   #9AA096;
+      --page-line:    #2C302C;
+      --page-line-sf: #232623;
+      --page-accent:  #A9C0A6;
+      --shadow: 0 1px 2px rgba(0,0,0,.4), 0 8px 24px -12px rgba(0,0,0,.6);
+    }
+  }
+  :root[data-theme="dark"] {
+    --page-bg:      #141614;
+    --page-panel:   #1C1F1C;
+    --page-ink:     #ECEEE9;
+    --page-muted:   #9AA096;
+    --page-line:    #2C302C;
+    --page-line-sf: #232623;
+    --page-accent:  #A9C0A6;
+    --shadow: 0 1px 2px rgba(0,0,0,.4), 0 8px 24px -12px rgba(0,0,0,.6);
+  }
+
+  * { box-sizing: border-box; }
+  body {
+    background: var(--page-bg);
+    color: var(--page-ink);
+    font-family: var(--sans);
+    font-size: 16px;
+    line-height: 1.6;
+    -webkit-font-smoothing: antialiased;
+  }
+  .wrap {
+    max-width: 1180px;
+    margin: 0 auto;
+    padding: clamp(28px, 5vw, 64px) clamp(18px, 4vw, 44px) 96px;
+    display: flex;
+    flex-direction: column;
+    gap: clamp(40px, 6vw, 68px);
+  }
+
+  .eyebrow {
+    font-family: var(--mono);
+    font-size: 11px;
+    letter-spacing: .14em;
+    text-transform: uppercase;
+    color: var(--page-muted);
+    margin: 0;
+  }
+
+  /* ── masthead ─────────────────────────────────────────────────── */
+  .masthead { display: flex; flex-direction: column; gap: 14px; }
+  .masthead h1 {
+    margin: 0;
+    font-size: clamp(30px, 4.4vw, 46px);
+    line-height: 1.06;
+    letter-spacing: -.028em;
+    font-weight: 600;
+    text-wrap: balance;
+  }
+  .masthead p {
+    margin: 0;
+    max-width: 62ch;
+    color: var(--page-muted);
+    font-size: 16.5px;
+  }
+  .masthead .rule { height: 1px; background: var(--page-line); margin-top: 6px; }
+
+  /* ── section heads ────────────────────────────────────────────── */
+  .sechead { display: flex; flex-direction: column; gap: 8px; margin-bottom: 26px; }
+  .sechead h2 {
+    margin: 0;
+    font-size: clamp(20px, 2.4vw, 25px);
+    letter-spacing: -.02em;
+    font-weight: 600;
+  }
+  .sechead p { margin: 0; color: var(--page-muted); max-width: 64ch; font-size: 15.5px; }
+
+  /* ── direction block ──────────────────────────────────────────── */
+  .dirs { display: flex; flex-direction: column; gap: 34px; }
+  .dir {
+    display: grid;
+    grid-template-columns: minmax(0, 300px) minmax(0, 1fr);
+    gap: clamp(20px, 3vw, 38px);
+    align-items: start;
+  }
+  @media (max-width: 900px) { .dir { grid-template-columns: 1fr; } }
+
+  .dir-meta { display: flex; flex-direction: column; gap: 14px; }
+  .dir-key { display: inline-flex; align-items: baseline; gap: 10px; flex-wrap: wrap; }
+  .dir-key .num {
+    font-family: var(--mono);
+    font-size: 12px;
+    color: var(--page-muted);
+    letter-spacing: .1em;
+  }
+  .dir-key h3 { margin: 0; font-size: 21px; letter-spacing: -.02em; font-weight: 600; }
+  .dir-meta > p { margin: 0; color: var(--page-muted); font-size: 15px; }
+  .dir-meta .verdict {
+    color: var(--page-ink);
+    font-size: 14.5px;
+    border-left: 2px solid var(--page-accent);
+    padding-left: 12px;
+  }
+  .flag {
+    font-family: var(--mono);
+    font-size: 10px;
+    letter-spacing: .12em;
+    text-transform: uppercase;
+    color: var(--page-bg);
+    background: var(--page-accent);
+    padding: 3px 8px;
+    border-radius: 4px;
+    white-space: nowrap;
+  }
+
+  .swatches { display: flex; flex-direction: column; gap: 7px; }
+  .sw {
+    display: grid;
+    grid-template-columns: 34px minmax(0,1fr) auto;
+    align-items: center;
+    gap: 11px;
+    font-size: 12.5px;
+  }
+  .sw i { display: block; height: 22px; border-radius: 4px; border: 1px solid rgba(128,128,128,.28); }
+  .sw span { color: var(--page-muted); }
+  .sw code { font-family: var(--mono); font-size: 11.5px; color: var(--page-muted); }
+
+  /* ── the hero specimen (paint chip — keeps its own fixed colors) ─ */
+  .tile {
+    background: var(--g);
+    color: var(--ink);
+    border: 1px solid var(--ln);
+    border-radius: 10px;
+    padding: clamp(16px, 2.2vw, 26px);
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    overflow: hidden;
+    box-shadow: var(--shadow);
+  }
+  .tile-nav { display: flex; align-items: center; gap: 14px; flex-wrap: wrap; }
+  .tile-mark {
+    font-weight: 700; font-size: 13px; letter-spacing: .04em;
+    padding: 5px 9px; border-radius: 6px;
+    background: var(--ac); color: var(--g);
+  }
+  .tile-links { display: flex; gap: 15px; font-size: 12.5px; color: var(--mut); flex-wrap: wrap; }
+  .tile-links b { color: var(--ink); font-weight: 500; }
+  .tile-nav .talk {
+    margin-left: auto; font-size: 12.5px; padding: 6px 13px; border-radius: 999px;
+    border: 1px solid var(--ln); background: var(--s); color: var(--ink);
+  }
+
+  .tile-badge {
+    align-self: flex-start;
+    display: inline-flex; align-items: center; gap: 7px;
+    font-size: 12px; padding: 5px 11px 5px 9px; border-radius: 999px;
+    background: var(--acs); color: var(--ac); font-weight: 500;
+  }
+  .tile-badge b { width: 6px; height: 6px; border-radius: 50%; background: var(--ac); display: block; }
+
+  .tile-body { display: flex; flex-direction: column; gap: 13px; }
+  .tile-eyebrow {
+    font-family: var(--mono); font-size: 10.5px; letter-spacing: .16em;
+    text-transform: uppercase; color: var(--mut);
+  }
+  .tile-name {
+    font-size: clamp(30px, 4.6vw, 52px);
+    line-height: 1.0; letter-spacing: -.035em; font-weight: 600; margin: 0;
+  }
+  .tile-name em { font-style: normal; color: var(--ac); }
+  .tile-lede {
+    margin: 0; max-width: 46ch; font-size: 14.5px; line-height: 1.62; color: var(--mut);
+  }
+  .tile-lede b { color: var(--ink); font-weight: 500; }
+
+  .tile-stats {
+    display: grid; grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 1px; background: var(--ln);
+    border: 1px solid var(--ln); border-radius: 8px; overflow: hidden;
+  }
+  @media (max-width: 560px) { .tile-stats { grid-template-columns: repeat(2, minmax(0,1fr)); } }
+  .tile-stats div { background: var(--s); padding: 11px 13px; display: flex; flex-direction: column; gap: 2px; }
+  .tile-stats strong {
+    font-size: 20px; font-weight: 600; letter-spacing: -.02em; font-variant-numeric: tabular-nums;
+  }
+  .tile-stats span {
+    font-size: 10.5px; color: var(--mut); letter-spacing: .04em;
+    text-transform: uppercase; font-family: var(--mono);
+  }
+
+  .tile-cta { display: flex; gap: 10px; flex-wrap: wrap; }
+  .tile-cta a { font-size: 13px; padding: 9px 17px; border-radius: 999px; text-decoration: none; font-weight: 500; }
+  .tile-cta .fill { background: var(--ac); color: var(--g); }
+  .tile-cta .ghost { border: 1px solid var(--ln); color: var(--ink); background: var(--s); }
+
+  /* ── typography specimens ─────────────────────────────────────── */
+  .types { display: flex; flex-direction: column; gap: 14px; }
+  .type {
+    background: var(--page-panel);
+    border: 1px solid var(--page-line);
+    border-radius: 10px;
+    padding: clamp(18px, 2.4vw, 28px);
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(0, 260px);
+    gap: clamp(18px, 3vw, 36px);
+    align-items: center;
+  }
+  @media (max-width: 820px) { .type { grid-template-columns: 1fr; } }
+  .type-show { display: flex; flex-direction: column; gap: 11px; min-width: 0; }
+  .type-key {
+    font-family: var(--mono); font-size: 11px; letter-spacing: .13em;
+    text-transform: uppercase; color: var(--page-muted);
+  }
+  .type-name { margin: 0; font-size: clamp(28px, 4.2vw, 44px); line-height: 1.02; letter-spacing: -.03em; }
+  .type-sub { margin: 0; font-size: 15px; color: var(--page-muted); max-width: 52ch; }
+  .type-stack {
+    display: flex; flex-direction: column; gap: 7px; font-size: 13px;
+    border-left: 1px solid var(--page-line); padding-left: 18px;
+  }
+  @media (max-width: 820px) {
+    .type-stack { border-left: 0; border-top: 1px solid var(--page-line); padding-left: 0; padding-top: 16px; }
+  }
+  .type-stack div { display: flex; gap: 9px; align-items: baseline; }
+  .type-stack .k {
+    font-family: var(--mono); font-size: 10.5px; letter-spacing: .1em;
+    text-transform: uppercase; color: var(--page-muted); width: 62px; flex: none;
+  }
+  .type-stack .v { color: var(--page-ink); }
+  .type-note { font-size: 13px; color: var(--page-muted); margin: 4px 0 0; }
+
+  .t-a .type-name { font-family: "Instrument Serif", Georgia, "Times New Roman", serif; font-weight: 400; letter-spacing: -.01em; }
+  .t-a .type-name em { font-style: italic; color: var(--page-accent); }
+  .t-a .type-sub { font-family: "Instrument Sans", var(--sans); }
+  .t-b .type-name { font-family: "Archivo", var(--sans); font-weight: 700; }
+  .t-b .type-name em { font-style: normal; color: var(--page-accent); }
+  .t-c .type-name { font-family: "Fraunces", Georgia, serif; font-weight: 600; font-variation-settings: "SOFT" 40, "WONK" 1; letter-spacing: -.022em; }
+  .t-c .type-name em { font-style: italic; color: var(--page-accent); }
+
+  /* ── closing note ─────────────────────────────────────────────── */
+  .close {
+    background: var(--page-panel);
+    border: 1px solid var(--page-line);
+    border-radius: 10px;
+    padding: clamp(20px, 2.6vw, 30px);
+    display: flex; flex-direction: column; gap: 12px;
+  }
+  .close h2 { margin: 0; font-size: 19px; letter-spacing: -.018em; font-weight: 600; }
+  .close p { margin: 0; color: var(--page-muted); max-width: 66ch; font-size: 15px; }
+  .close .pick {
+    font-family: var(--mono); font-size: 13px; color: var(--page-ink);
+    background: var(--page-line-sf); border-radius: 7px; padding: 12px 15px; line-height: 1.9;
+  }
+
+  .footnote {
+    font-size: 13px; color: var(--page-muted);
+    border-top: 1px solid var(--page-line); padding-top: 18px; margin: 0; max-width: 70ch;
+  }
+</style>
+
+</head>
+<body>
+<div class="wrap">
+
+  <header class="masthead">
+    <p class="eyebrow">Portfolio · design directions · v2 · 09.2026</p>
+    <h1>Seven ways the site could look</h1>
+    <p>Same layout, same content, same motion plan — only the colour changes. Every block below is your real hero section: your name, your numbers from the CV, your buttons. Deep Forest leads because you picked it; the rest are here so you can be sure. Typography is a separate choice at the bottom.</p>
+    <div class="rule"></div>
+  </header>
+
+  <!-- ═══ LEADER ═══════════════════════════════════════════════ -->
+  <section>
+    <div class="sechead">
+      <p class="eyebrow">Leading</p>
+      <h2>The one you chose</h2>
+      <p>Deep evergreen on cool paper — the green already on horbachova.com, brought into the light. Everything below is measured against this.</p>
+    </div>
+
+    <div class="dirs">
+      <article class="dir">
+        <div class="dir-meta">
+          <div class="dir-key"><span class="num">02</span><h3>Deep Forest</h3><span class="flag">Your pick</span></div>
+          <p>Deep evergreen accent, cool paper ground, greys tinted the same way so nothing sits outside the family. Precise and professional.</p>
+          <p class="verdict">Keeps your existing identity — a recruiter who saw the old site still recognises you. The safest of the set, in a good way.</p>
+          <div class="swatches">
+            <div class="sw"><i style="background:#F3F5F2"></i><span>Ground</span><code>#F3F5F2</code></div>
+            <div class="sw"><i style="background:#FFFFFF"></i><span>Surface</span><code>#FFFFFF</code></div>
+            <div class="sw"><i style="background:#14563C"></i><span>Accent</span><code>#14563C</code></div>
+            <div class="sw"><i style="background:#131A16"></i><span>Ink</span><code>#131A16</code></div>
+            <div class="sw"><i style="background:#5D6B62"></i><span>Muted</span><code>#5D6B62</code></div>
+          </div>
+        </div>
+        <div class="tile" style="--g:#F3F5F2; --s:#FFFFFF; --ink:#131A16; --mut:#5D6B62; --ln:#DDE3DD; --ac:#14563C; --acs:#E0EBE4;">
+          <div class="tile-nav">
+            <span class="tile-mark">AH</span>
+            <span class="tile-links"><b>Work</b><span>Experience</span><span>Stack</span><span>Contact</span></span>
+            <span class="talk">Let’s talk</span>
+          </div>
+          <div class="tile-badge"><b></b>Available for work</div>
+          <div class="tile-body">
+            <div class="tile-eyebrow">Full-stack developer · EU work authorization</div>
+            <p class="tile-name">Anastasiia <em>Horbachova</em></p>
+            <p class="tile-lede">I build <b>full-stack React and Node applications</b> — from a storefront with payments and three delivery carriers to a real-time support chat that reconnects on its own.</p>
+          </div>
+          <div class="tile-stats">
+            <div><strong>3+</strong><span>Years</span></div>
+            <div><strong>6</strong><span>Companies</span></div>
+            <div><strong>5+</strong><span>Projects</span></div>
+            <div><strong>2</strong><span>npm packages</span></div>
+          </div>
+          <div class="tile-cta">
+            <a class="fill" href="#0">View selected work</a>
+            <a class="ghost" href="#0">Download CV</a>
+          </div>
+        </div>
+      </article>
+    </div>
+  </section>
+
+  <!-- ═══ NOT GREEN ════════════════════════════════════════════ -->
+  <section>
+    <div class="sechead">
+      <p class="eyebrow">Part two</p>
+      <h2>Not green</h2>
+      <p>Four other worlds, built to the same rules: light quiet ground, one accent doing all the talking, greys tinted toward that accent so the palette reads as one decision rather than a colour dropped on top of grey.</p>
+    </div>
+
+    <div class="dirs">
+
+      <!-- 04 · INK & COBALT -->
+      <article class="dir">
+        <div class="dir-meta">
+          <div class="dir-key"><span class="num">04</span><h3>Ink &amp; Cobalt</h3></div>
+          <p>Electric cobalt on cool white. This is the blue from the Tomas site you liked, pushed deeper so it stays comfortable over a long scroll.</p>
+          <p class="verdict">The most immediately “software” of the set. Reads as trustworthy and current — and it is also the most common choice in this industry.</p>
+          <div class="swatches">
+            <div class="sw"><i style="background:#F3F5FA"></i><span>Ground</span><code>#F3F5FA</code></div>
+            <div class="sw"><i style="background:#FFFFFF"></i><span>Surface</span><code>#FFFFFF</code></div>
+            <div class="sw"><i style="background:#2138C4"></i><span>Accent</span><code>#2138C4</code></div>
+            <div class="sw"><i style="background:#12151C"></i><span>Ink</span><code>#12151C</code></div>
+            <div class="sw"><i style="background:#5A6172"></i><span>Muted</span><code>#5A6172</code></div>
+          </div>
+        </div>
+        <div class="tile" style="--g:#F3F5FA; --s:#FFFFFF; --ink:#12151C; --mut:#5A6172; --ln:#DDE1EC; --ac:#2138C4; --acs:#E3E7FA;">
+          <div class="tile-nav">
+            <span class="tile-mark">AH</span>
+            <span class="tile-links"><b>Work</b><span>Experience</span><span>Stack</span><span>Contact</span></span>
+            <span class="talk">Let’s talk</span>
+          </div>
+          <div class="tile-badge"><b></b>Available for work</div>
+          <div class="tile-body">
+            <div class="tile-eyebrow">Full-stack developer · EU work authorization</div>
+            <p class="tile-name">Anastasiia <em>Horbachova</em></p>
+            <p class="tile-lede">I build <b>full-stack React and Node applications</b> — from a storefront with payments and three delivery carriers to a real-time support chat that reconnects on its own.</p>
+          </div>
+          <div class="tile-stats">
+            <div><strong>3+</strong><span>Years</span></div>
+            <div><strong>6</strong><span>Companies</span></div>
+            <div><strong>5+</strong><span>Projects</span></div>
+            <div><strong>2</strong><span>npm packages</span></div>
+          </div>
+          <div class="tile-cta">
+            <a class="fill" href="#0">View selected work</a>
+            <a class="ghost" href="#0">Download CV</a>
+          </div>
+        </div>
+      </article>
+
+      <!-- 05 · OXBLOOD -->
+      <article class="dir">
+        <div class="dir-meta">
+          <div class="dir-key"><span class="num">05</span><h3>Oxblood</h3></div>
+          <p>Deep wine on warm bone. A red dark enough to behave like a neutral — it never shouts, but every accent on the page carries weight.</p>
+          <p class="verdict">The most distinctive here. Almost nobody in this field uses it, which is exactly the argument for and against it.</p>
+          <div class="swatches">
+            <div class="sw"><i style="background:#F7F3F1"></i><span>Ground</span><code>#F7F3F1</code></div>
+            <div class="sw"><i style="background:#FFFDFC"></i><span>Surface</span><code>#FFFDFC</code></div>
+            <div class="sw"><i style="background:#7B2233"></i><span>Accent</span><code>#7B2233</code></div>
+            <div class="sw"><i style="background:#1E1517"></i><span>Ink</span><code>#1E1517</code></div>
+            <div class="sw"><i style="background:#6E5F60"></i><span>Muted</span><code>#6E5F60</code></div>
+          </div>
+        </div>
+        <div class="tile" style="--g:#F7F3F1; --s:#FFFDFC; --ink:#1E1517; --mut:#6E5F60; --ln:#E8DFDB; --ac:#7B2233; --acs:#F3E3E5;">
+          <div class="tile-nav">
+            <span class="tile-mark">AH</span>
+            <span class="tile-links"><b>Work</b><span>Experience</span><span>Stack</span><span>Contact</span></span>
+            <span class="talk">Let’s talk</span>
+          </div>
+          <div class="tile-badge"><b></b>Available for work</div>
+          <div class="tile-body">
+            <div class="tile-eyebrow">Full-stack developer · EU work authorization</div>
+            <p class="tile-name">Anastasiia <em>Horbachova</em></p>
+            <p class="tile-lede">I build <b>full-stack React and Node applications</b> — from a storefront with payments and three delivery carriers to a real-time support chat that reconnects on its own.</p>
+          </div>
+          <div class="tile-stats">
+            <div><strong>3+</strong><span>Years</span></div>
+            <div><strong>6</strong><span>Companies</span></div>
+            <div><strong>5+</strong><span>Projects</span></div>
+            <div><strong>2</strong><span>npm packages</span></div>
+          </div>
+          <div class="tile-cta">
+            <a class="fill" href="#0">View selected work</a>
+            <a class="ghost" href="#0">Download CV</a>
+          </div>
+        </div>
+      </article>
+
+      <!-- 06 · OCHRE SLATE -->
+      <article class="dir">
+        <div class="dir-meta">
+          <div class="dir-key"><span class="num">06</span><h3>Ochre Slate</h3></div>
+          <p>Warm amber accent on a cool grey ground. The two temperatures pull against each other, which is what makes it feel designed rather than assembled.</p>
+          <p class="verdict">Friendly without being soft. The accent doubles as a natural highlight colour for skills and dates, so the page needs fewer devices.</p>
+          <div class="swatches">
+            <div class="sw"><i style="background:#EFF1F1"></i><span>Ground</span><code>#EFF1F1</code></div>
+            <div class="sw"><i style="background:#FFFFFF"></i><span>Surface</span><code>#FFFFFF</code></div>
+            <div class="sw"><i style="background:#8A5313"></i><span>Accent</span><code>#8A5313</code></div>
+            <div class="sw"><i style="background:#1A1D1E"></i><span>Ink</span><code>#1A1D1E</code></div>
+            <div class="sw"><i style="background:#62696B"></i><span>Muted</span><code>#62696B</code></div>
+          </div>
+        </div>
+        <div class="tile" style="--g:#EFF1F1; --s:#FFFFFF; --ink:#1A1D1E; --mut:#62696B; --ln:#DCE0E0; --ac:#8A5313; --acs:#F6EAD8;">
+          <div class="tile-nav">
+            <span class="tile-mark">AH</span>
+            <span class="tile-links"><b>Work</b><span>Experience</span><span>Stack</span><span>Contact</span></span>
+            <span class="talk">Let’s talk</span>
+          </div>
+          <div class="tile-badge"><b></b>Available for work</div>
+          <div class="tile-body">
+            <div class="tile-eyebrow">Full-stack developer · EU work authorization</div>
+            <p class="tile-name">Anastasiia <em>Horbachova</em></p>
+            <p class="tile-lede">I build <b>full-stack React and Node applications</b> — from a storefront with payments and three delivery carriers to a real-time support chat that reconnects on its own.</p>
+          </div>
+          <div class="tile-stats">
+            <div><strong>3+</strong><span>Years</span></div>
+            <div><strong>6</strong><span>Companies</span></div>
+            <div><strong>5+</strong><span>Projects</span></div>
+            <div><strong>2</strong><span>npm packages</span></div>
+          </div>
+          <div class="tile-cta">
+            <a class="fill" href="#0">View selected work</a>
+            <a class="ghost" href="#0">Download CV</a>
+          </div>
+        </div>
+      </article>
+
+      <!-- 07 · GRAPHITE -->
+      <article class="dir">
+        <div class="dir-meta">
+          <div class="dir-key"><span class="num">07</span><h3>Graphite</h3></div>
+          <p>No accent hue at all. Near-black on paper, and the hierarchy is carried entirely by weight, size and space. The only colour on the page comes from your project screenshots.</p>
+          <p class="verdict">The most disciplined option, and the least forgiving — with nothing to hide behind, every spacing decision is visible. Done right it looks the most expensive.</p>
+          <div class="swatches">
+            <div class="sw"><i style="background:#F2F2F0"></i><span>Ground</span><code>#F2F2F0</code></div>
+            <div class="sw"><i style="background:#FFFFFF"></i><span>Surface</span><code>#FFFFFF</code></div>
+            <div class="sw"><i style="background:#22241F"></i><span>Accent</span><code>#22241F</code></div>
+            <div class="sw"><i style="background:#141513"></i><span>Ink</span><code>#141513</code></div>
+            <div class="sw"><i style="background:#64665F"></i><span>Muted</span><code>#64665F</code></div>
+          </div>
+        </div>
+        <div class="tile" style="--g:#F2F2F0; --s:#FFFFFF; --ink:#141513; --mut:#64665F; --ln:#DEDEDA; --ac:#22241F; --acs:#E5E5E0;">
+          <div class="tile-nav">
+            <span class="tile-mark">AH</span>
+            <span class="tile-links"><b>Work</b><span>Experience</span><span>Stack</span><span>Contact</span></span>
+            <span class="talk">Let’s talk</span>
+          </div>
+          <div class="tile-badge"><b></b>Available for work</div>
+          <div class="tile-body">
+            <div class="tile-eyebrow">Full-stack developer · EU work authorization</div>
+            <p class="tile-name">Anastasiia <em>Horbachova</em></p>
+            <p class="tile-lede">I build <b>full-stack React and Node applications</b> — from a storefront with payments and three delivery carriers to a real-time support chat that reconnects on its own.</p>
+          </div>
+          <div class="tile-stats">
+            <div><strong>3+</strong><span>Years</span></div>
+            <div><strong>6</strong><span>Companies</span></div>
+            <div><strong>5+</strong><span>Projects</span></div>
+            <div><strong>2</strong><span>npm packages</span></div>
+          </div>
+          <div class="tile-cta">
+            <a class="fill" href="#0">View selected work</a>
+            <a class="ghost" href="#0">Download CV</a>
+          </div>
+        </div>
+      </article>
+
+    </div>
+  </section>
+
+  <!-- ═══ OTHER GREENS ═════════════════════════════════════════ -->
+  <section>
+    <div class="sechead">
+      <p class="eyebrow">Part three</p>
+      <h2>The other two greens</h2>
+      <p>From the first round, kept here for comparison.</p>
+    </div>
+
+    <div class="dirs">
+
+      <!-- 01 · OLIVE PRESS -->
+      <article class="dir">
+        <div class="dir-meta">
+          <div class="dir-key"><span class="num">01</span><h3>Olive Press</h3></div>
+          <p>Warm olive on an oat ground. Yellow-leaning green, closer to paper and ink than to software.</p>
+          <p class="verdict">The warmest and least corporate. Softer than Deep Forest, and slightly less serious.</p>
+          <div class="swatches">
+            <div class="sw"><i style="background:#F6F5EE"></i><span>Ground</span><code>#F6F5EE</code></div>
+            <div class="sw"><i style="background:#FCFBF6"></i><span>Surface</span><code>#FCFBF6</code></div>
+            <div class="sw"><i style="background:#556533"></i><span>Accent</span><code>#556533</code></div>
+            <div class="sw"><i style="background:#1E2019"></i><span>Ink</span><code>#1E2019</code></div>
+            <div class="sw"><i style="background:#6B6E5F"></i><span>Muted</span><code>#6B6E5F</code></div>
+          </div>
+        </div>
+        <div class="tile" style="--g:#F6F5EE; --s:#FCFBF6; --ink:#1E2019; --mut:#6B6E5F; --ln:#E2DFD2; --ac:#556533; --acs:#E9EBDC;">
+          <div class="tile-nav">
+            <span class="tile-mark">AH</span>
+            <span class="tile-links"><b>Work</b><span>Experience</span><span>Stack</span><span>Contact</span></span>
+            <span class="talk">Let’s talk</span>
+          </div>
+          <div class="tile-badge"><b></b>Available for work</div>
+          <div class="tile-body">
+            <div class="tile-eyebrow">Full-stack developer · EU work authorization</div>
+            <p class="tile-name">Anastasiia <em>Horbachova</em></p>
+            <p class="tile-lede">I build <b>full-stack React and Node applications</b> — from a storefront with payments and three delivery carriers to a real-time support chat that reconnects on its own.</p>
+          </div>
+          <div class="tile-stats">
+            <div><strong>3+</strong><span>Years</span></div>
+            <div><strong>6</strong><span>Companies</span></div>
+            <div><strong>5+</strong><span>Projects</span></div>
+            <div><strong>2</strong><span>npm packages</span></div>
+          </div>
+          <div class="tile-cta">
+            <a class="fill" href="#0">View selected work</a>
+            <a class="ghost" href="#0">Download CV</a>
+          </div>
+        </div>
+      </article>
+
+      <!-- 03 · MOSS ROOM -->
+      <article class="dir">
+        <div class="dir-meta">
+          <div class="dir-key"><span class="num">03</span><h3>Moss Room</h3></div>
+          <p>Dark-first. A green-black ground with a soft moss accent — desaturated on purpose, so it glows rather than shouts.</p>
+          <p class="verdict">Pick this only if you want a dark site. The most striking, and the hardest to keep restful over a long scroll.</p>
+          <div class="swatches">
+            <div class="sw"><i style="background:#101613"></i><span>Ground</span><code>#101613</code></div>
+            <div class="sw"><i style="background:#171F1A"></i><span>Surface</span><code>#171F1A</code></div>
+            <div class="sw"><i style="background:#A3C585"></i><span>Accent</span><code>#A3C585</code></div>
+            <div class="sw"><i style="background:#E9EDE7"></i><span>Ink</span><code>#E9EDE7</code></div>
+            <div class="sw"><i style="background:#8FA096"></i><span>Muted</span><code>#8FA096</code></div>
+          </div>
+        </div>
+        <div class="tile" style="--g:#101613; --s:#171F1A; --ink:#E9EDE7; --mut:#8FA096; --ln:#26302A; --ac:#A3C585; --acs:#1E2A1C;">
+          <div class="tile-nav">
+            <span class="tile-mark">AH</span>
+            <span class="tile-links"><b>Work</b><span>Experience</span><span>Stack</span><span>Contact</span></span>
+            <span class="talk">Let’s talk</span>
+          </div>
+          <div class="tile-badge"><b></b>Available for work</div>
+          <div class="tile-body">
+            <div class="tile-eyebrow">Full-stack developer · EU work authorization</div>
+            <p class="tile-name">Anastasiia <em>Horbachova</em></p>
+            <p class="tile-lede">I build <b>full-stack React and Node applications</b> — from a storefront with payments and three delivery carriers to a real-time support chat that reconnects on its own.</p>
+          </div>
+          <div class="tile-stats">
+            <div><strong>3+</strong><span>Years</span></div>
+            <div><strong>6</strong><span>Companies</span></div>
+            <div><strong>5+</strong><span>Projects</span></div>
+            <div><strong>2</strong><span>npm packages</span></div>
+          </div>
+          <div class="tile-cta">
+            <a class="fill" href="#0">View selected work</a>
+            <a class="ghost" href="#0">Download CV</a>
+          </div>
+        </div>
+      </article>
+
+    </div>
+  </section>
+
+  <!-- ═══ TYPE ═════════════════════════════════════════════════ -->
+  <section>
+    <div class="sechead">
+      <p class="eyebrow">Part four</p>
+      <h2>Typography</h2>
+      <p>Independent of the colour — any pairing works with any direction. Shown in neutral grey so the letterforms are the only thing you are judging. Body text and the mono used for labels stay the same in all three; only the display face changes.</p>
+    </div>
+
+    <div class="types">
+
+      <article class="type t-a">
+        <div class="type-show">
+          <p class="type-key">A · Editorial</p>
+          <p class="type-name">Anastasiia <em>Horbachova</em></p>
+          <p class="type-sub">A serif with a real italic, used only for your name and section titles. This is the elegance you liked in the Tomas site — but ours leans quieter, without his red.</p>
+        </div>
+        <div class="type-stack">
+          <div><span class="k">Display</span><span class="v">Instrument Serif</span></div>
+          <div><span class="k">Body</span><span class="v">Instrument Sans</span></div>
+          <div><span class="k">Labels</span><span class="v">JetBrains Mono</span></div>
+          <p class="type-note">Warmest and most human. Slight risk: serifs are having a moment, so it is the least surprising of the three.</p>
+        </div>
+      </article>
+
+      <article class="type t-b">
+        <div class="type-show">
+          <p class="type-key">B · Structural</p>
+          <p class="type-name">Anastasiia <em>Horbachova</em></p>
+          <p class="type-sub">A tight, confident grotesque set heavy and large. No decoration anywhere — the impact comes purely from weight and spacing. The most “engineer” of the three.</p>
+        </div>
+        <div class="type-stack">
+          <div><span class="k">Display</span><span class="v">Archivo</span></div>
+          <div><span class="k">Body</span><span class="v">Inter Tight</span></div>
+          <div><span class="k">Labels</span><span class="v">JetBrains Mono</span></div>
+          <p class="type-note">Cleanest and most neutral. Ages well, reads as precise, but carries the least personality on its own.</p>
+        </div>
+      </article>
+
+      <article class="type t-c">
+        <div class="type-show">
+          <p class="type-key">C · Distinctive</p>
+          <p class="type-name">Anastasiia <em>Horbachova</em></p>
+          <p class="type-sub">A variable serif with softened corners and deliberately odd letterforms. Nobody else’s portfolio is set in this. Memorable — and the one a stranger is most likely to comment on.</p>
+        </div>
+        <div class="type-stack">
+          <div><span class="k">Display</span><span class="v">Fraunces</span></div>
+          <div><span class="k">Body</span><span class="v">Inter Tight</span></div>
+          <div><span class="k">Labels</span><span class="v">JetBrains Mono</span></div>
+          <p class="type-note">The boldest call. Highest ceiling, and the one most dependent on getting the spacing exactly right.</p>
+        </div>
+      </article>
+
+    </div>
+  </section>
+
+  <!-- ═══ CLOSE ════════════════════════════════════════════════ -->
+  <section class="close">
+    <h2>What I need from you</h2>
+    <p>One number and one letter. If nothing here is right, say what is wrong with the closest one — “too warm”, “too dark”, “the green is too grey” — and I will adjust rather than start over.</p>
+    <div class="pick">
+      Colour&nbsp;&nbsp;→&nbsp;&nbsp;01 Olive Press &nbsp;·&nbsp; <strong>02 Deep Forest</strong> &nbsp;·&nbsp; 03 Moss Room &nbsp;·&nbsp; 04 Ink &amp; Cobalt<br>
+      &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;05 Oxblood &nbsp;·&nbsp; 06 Ochre Slate &nbsp;·&nbsp; 07 Graphite<br>
+      Type&nbsp;&nbsp;&nbsp;&nbsp;→&nbsp;&nbsp;A Editorial &nbsp;·&nbsp; B Structural &nbsp;·&nbsp; C Distinctive
+    </div>
+    <p>Whichever you choose gets both a light and a dark theme built properly — the direction above just decides which one the site leads with.</p>
+  </section>
+
+  <p class="footnote">The hero blocks keep their own fixed colours in any theme, the way paint chips do. Everything around them follows your system light/dark setting. Numbers are taken from your CV; the copy is a placeholder I wrote to show the shape, not final wording.</p>
+
+</div>
+</body>
+</html>
