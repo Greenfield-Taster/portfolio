@@ -1,0 +1,43 @@
+.stack {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: var(--space-6);
+
+  @media (max-width: 768px) { grid-template-columns: 1fr; }
+
+  &__group {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-4);
+    padding-top: var(--space-4);
+    border-top: 1px solid var(--line);
+  }
+
+  &__title {
+    font-size: var(--step-h3);
+    font-weight: 600;
+    letter-spacing: -.015em;
+  }
+
+  &__items {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-2);
+
+    li {
+      font-family: var(--font-mono);
+      font-size: var(--step-label);
+      padding: var(--space-2) var(--space-3);
+      border: 1px solid var(--line);
+      border-radius: var(--radius-sm);
+      color: var(--muted);
+      // Safety net: nothing today is long enough to need this, but a future
+      // technology name with no natural break point must wrap, not force
+      // the page to scroll horizontally.
+      overflow-wrap: anywhere;
+      transition: border-color var(--dur-fast) var(--ease), color var(--dur-fast) var(--ease);
+    }
+
+    li:hover { border-color: var(--accent); color: var(--ink); }
+  }
+}
