@@ -46,10 +46,10 @@ npx --yes npm@12 install
 
 ```powershell
 cd frontend
-npm test              # модульні (117 тестів)
+npm test              # модульні (165 тестів)
 npm run lint
 
-npm run e2e           # з кореня: наскрізні, Playwright (6 тестів)
+npm run e2e           # з кореня: наскрізні, Playwright (8 тестів)
 ```
 
 CI в репозиторії наразі немає. Якщо колись з'явиться, `playwright.config.ts`
