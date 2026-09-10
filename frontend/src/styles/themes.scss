@@ -1,73 +1,77 @@
+// Two oranges, not one. --accent is the brand colour and goes on fills, borders
+// and the landscape; --accent-ink is the one that may carry text. The brand
+// orange on the pale background is 2.2:1, far under the 4.5:1 this site holds
+// itself to, so anything that reads as words uses --accent-ink instead.
 :root {
-  --bg: #F3F5F2;
-  --surface: #FFFFFF;
-  --ink: #131A16;
-  --muted: #5D6B62;
-  --line: #DDE3DD;
-  --accent: #14563C;
-  --accent-soft: #E0EBE4;
-  --on-accent: #F3F5F2;
+  --bg: #F3DECD;
+  --surface: #E7D2C1;
+  --ink: #25211C;
+  --muted: #5A4535;
+  --line: rgba(37, 33, 28, .16);
+  --accent: #F56F0D;
+  --accent-ink: #8A4200;
+  --accent-soft: #F0D3B8;
+  --on-accent: #1B1209;
 
   --ok: #1F6F43;
   --err: #97202B;
   --err-soft: #F6E4E6;
 
-  // Hero scene. Held apart from --accent so each theme can decide how loud the
-  // landscape and the sky are: one accent reads very differently against a pale
-  // background than against a near-black one.
-  --hero-terrain: #A9C7B4;
-  --hero-wire: #7CA189;
-  --hero-star: #BCC9C0;
-  --hero-line: #D3DFD7;
-  --hero-figure: #93AC9D;
+  // Hero scene. Held apart from the accent so each theme can decide how loud the
+  // landscape and the sky are: one orange reads very differently against a warm
+  // cream than against near-black.
+  --hero-terrain: #EDBE95;
+  --hero-wire: #F8DFC8;
+  --hero-star: #C3B2A0;
+  --hero-glow: #F56F0D;
 
-  --shadow-card: 0 1px 2px rgba(19, 26, 22, .05), 0 12px 32px -16px rgba(19, 26, 22, .18);
+  --shadow-card: 0 1px 2px rgba(37, 33, 28, .06), 0 12px 32px -16px rgba(37, 33, 28, .22);
 }
 
 @media (prefers-color-scheme: dark) {
   :root:not([data-theme='light']) {
-    --bg: #0D1310;
-    --surface: #141C17;
-    --ink: #ECF1ED;
-    --muted: #91A197;
-    --line: #223029;
-    --accent: #5FB88A;
-    --accent-soft: #16271F;
-    --on-accent: #0D1310;
+    --bg: #0D0D0D;
+    --surface: #161616;
+    --ink: #FFFFFF;
+    --muted: #C0B8B0;
+    --line: rgba(255, 255, 255, .14);
+    --accent: #F56F0D;
+    --accent-ink: #F56F0D;
+    --accent-soft: #2A1608;
+    --on-accent: #0D0D0D;
 
     --ok: #7BC79B;
     --err: #E98B95;
     --err-soft: #2A1719;
 
-    --hero-terrain: #3E8F65;
-    --hero-wire: #6FC095;
-    --hero-star: #6E8478;
-    --hero-line: #23382C;
-    --hero-figure: #7FB196;
+    --hero-terrain: #D65F05;
+    --hero-wire: #FFB067;
+    --hero-star: #9A8F84;
+    --hero-glow: #F56F0D;
 
-    --shadow-card: 0 1px 2px rgba(0, 0, 0, .4), 0 12px 32px -16px rgba(0, 0, 0, .7);
+    --shadow-card: 0 1px 2px rgba(0, 0, 0, .5), 0 12px 32px -16px rgba(0, 0, 0, .8);
   }
 }
 
 :root[data-theme='dark'] {
-  --bg: #0D1310;
-  --surface: #141C17;
-  --ink: #ECF1ED;
-  --muted: #91A197;
-  --line: #223029;
-  --accent: #5FB88A;
-  --accent-soft: #16271F;
-  --on-accent: #0D1310;
+  --bg: #0D0D0D;
+  --surface: #161616;
+  --ink: #FFFFFF;
+  --muted: #C0B8B0;
+  --line: rgba(255, 255, 255, .14);
+  --accent: #F56F0D;
+  --accent-ink: #F56F0D;
+  --accent-soft: #2A1608;
+  --on-accent: #0D0D0D;
 
   --ok: #7BC79B;
   --err: #E98B95;
   --err-soft: #2A1719;
 
-  --hero-terrain: #3E8F65;
-  --hero-wire: #6FC095;
-  --hero-star: #6E8478;
-  --hero-line: #23382C;
-  --hero-figure: #7FB196;
+  --hero-terrain: #D65F05;
+  --hero-wire: #FFB067;
+  --hero-star: #9A8F84;
+  --hero-glow: #F56F0D;
 
-  --shadow-card: 0 1px 2px rgba(0, 0, 0, .4), 0 12px 32px -16px rgba(0, 0, 0, .7);
+  --shadow-card: 0 1px 2px rgba(0, 0, 0, .5), 0 12px 32px -16px rgba(0, 0, 0, .8);
 }

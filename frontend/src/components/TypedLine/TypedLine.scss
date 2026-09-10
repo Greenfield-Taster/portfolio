@@ -13,7 +13,7 @@
   color: var(--ink);
   text-align: left;
 
-  &__prompt { color: var(--accent); }
+  &__prompt { color: var(--accent-ink); }
 
   &__text {
     // The line grows a character at a time; wrapping mid-word would reflow the
