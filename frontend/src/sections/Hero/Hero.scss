@@ -103,7 +103,10 @@
     width: 40px;
     height: 40px;
     border-radius: 50%;
-    color: var(--accent-ink);
+    // The cue lands on the orange landscape, not on the page background, so it
+    // takes the plain text colour: white on the dark theme, ink on the light
+    // one. The accent orange is invisible against ground of the same hue.
+    color: var(--ink);
     text-decoration: none;
 
     span { animation: hero-nudge 2.6s var(--ease) infinite; }
