@@ -7,7 +7,7 @@ import './HeroCanvas.scss'
 interface Scene {
   destroy(): void
   setPaused(paused: boolean): void
-  refreshAccent(): void
+  refreshTheme(): void
 }
 
 // Cheap synchronous stand-in for the IntersectionObserver's first callback,
@@ -96,14 +96,14 @@ export function HeroCanvas() {
     }
   }, [reduced])
 
-  // The scene reads `--accent` off the document element, so it has to be told
+  // The scene reads its colours off the document element, so it has to be told
   // when the theme changes. ThemeProvider stamps `data-theme` synchronously
-  // from its setters, so by the time this effect runs the resolved value is
-  // already the new one. On mount there is no scene yet (the import is
-  // deferred to idle) and this is a no-op — the scene reads the accent itself
+  // from its setters, so by the time this effect runs the resolved values are
+  // already the new ones. On mount there is no scene yet (the import is
+  // deferred to idle) and this is a no-op — the scene reads the tokens itself
   // at construction.
   useEffect(() => {
-    sceneRef.current?.refreshAccent()
+    sceneRef.current?.refreshTheme()
   }, [theme])
 
   return (
