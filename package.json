@@ -1,0 +1,26 @@
+{
+  "name": "portfolio",
+  "version": "1.0.0",
+  "description": "Персональний сайт-портфоліо: досвід, проєкти, навички UI/UX та фронтенд-розробки.",
+  "directories": {
+    "doc": "docs"
+  },
+  "scripts": {
+    "e2e": "playwright test"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Greenfield-Taster/portfolio.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs",
+  "bugs": {
+    "url": "https://github.com/Greenfield-Taster/portfolio/issues"
+  },
+  "homepage": "https://github.com/Greenfield-Taster/portfolio#readme",
+  "devDependencies": {
+    "@playwright/test": "^1.63.0"
+  }
+}
