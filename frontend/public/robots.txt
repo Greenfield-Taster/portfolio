@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://horbachova.com/sitemap.xml

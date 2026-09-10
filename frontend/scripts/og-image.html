@@ -1,0 +1,143 @@
+<!--
+  Source for frontend/public/og.png (1200×630 Open Graph / Twitter card image).
+
+  Uses the site's real tokens and fonts (loaded from node_modules, so this
+  only renders correctly from a checked-out `frontend/` with dependencies
+  installed) — it is the same visual language as the Hero section, not a
+  generic template.
+
+  IMPORTANT: this file must be served over HTTP, not opened as a file://
+  URL — automated browsers commonly block file:// navigation (Playwright's
+  browser_navigate does, in this project's sandbox), and this page's
+  @font-face url() paths are also resolved relative to whatever server root
+  is serving it.
+
+  To regenerate after a design change (verified working procedure):
+    1. From `frontend/`, run `npm run dev` (Vite serves the whole
+       `frontend/` tree, this file included — no separate server needed).
+       It listens on http://localhost:5173 by default.
+    2. Open http://localhost:5173/scripts/og-image.html in a browser
+       automated at EXACTLY these numbers:
+         - viewport: 1200 x 630
+         - device scale factor: 1 (headless Chromium's default — do not
+           let it default to a HiDPI factor, or the PNG will come out
+           larger than 1200x630)
+       With the Playwright MCP tools this is:
+         browser_navigate to http://localhost:5173/scripts/og-image.html
+         browser_resize to width 1200, height 630
+         browser_take_screenshot with scale: "css" (NOT "device" — "device"
+         multiplies by the device pixel ratio and will not produce 1200x630)
+       With a plain `playwright` script it is:
+         const page = await browser.newPage({
+           viewport: { width: 1200, height: 630 },
+           deviceScaleFactor: 1,
+         })
+         await page.goto('http://localhost:5173/scripts/og-image.html')
+         await page.screenshot({ path: 'public/og.png' })
+    3. Save the screenshot as frontend/public/og.png, overwriting the old one.
+    4. Confirm the PNG's IHDR chunk reports exactly 1200x630 (e.g.
+       `node -e "const b=require('fs').readFileSync('public/og.png');
+       console.log(b.readUInt32BE(16), b.readUInt32BE(20))"`) and that it
+       still reads well at thumbnail size.
+    5. Stop the dev server.
+
+  Drift risk: the name and role below are hard-coded, not read from
+  `profile` (this file deliberately has no build step / bundler). If
+  `profile.name` or `profile.role` in `src/data/profile.ts` ever changes,
+  this file and the generated `og.png` will silently go stale — update the
+  text below by hand and regenerate.
+-->
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<title>OG image source</title>
+<style>
+  @font-face {
+    font-family: 'Instrument Serif';
+    font-style: normal;
+    font-weight: 400;
+    src: url('../node_modules/@fontsource/instrument-serif/files/instrument-serif-latin-400-normal.woff2') format('woff2');
+  }
+  @font-face {
+    font-family: 'Instrument Serif';
+    font-style: italic;
+    font-weight: 400;
+    src: url('../node_modules/@fontsource/instrument-serif/files/instrument-serif-latin-400-italic.woff2') format('woff2');
+  }
+  @font-face {
+    font-family: 'JetBrains Mono';
+    font-style: normal;
+    font-weight: 500;
+    src: url('../node_modules/@fontsource/jetbrains-mono/files/jetbrains-mono-latin-500-normal.woff2') format('woff2');
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  html, body {
+    width: 1200px;
+    height: 630px;
+    overflow: hidden;
+  }
+
+  .card {
+    width: 1200px;
+    height: 630px;
+    background: #F3F5F2; /* --bg, light theme "paper" ground */
+    color: #131A16;      /* --ink */
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    padding: 96px 100px;
+  }
+
+  .eyebrow {
+    font-family: 'JetBrains Mono', monospace;
+    font-weight: 500;
+    font-size: 20px;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: #5D6B62; /* --muted */
+    margin-bottom: 28px;
+  }
+
+  .name {
+    font-family: 'Instrument Serif', Georgia, serif;
+    font-weight: 400;
+    font-size: 116px;
+    line-height: 1.02;
+    letter-spacing: -0.02em;
+  }
+
+  .name em {
+    font-style: italic;
+    color: #14563C; /* --accent */
+  }
+
+  .rule {
+    width: 88px;
+    height: 3px;
+    background: #14563C;
+    margin-top: 44px;
+    margin-bottom: 44px;
+  }
+
+  .domain {
+    font-family: 'JetBrains Mono', monospace;
+    font-weight: 500;
+    font-size: 20px;
+    letter-spacing: 0.04em;
+    color: #5D6B62;
+  }
+</style>
+</head>
+<body>
+  <div class="card">
+    <p class="eyebrow">Full-stack developer</p>
+    <h1 class="name">Anastasiia <em>Horbachova</em></h1>
+    <div class="rule"></div>
+    <p class="domain">horbachova.com</p>
+  </div>
+</body>
+</html>
