@@ -46,7 +46,7 @@ npx --yes npm@12 install
 
 ```powershell
 cd frontend
-npm test              # модульні (171 тест)
+npm test              # модульні (161 тест)
 npm run lint
 
 npm run e2e           # з кореня: наскрізні, Playwright (9 тестів)
