@@ -1,5 +1,8 @@
+// Fixed rather than absolute: the scene is the backdrop for the whole page,
+// not decoration inside the hero. It stays still while the page scrolls over
+// it, and the sections above are scrims that let it through.
 .hero-canvas {
-  position: absolute;
+  position: fixed;
   inset: 0;
   width: 100%;
   height: 100%;

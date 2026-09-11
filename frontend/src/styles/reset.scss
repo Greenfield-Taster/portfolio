@@ -27,6 +27,11 @@ body {
   -webkit-font-smoothing: antialiased;
 }
 
+// The scene canvas is fixed at z-index 0, and a positioned element paints
+// above ordinary block content however late that content comes in the DOM.
+// Positioning the page's two top-level blocks puts them back on top of it.
+main, .footer { position: relative; z-index: 1; }
+
 h1, h2, h3, p, figure, ul, ol { margin: 0; }
 ul, ol { padding: 0; list-style: none; }
 img, svg, canvas { display: block; max-width: 100%; }

@@ -1,5 +1,7 @@
 .section {
   padding-block: var(--section-top) var(--space-9);
+  // Sheer, so the landscape fixed behind the page keeps going underneath.
+  background: color-mix(in srgb, var(--bg) var(--scrim), transparent);
 
   &__inner {
     max-width: var(--content-max);

@@ -1,6 +1,7 @@
 .footer {
   border-top: 1px solid var(--line);
   padding-block: var(--space-7);
+  background: color-mix(in srgb, var(--bg) var(--scrim), transparent);
 
   &__inner {
     max-width: var(--content-max);

@@ -1,5 +1,4 @@
 import { Button } from '../../components/Button/Button'
-import { HeroCanvas } from '../../components/HeroCanvas/HeroCanvas'
 import { RotatingRole } from '../../components/RotatingRole/RotatingRole'
 import { StatTile } from '../../components/StatTile/StatTile'
 import { TypedLine } from '../../components/TypedLine/TypedLine'
@@ -23,8 +22,6 @@ export function Hero() {
 
   return (
     <section className="hero" id="top">
-      <HeroCanvas />
-
       <div className="hero__inner">
         <p className="hero__status">
           <span className="hero__pulse" aria-hidden="true" />
