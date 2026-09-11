@@ -3,16 +3,12 @@ import { ThemeToggle } from '../ThemeToggle/ThemeToggle'
 import { Button } from '../Button/Button'
 import { useActiveSection } from '../../hooks/useActiveSection'
 import { profile } from '../../data/profile'
+import { SECTIONS } from '../../data/sections'
 import './Nav.scss'
 
-export const NAV_ITEMS = [
-  { id: 'top', label: 'Home' },
-  { id: 'about', label: 'About' },
-  { id: 'experience', label: 'Experience' },
-  { id: 'work', label: 'Work' },
-  { id: 'stack', label: 'Stack' },
-  { id: 'contact', label: 'Contact' },
-] as const
+// The navigation is the page's running order, so it reads the same list the
+// section heads number themselves from rather than keeping a copy of it.
+export const NAV_ITEMS = SECTIONS
 
 // Hoisted so the identity stays stable across renders: useActiveSection keeps
 // it in an effect dependency list, and a fresh array every render would tear

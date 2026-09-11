@@ -1,3 +1,8 @@
+// The width of the slash mark and the gap after it. The lede is indented by
+// exactly this, so it starts on the same line as the title rather than under
+// the mark.
+$mark-width: 12px;
+
 .section {
   padding-block: var(--section-top) var(--space-9);
   // Sheer, so the landscape fixed behind the page keeps going underneath.
@@ -18,10 +23,46 @@
     gap: var(--space-3);
   }
 
+  // Wider tracking than the page's other labels, and in the accent rather
+  // than the muted ink: this is the line that announces a new section, so it
+  // should read as a marker rather than as another caption.
+  &__eyebrow {
+    color: var(--accent-ink);
+    letter-spacing: .4em;
+  }
+
+  &__number { font-variant-numeric: tabular-nums; }
+
+  &__sep {
+    // Dimmer than the two things it divides, so it separates without counting
+    // as a third element in the line.
+    margin-inline: .35em;
+    opacity: .5;
+  }
+
+  &__line {
+    display: flex;
+    align-items: center;
+    gap: var(--space-4);
+  }
+
+  // A leaning bar, cut from a rectangle rather than set as a '/' character,
+  // so its weight and slant stay put whatever the display face does.
+  &__mark {
+    flex: none;
+    width: $mark-width;
+    height: clamp(2rem, 4.5vw, 3rem);
+    background: var(--accent);
+    clip-path: polygon(60% 0, 100% 0, 40% 100%, 0 100%);
+  }
+
   &__title {
     font-size: var(--step-h2);
     margin: 0;
   }
 
-  &__lede { color: var(--muted); }
+  &__lede {
+    color: var(--muted);
+    padding-inline-start: calc(#{$mark-width} + var(--space-4));
+  }
 }
