@@ -43,14 +43,14 @@ describe('Hero', () => {
     ).toBeInTheDocument()
   })
 
-  it('shows four stat tiles', () => {
+  it('shows five stat tiles', () => {
     render(<Hero />)
-    expect(screen.getAllByTestId('stat-tile')).toHaveLength(4)
+    expect(screen.getAllByTestId('stat-tile')).toHaveLength(5)
   })
 
   it('derives the project count from the data, not a literal', () => {
     render(<Hero />)
-    expect(screen.getByText(String(projects.length))).toBeInTheDocument()
+    expect(screen.getByText(`${projects.length}+`)).toBeInTheDocument()
   })
 
   it('offers the CV as a download', () => {

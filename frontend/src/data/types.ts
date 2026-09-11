@@ -57,5 +57,6 @@ export interface Profile {
   languages: { name: string; level: string }[]
   years: string
   companies: number
+  clients: number
   npmPackages: number
 }

@@ -7,10 +7,13 @@ import { projectCount } from '../../data/select'
 import './Hero.scss'
 
 export function Hero() {
+  // The project count is the floor, not the total: it counts what this site
+  // shows, and the plus stands for the work that is not on it.
   const stats = [
     { value: profile.years, label: 'Years' },
-    { value: String(profile.companies), label: 'Companies' },
-    { value: String(projectCount()), label: 'Projects' },
+    { value: String(profile.companies), label: 'Company' },
+    { value: String(profile.clients), label: 'Clients' },
+    { value: `${projectCount()}+`, label: 'Projects' },
     { value: String(profile.npmPackages), label: 'npm packages' },
   ]
 

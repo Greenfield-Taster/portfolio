@@ -31,6 +31,7 @@ export const profile: Profile = {
     { name: 'Ukrainian', level: 'Native' },
   ],
   years: '3+',
-  companies: 6,
+  companies: 1,
+  clients: 6,
   npmPackages: 2,
 }
