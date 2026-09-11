@@ -1,7 +1,7 @@
 .about {
   display: grid;
   // The card holds a fixed width and the text runs beside it.
-  grid-template-columns: minmax(0, 340px) minmax(0, 1fr);
+  grid-template-columns: minmax(0, 420px) minmax(0, 1fr);
   gap: var(--space-7);
   align-items: start;
 
@@ -10,70 +10,22 @@
   // grew past the page and the section's own overflow quietly clipped it.
   @media (max-width: 768px) { grid-template-columns: minmax(0, 1fr); }
 
-  // ── Profile card ─────────────────────────────────────────────────────────
-
-  &__card {
-    display: flex;
-    flex-direction: column;
-    align-items: flex-start;
-    gap: var(--space-4);
-    padding: var(--space-5);
-    border: 1px solid var(--line);
-    border-radius: var(--radius-lg);
-    background: var(--surface);
-    box-shadow: var(--shadow-card);
-  }
-
-  &__name {
-    display: flex;
-    flex-direction: column;
-    margin: 0;
-    font-size: clamp(2.25rem, 4.4vw, 3rem);
-    line-height: 1.02;
-  }
-
-  // The surname carries the accent on its own: the name is one phrase, and
-  // colouring a word inside a line would break it into two.
-  &__surname { color: var(--accent-ink); }
-
-  &__card-facts {
-    width: 100%;
-    margin: 0;
-    padding-top: var(--space-4);
-    border-top: 1px solid var(--line);
-    display: flex;
-    flex-direction: column;
-    gap: var(--space-4);
-  }
-
-  &__card-fact {
-    display: grid;
-    // A fixed label column, so the two values start on the same line however
-    // long the labels get.
-    grid-template-columns: 64px minmax(0, 1fr);
-    gap: var(--space-3);
-    align-items: baseline;
-
-    dt {
-      font-family: var(--font-mono);
-      font-size: var(--step-label);
-      letter-spacing: .14em;
-      text-transform: uppercase;
-      color: var(--muted);
-    }
-
-    dd {
-      margin: 0;
-      display: flex;
-      flex-direction: column;
-      gap: 2px;
-      font-size: var(--step-small);
-    }
-
-    dd span { color: var(--muted); }
-  }
-
   // ── Text column ──────────────────────────────────────────────────────────
+
+  &__facts {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-2);
+  }
+
+  &__fact {
+    padding: var(--space-2) var(--space-4);
+    border: 1px solid color-mix(in srgb, var(--accent) 22%, transparent);
+    border-radius: var(--radius-pill);
+    background: color-mix(in srgb, var(--accent) 7%, transparent);
+    font-size: var(--step-small);
+    color: var(--muted);
+  }
 
   &__body {
     // Lets the column shrink under the code block rather than being held

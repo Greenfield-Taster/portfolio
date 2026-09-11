@@ -1,47 +1,29 @@
 import { Section } from '../../components/Section/Section'
+import { BusinessCard } from '../../components/BusinessCard/BusinessCard'
 import { ToolMarquee } from '../../components/ToolMarquee/ToolMarquee'
 import { profile } from '../../data/profile'
 import './About.scss'
 
 export function About() {
+  // Quick facts, in the order a recruiter scans them. The card beside these
+  // carries who she is and how to reach her; none of it is repeated here.
+  const facts = [
+    profile.workAuthorization,
+    ...profile.languages.map((language) => `${language.name} — ${language.level}`),
+  ]
+
   return (
     <Section id="about" eyebrow="About" title="About me" lede={profile.lede}>
       <div className="about" data-reveal>
-        <article className="about__card">
-          <p className="about__name u-display">
-            <span>Anastasiia</span>
-            <span className="about__surname">Horbachova</span>
-          </p>
-
-          <dl className="about__card-facts">
-            <div className="about__card-fact">
-              <dt>Role</dt>
-              <dd>
-                <strong>{profile.role}</strong>
-              </dd>
-            </div>
-
-            <div className="about__card-fact">
-              <dt>Works</dt>
-              <dd>
-                <span>{profile.workAuthorization}</span>
-              </dd>
-            </div>
-
-            <div className="about__card-fact">
-              {/* 'Speaks' rather than 'Languages': it says the same thing in
-                  the width the label column actually has. */}
-              <dt>Speaks</dt>
-              <dd>
-                {profile.languages.map((language) => (
-                  <span key={language.name}>{language.name} — {language.level}</span>
-                ))}
-              </dd>
-            </div>
-          </dl>
-        </article>
+        <BusinessCard />
 
         <div className="about__body">
+          <ul className="about__facts">
+            {facts.map((fact) => (
+              <li key={fact} className="about__fact">{fact}</li>
+            ))}
+          </ul>
+
           <dl className="about__edu">
             <dt>Education</dt>
             <dd>
