@@ -9,6 +9,9 @@
   --radius-pill: 999px;
 
   --content-max: 1180px;
+  // Anchor jumps land a section's top edge flush with the viewport, so this
+  // padding is what clears the fixed nav pill and gives the heading air.
+  --section-top: clamp(7.5rem, 12vw, 10rem);
 
   --font-display: 'Instrument Serif', 'Instrument Serif Fallback', Georgia, 'Times New Roman', serif;
   // 'Instrument Sans Variable' is the family name @fontsource-variable actually

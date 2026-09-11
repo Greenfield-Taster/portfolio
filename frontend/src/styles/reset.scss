@@ -5,9 +5,10 @@
 // themes.scss uses for every colour token.
 :root {
   color-scheme: light;
-  // Anchor jumps have to clear the nav pill, which is fixed and so contributes
-  // no height of its own for the browser to scroll past.
-  scroll-padding-top: 104px;
+  // No scroll padding on purpose: an anchor jump puts the section's top edge
+  // flush with the top of the screen. The nav pill is cleared by the section's
+  // own `--section-top` padding instead, so nothing is hidden behind it.
+  scroll-padding-top: 0;
 }
 
 @media (prefers-color-scheme: dark) {

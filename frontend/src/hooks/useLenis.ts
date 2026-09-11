@@ -8,15 +8,14 @@ export function useLenis(): void {
   useEffect(() => {
     if (reduced) return
 
-    // `anchors` puts in-page links through the same smooth scroll as the
-    // wheel. Without it the browser jumps straight to the target, and the
-    // navigation's current-section mark snaps to the destination instead of
-    // travelling across the sections on the way. The offset clears the fixed
-    // nav pill, matching `scroll-padding-top` in the reset.
+    // In-page links still go through Lenis so its internal scroll position
+    // stays in step with the page, but `immediate` lands them in a single
+    // frame. Picking a section from the nav is navigation, not a journey: the
+    // reader asked to be somewhere else, not to watch the way there.
     const lenis = new Lenis({
       duration: 1.1,
       smoothWheel: true,
-      anchors: { offset: -104, duration: 1.6 },
+      anchors: { immediate: true },
     })
     let frame = 0
 

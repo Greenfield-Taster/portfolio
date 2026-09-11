@@ -128,22 +128,20 @@ test('the header downloads the CV without leaving the page', async ({ page }) =>
   await expect(page.getByRole('heading', { level: 1 })).toBeVisible()
 })
 
-test('jumping to a far section travels through the ones in between', async ({ page }) => {
+test('picking a section from the header goes straight there', async ({ page }) => {
   await page.setViewportSize({ width: 1440, height: 900 })
   await page.goto('/')
 
   const nav = page.getByRole('navigation')
   await nav.getByRole('link', { name: 'Contact' }).click()
 
-  // Sample the marked link while the page is on its way. A jump that lands
-  // instantly only ever shows Contact; a scroll that travels shows the
-  // sections it passes, which is the whole point of the smooth scroll.
-  // Sampling a fixed number of frames raced the scroll itself: the window
-  // ended around the point the mark reached Work, so the test passed or failed
-  // on timing. Watch until the journey is over instead.
+  // Sample the marked link over the frames a travelling scroll would have
+  // spent crossing the page. Home is the mark the page started on and may
+  // still be committed for a frame; what must never appear is a section in
+  // between, because that only happens when the scroll animates through them.
   const seen = await page.evaluate(async () => {
     const marks = new Set<string>()
-    for (let i = 0; i < 300 && !marks.has('Contact'); i += 1) {
+    for (let i = 0; i < 40; i += 1) {
       const current = document.querySelector('nav a[aria-current]')
       if (current?.textContent) marks.add(current.textContent)
       await new Promise((resolve) => requestAnimationFrame(resolve))
@@ -151,11 +149,11 @@ test('jumping to a far section travels through the ones in between', async ({ pa
     return [...marks]
   })
 
-  // Not any one section by name: the scroll is fastest in the middle, and a
-  // short section there can pass between two frames. What matters is that the
-  // mark visits the sections on the way at all — a jump reports only Contact.
-  const passed = seen.filter((label) => label !== 'Contact')
-  expect(passed.length).toBeGreaterThanOrEqual(2)
-
+  expect(seen.filter((label) => label !== 'Contact' && label !== 'Home')).toEqual([])
   await expect(nav.getByRole('link', { name: 'Contact' })).toHaveAttribute('aria-current', 'true')
+
+  // The section's own top edge sits on the top of the screen, rather than
+  // below a scroll-padding gap that would leave the previous section showing.
+  const top = await page.locator('#contact').evaluate((el) => el.getBoundingClientRect().top)
+  expect(Math.abs(top)).toBeLessThanOrEqual(2)
 })

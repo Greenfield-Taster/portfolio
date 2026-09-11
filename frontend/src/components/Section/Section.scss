@@ -1,5 +1,5 @@
 .section {
-  padding-block: var(--space-9);
+  padding-block: var(--section-top) var(--space-9);
 
   &__inner {
     max-width: var(--content-max);
