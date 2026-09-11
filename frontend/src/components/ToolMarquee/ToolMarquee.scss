@@ -1,0 +1,58 @@
+.marquee {
+  overflow: hidden;
+  // Fades the strip out at both ends instead of cutting it, so items arrive
+  // and leave rather than appearing at a hard edge.
+  mask-image: linear-gradient(to right, transparent, #000 8%, #000 92%, transparent);
+
+  &__track {
+    display: flex;
+    width: max-content;
+    // One row's width, which is half the track: at -50% the second row sits
+    // exactly where the first one started, so the reset is invisible.
+    animation: marquee-drift 46s linear infinite;
+
+    &:hover { animation-play-state: paused; }
+  }
+
+  &__row {
+    display: flex;
+    flex-shrink: 0;
+    align-items: center;
+    gap: var(--space-6);
+    padding-right: var(--space-6);
+  }
+
+  // Still version, for reduced motion: the same list, wrapped and at rest.
+  & > .marquee__row {
+    flex-wrap: wrap;
+    row-gap: var(--space-4);
+    padding-right: 0;
+  }
+
+  &__item {
+    display: flex;
+    align-items: center;
+    gap: var(--space-2);
+    white-space: nowrap;
+    font-family: var(--font-mono);
+    font-size: var(--step-label);
+    letter-spacing: .1em;
+    text-transform: uppercase;
+    color: var(--muted);
+  }
+
+  // Monochrome on purpose. Eighteen brand colours at once would fight the
+  // page's own palette and read as a sponsor wall; drawn in the page's ink
+  // they read as one set of tools.
+  &__logo {
+    width: 22px;
+    height: 22px;
+    flex: none;
+    color: var(--accent-ink);
+  }
+}
+
+@keyframes marquee-drift {
+  from { transform: translateX(0); }
+  to { transform: translateX(-50%); }
+}

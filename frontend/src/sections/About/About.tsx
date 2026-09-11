@@ -1,6 +1,5 @@
 import { Section } from '../../components/Section/Section'
-import { Badge } from '../../components/Badge/Badge'
-import { Button } from '../../components/Button/Button'
+import { ToolMarquee } from '../../components/ToolMarquee/ToolMarquee'
 import { profile } from '../../data/profile'
 import './About.scss'
 
@@ -9,8 +8,6 @@ export function About() {
     <Section id="about" eyebrow="About" title="About me" lede={profile.lede}>
       <div className="about" data-reveal>
         <article className="about__card">
-          <Badge>Profile</Badge>
-
           <p className="about__name u-display">
             <span>Anastasiia</span>
             <span className="about__surname">Horbachova</span>
@@ -25,9 +22,9 @@ export function About() {
             </div>
 
             <div className="about__card-fact">
-              <dt>Based</dt>
+              <dt>Works</dt>
               <dd>
-                <span>Europe · {profile.workAuthorization}</span>
+                <span>{profile.workAuthorization}</span>
               </dd>
             </div>
 
@@ -42,16 +39,6 @@ export function About() {
               </dd>
             </div>
           </dl>
-
-          <footer className="about__card-foot">
-            <p className="about__open">
-              <span className="about__open-dot" aria-hidden="true" />
-              {profile.availability}
-            </p>
-            <Button variant="ghost" href={profile.cvPath} download>
-              Resume
-            </Button>
-          </footer>
         </article>
 
         <div className="about__body">
@@ -71,17 +58,21 @@ export function About() {
           </dl>
 
           {/* Her own summary of the work, in the one notation a developer
-              reading this page already knows how to skim. */}
+              reading this page already knows how to skim. Every key here is
+              something the card beside it does not already say. */}
           <pre className="about__code" aria-label="Summary of the work, as code">
             <code>
               <span className="about__code-key">const</span> anastasiia = {'{'}{'\n'}
-              {'  '}stack: [<span className="about__code-str">&apos;React&apos;</span>, <span className="about__code-str">&apos;Node.js&apos;</span>, <span className="about__code-str">&apos;PostgreSQL&apos;</span>],{'\n'}
-              {'  '}ships: <span className="about__code-str">&apos;requirements to deployment&apos;</span>,{'\n'}
               {'  '}available: <span className="about__code-bool">true</span>,{'\n'}
+              {'  '}location: <span className="about__code-str">&apos;Europe&apos;</span>,{'\n'}
+              {'  '}focus: <span className="about__code-str">&apos;React &amp; Node&apos;</span>,{'\n'}
+              {'  '}ships: <span className="about__code-str">&apos;requirements to deployment&apos;</span>,{'\n'}
               {'}'}
             </code>
           </pre>
         </div>
+
+        <ToolMarquee />
       </div>
     </Section>
   )

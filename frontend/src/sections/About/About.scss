@@ -73,32 +73,6 @@
     dd span { color: var(--muted); }
   }
 
-  &__card-foot {
-    width: 100%;
-    padding-top: var(--space-4);
-    border-top: 1px solid var(--line);
-    display: flex;
-    flex-wrap: wrap;
-    align-items: center;
-    justify-content: space-between;
-    gap: var(--space-3);
-  }
-
-  &__open {
-    display: flex;
-    align-items: center;
-    gap: var(--space-2);
-    font-size: var(--step-small);
-    color: var(--muted);
-  }
-
-  &__open-dot {
-    width: 7px;
-    height: 7px;
-    border-radius: 50%;
-    background: var(--ok);
-  }
-
   // ── Text column ──────────────────────────────────────────────────────────
 
   &__body {
@@ -153,4 +127,12 @@
   &__code-key { color: var(--accent-ink); }
   &__code-str { color: var(--ok); }
   &__code-bool { color: var(--accent-ink); font-weight: 600; }
+
+  // The tools strip runs the full width under both columns.
+  .marquee {
+    grid-column: 1 / -1;
+    margin-top: var(--space-3);
+    padding-top: var(--space-5);
+    border-top: 1px solid var(--line);
+  }
 }

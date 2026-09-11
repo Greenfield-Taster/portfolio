@@ -1,13 +1,13 @@
-import { render, screen } from '@testing-library/react'
-import userEvent from '@testing-library/user-event'
+import { render, screen, within } from '@testing-library/react'
 import { Experience } from './Experience'
 import { roles } from '../../data/experience'
+import { rolesNewestFirst } from '../../data/select'
 
 describe('Experience', () => {
   it('lists every role', () => {
     render(<Experience />)
     for (const role of roles) {
-      expect(screen.getByText(role.company)).toBeInTheDocument()
+      expect(screen.getByText(new RegExp(role.company))).toBeInTheDocument()
     }
   })
 
@@ -17,67 +17,58 @@ describe('Experience', () => {
     expect(items[0]).toHaveTextContent('Kryla Nadii')
   })
 
+  it('runs newest to oldest', () => {
+    render(<Experience />)
+    const rendered = screen.getAllByTestId('role-row')
+    const expected = rolesNewestFirst()
+
+    expect(rendered).toHaveLength(expected.length)
+    rendered.forEach((row, index) => {
+      expect(row).toHaveTextContent(expected[index].company)
+    })
+  })
+
   it('marks an ongoing role as Present', () => {
     render(<Experience />)
     expect(screen.getByText(/Jul 2026 — Present/)).toBeInTheDocument()
   })
 
-  it('keeps details collapsed until asked', () => {
+  it('shows every highlight of every role without asking the reader to open anything', () => {
     render(<Experience />)
-    expect(screen.getByRole('button', { name: /Kryla Nadii/ })).toBeInTheDocument()
-    expect(
-      screen.queryByText(/430\+ token SCSS design system/)
-    ).not.toBeVisible()
+
+    // The section used to hide the detail behind a toggle. Nothing may be
+    // collapsed now, so a reader — or a search engine — gets all of it.
+    const rows = screen.getAllByTestId('role-row')
+    rolesNewestFirst().forEach((role, index) => {
+      const row = rows[index]
+      expect(within(row).getByText(role.summary)).toBeVisible()
+      for (const highlight of role.highlights) {
+        expect(within(row).getByText(highlight)).toBeVisible()
+      }
+    })
   })
 
-  it('reveals the highlights when a role is opened', async () => {
-    const user = userEvent.setup()
+  it('names the stack each role was built with', () => {
     render(<Experience />)
-    await user.click(screen.getByRole('button', { name: /Kryla Nadii/ }))
-    expect(
-      screen.getByText(/430\+ token SCSS design system/)
-    ).toBeInTheDocument()
+    const rows = screen.getAllByTestId('role-row')
+
+    rolesNewestFirst().forEach((role, index) => {
+      for (const item of role.stack) {
+        expect(within(rows[index]).getByText(item)).toBeInTheDocument()
+      }
+    })
   })
 
-  it('exposes the open state to assistive technology', async () => {
-    const user = userEvent.setup()
+  it('heads each card with the job title, not the company', () => {
     render(<Experience />)
-    const trigger = screen.getByRole('button', { name: /Kryla Nadii/ })
-    expect(trigger).toHaveAttribute('aria-expanded', 'false')
-    await user.click(trigger)
-    expect(trigger).toHaveAttribute('aria-expanded', 'true')
-  })
+    const rows = screen.getAllByTestId('role-row')
 
-  it('closes an open role when its trigger is clicked again', async () => {
-    const user = userEvent.setup()
-    render(<Experience />)
-    const trigger = screen.getByRole('button', { name: /Kryla Nadii/ })
-
-    await user.click(trigger)
-    expect(trigger).toHaveAttribute('aria-expanded', 'true')
-
-    await user.click(trigger)
-    expect(trigger).toHaveAttribute('aria-expanded', 'false')
-    expect(
-      screen.getByText(/430\+ token SCSS design system/)
-    ).not.toBeVisible()
-  })
-
-  it('closes the previously open role when a different role is opened', async () => {
-    const user = userEvent.setup()
-    render(<Experience />)
-    const kryla = screen.getByRole('button', { name: /Kryla Nadii/ })
-    const justSleep = screen.getByRole('button', { name: /Just Sleep/ })
-
-    await user.click(kryla)
-    expect(kryla).toHaveAttribute('aria-expanded', 'true')
-
-    await user.click(justSleep)
-    expect(justSleep).toHaveAttribute('aria-expanded', 'true')
-    expect(kryla).toHaveAttribute('aria-expanded', 'false')
-    expect(
-      screen.getByText(/430\+ token SCSS design system/)
-    ).not.toBeVisible()
-    expect(screen.getByText(/Phone \+ OTP auth via TurboSMS/)).toBeVisible()
+    // Scoped per row on purpose: two roles share the title 'Frontend
+    // Developer', so a page-wide query would match both.
+    rolesNewestFirst().forEach((role, index) => {
+      expect(
+        within(rows[index]).getByRole('heading', { level: 3, name: role.title })
+      ).toBeInTheDocument()
+    })
   })
 })

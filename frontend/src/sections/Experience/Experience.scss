@@ -1,44 +1,152 @@
+// Where the line sits, and how far the cards clear it. One number, because
+// the rail, the markers and the card indent all have to agree.
+$rail-x: 7px;
+$rail-gap: 44px;
+
 .xp {
-  border-top: 1px solid var(--line);
+  display: grid;
+  grid-template-columns: minmax(0, 240px) minmax(0, 1fr);
+  gap: var(--space-7);
+  align-items: start;
 
-  &__row { border-bottom: 1px solid var(--line); }
+  @media (max-width: 900px) { grid-template-columns: minmax(0, 1fr); }
 
-  &__trigger {
-    width: 100%;
-    display: grid;
-    grid-template-columns: minmax(0, 1.1fr) minmax(0, 1.2fr) minmax(0, 1fr) auto auto;
-    align-items: baseline;
-    gap: var(--space-4);
-    padding-block: var(--space-5);
-    background: none;
-    border: 0;
-    text-align: left;
-    cursor: pointer;
+  // Stays with the reader while the roles scroll past it, which is the whole
+  // point of the two columns: the heading keeps its place in view instead of
+  // scrolling away from the list it belongs to.
+  &__intro {
+    position: sticky;
+    // Clears the fixed nav pill plus a little air.
+    top: calc(var(--space-4) + 76px);
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: var(--space-3);
 
-    @media (max-width: 1024px) {
-      grid-template-columns: minmax(0, 1fr) auto;
-      row-gap: var(--space-2);
+    @media (max-width: 900px) { position: static; }
+  }
+
+  &__count {
+    margin: 0;
+    font-size: clamp(2rem, 3.4vw, 2.75rem);
+    line-height: 1;
+  }
+
+  &__span {
+    margin: 0;
+    font-family: var(--font-mono);
+    font-size: var(--step-label);
+    letter-spacing: .14em;
+    text-transform: uppercase;
+    color: var(--muted);
+  }
+
+  // ── Timeline ─────────────────────────────────────────────────────────────
+
+  &__timeline {
+    position: relative;
+    min-width: 0;
+    // The hook writes over this every frame; the value here is what the line
+    // shows before JavaScript has run, and where it stays if it never does.
+    --timeline-progress: 0;
+  }
+
+  &__rail {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: $rail-x;
+    width: 2px;
+    border-radius: var(--radius-pill);
+    background: var(--line);
+  }
+
+  // Drawn from the top down by scaling rather than by changing height: a
+  // transform is composited, so the line follows the scroll without asking
+  // for layout on every frame.
+  &__rail-fill {
+    position: absolute;
+    inset: 0;
+    transform-origin: top;
+    transform: scaleY(var(--timeline-progress));
+    border-radius: inherit;
+    background: var(--accent);
+  }
+
+  &__list {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-5);
+  }
+
+  &__row {
+    position: relative;
+    padding-left: $rail-gap;
+    min-width: 0;
+  }
+
+  // Sits on the rail, and fills in as the drawn line reaches it.
+  &__dot {
+    position: absolute;
+    left: 0;
+    // Lines up with the middle of the card's first line of text.
+    top: calc(var(--space-5) + .6em);
+    width: 16px;
+    height: 16px;
+    border-radius: 50%;
+    border: 2px solid var(--line);
+    background: var(--bg);
+    transition: border-color var(--dur) var(--ease), background var(--dur) var(--ease);
+
+    &[data-reached] {
+      border-color: var(--accent);
+      background: color-mix(in srgb, var(--accent) 28%, var(--bg));
     }
   }
 
-  &__company { font-size: var(--step-h3); font-weight: 600; letter-spacing: -.015em; }
-  &__context, &__title { color: var(--muted); font-size: var(--step-small); }
-
-  &__period {
-    font-family: var(--font-mono);
-    font-size: var(--step-label);
-    color: var(--muted);
-    white-space: nowrap;
-  }
-
-  &__chev { color: var(--accent-ink); font-size: var(--step-h3); line-height: 1; }
-
-  &__detail {
+  &__card {
+    display: flex;
     flex-direction: column;
     gap: var(--space-4);
-    padding-bottom: var(--space-6);
+    padding: var(--space-5);
+    border: 1px solid var(--line);
+    border-radius: var(--radius-lg);
+    background: var(--surface);
+    box-shadow: var(--shadow-card);
+  }
 
-    &:not([hidden]) { display: flex; }
+  &__head {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: var(--space-3);
+  }
+
+  &__title {
+    margin: 0;
+    font-size: var(--step-h3);
+    letter-spacing: -.015em;
+  }
+
+  &__company {
+    margin-top: var(--space-1);
+    color: var(--accent-ink);
+    font-weight: 500;
+
+    span { color: var(--muted); font-weight: 400; }
+  }
+
+  &__period {
+    flex: none;
+    font-family: var(--font-mono);
+    font-size: var(--step-label);
+    letter-spacing: .08em;
+    color: var(--muted);
+    white-space: nowrap;
+    padding: var(--space-1) var(--space-3);
+    border: 1px solid var(--line);
+    border-radius: var(--radius-pill);
   }
 
   &__summary { color: var(--ink); }
@@ -64,6 +172,16 @@
       height: 1px;
       background: var(--accent);
     }
+  }
+
+  &__foot {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--space-3);
+    padding-top: var(--space-4);
+    border-top: 1px solid var(--line);
   }
 
   &__stack {

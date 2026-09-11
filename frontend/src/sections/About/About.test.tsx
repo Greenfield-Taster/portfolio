@@ -37,13 +37,19 @@ describe('About', () => {
     expect(screen.getByText(profile.role)).toBeInTheDocument()
   })
 
-  it('offers the CV from the profile card', () => {
-    render(<About />)
-    expect(screen.getByRole('link', { name: /resume/i })).toHaveAttribute('href', profile.cvPath)
-  })
-
   it('says where she works without pinning her to a street address', () => {
     render(<About />)
     expect(screen.getByText(/Europe/)).toBeInTheDocument()
+  })
+
+  it('keeps the card and the code block from saying the same thing twice', () => {
+    render(<About />)
+
+    // The card carries who she is; the block carries what she is doing. A key
+    // drifting back into both is the thing this guards against.
+    const card = screen.getByText(profile.role).closest('article') as HTMLElement
+    for (const repeated of [/Europe/, /available/i]) {
+      expect(card.textContent).not.toMatch(repeated)
+    }
   })
 })

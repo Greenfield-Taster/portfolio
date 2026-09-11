@@ -1,22 +1,72 @@
 .stack {
   display: grid;
-  grid-template-columns: repeat(2, minmax(0, 1fr));
-  gap: var(--space-6);
-
-  @media (max-width: 768px) { grid-template-columns: 1fr; }
+  // Cards take the width they can get rather than a fixed column count, so
+  // the grid reflows from three across to one without a breakpoint per step.
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: var(--space-5);
+  // Groups hold different numbers of tools; letting each card end where its
+  // content ends reads better than stretching them all to the tallest.
+  align-items: start;
 
   &__group {
+    position: relative;
+    overflow: hidden;
     display: flex;
     flex-direction: column;
     gap: var(--space-4);
-    padding-top: var(--space-4);
-    border-top: 1px solid var(--line);
+    padding: var(--space-5);
+    border: 1px solid var(--line);
+    border-radius: var(--radius-lg);
+    background: var(--surface);
+    box-shadow: var(--shadow-card);
+  }
+
+  // A single accent edge along the top of every card. The reference gives
+  // each card its own hue; this palette has one accent, and five invented
+  // colours would say something about the groups that is not true.
+  &__group::before {
+    content: '';
+    position: absolute;
+    inset: 0 0 auto;
+    height: 2px;
+    background: linear-gradient(to right, var(--accent), transparent 70%);
+  }
+
+  // The card's place in the run, set large and faint in the far corner —
+  // the same device the section heads use, at the scale a card can carry.
+  &__number {
+    position: absolute;
+    right: var(--space-4);
+    bottom: var(--space-2);
+    font-family: var(--font-body);
+    font-weight: 700;
+    font-size: 3.5rem;
+    line-height: 1;
+    color: var(--ghost);
+  }
+
+  &__head {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: var(--space-3);
   }
 
   &__title {
+    margin: 0;
     font-size: var(--step-h3);
     font-weight: 600;
     letter-spacing: -.015em;
+  }
+
+  &__count {
+    margin: 0;
+    font-family: var(--font-mono);
+    font-size: var(--step-label);
+    letter-spacing: .14em;
+    text-transform: uppercase;
+    color: var(--muted);
   }
 
   &__items {
@@ -25,11 +75,15 @@
     gap: var(--space-2);
 
     li {
+      display: flex;
+      align-items: center;
+      gap: var(--space-2);
       font-family: var(--font-mono);
       font-size: var(--step-label);
       padding: var(--space-2) var(--space-3);
       border: 1px solid var(--line);
-      border-radius: var(--radius-sm);
+      border-radius: var(--radius-pill);
+      background: var(--bg);
       color: var(--muted);
       // Safety net: nothing today is long enough to need this, but a future
       // technology name with no natural break point must wrap, not force
@@ -39,5 +93,12 @@
     }
 
     li:hover { border-color: var(--accent); color: var(--ink); }
+  }
+
+  &__logo {
+    width: 14px;
+    height: 14px;
+    flex: none;
+    color: var(--accent-ink);
   }
 }
