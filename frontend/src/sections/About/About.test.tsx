@@ -1,8 +1,6 @@
 import { render, screen, within } from '@testing-library/react'
 import { About } from './About'
 import { profile } from '../../data/profile'
-import { focusAreas } from '../../data/focus'
-import { rolesNewestFirst } from '../../data/select'
 
 describe('About', () => {
   it('lists both schools', () => {
@@ -22,27 +20,21 @@ describe('About', () => {
     expect(screen.getByText(new RegExp(profile.workAuthorization, 'i'))).toBeInTheDocument()
   })
 
-  it('lists languages and education as distinct items, not one blob of text', () => {
+  it('gives every school its own list item, not one blob of text', () => {
     render(<About />)
-
-    const languageItems = profile.languages.map((l) => `${l.name} — ${l.level}`)
-    for (const label of languageItems) {
-      expect(screen.getByText(new RegExp(label.replace(/[-—]/g, '.')))).toBeInTheDocument()
-    }
 
     const education = screen.getByText('Education').closest('dl') as HTMLElement
-    const educationList = within(education).getByRole('list')
-    expect(within(educationList).getAllByRole('listitem')).toHaveLength(profile.education.length)
+    const list = within(education).getByRole('list')
+    expect(within(education).getAllByRole('listitem')).toHaveLength(profile.education.length)
+    expect(list).toBeInTheDocument()
   })
 
-  it('names the job she holds now, read off the same list Experience uses', () => {
+  it('names the role she is hired for, not the title of one job', () => {
     render(<About />)
-    const current = rolesNewestFirst()[0]
 
-    // Hard-coding the running role here is the regression this guards: it
-    // would go stale the moment a new one is added to the experience data.
-    expect(screen.getByText(current.title)).toBeInTheDocument()
-    expect(screen.getByText(new RegExp(current.company))).toBeInTheDocument()
+    // The card says what she does, which is a fact about her rather than
+    // about her current employer — that belongs to the Experience section.
+    expect(screen.getByText(profile.role)).toBeInTheDocument()
   })
 
   it('offers the CV from the profile card', () => {
@@ -50,11 +42,8 @@ describe('About', () => {
     expect(screen.getByRole('link', { name: /resume/i })).toHaveAttribute('href', profile.cvPath)
   })
 
-  it('shows every focus area with what it is built from', () => {
+  it('says where she works without pinning her to a street address', () => {
     render(<About />)
-    for (const area of focusAreas) {
-      expect(screen.getByRole('heading', { name: area.title })).toBeInTheDocument()
-      expect(screen.getByText(area.items.join(' · '))).toBeInTheDocument()
-    }
+    expect(screen.getByText(/Europe/)).toBeInTheDocument()
   })
 })

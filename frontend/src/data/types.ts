@@ -38,17 +38,6 @@ export interface StackGroup {
   items: string[]
 }
 
-/**
- * A part of the job she takes on, as opposed to a tool she knows. The Stack
- * section inventories the tools; these three say what she is actually hired
- * to do with them.
- */
-export interface FocusArea {
-  id: string
-  title: string
-  items: string[]
-}
-
 export interface Profile {
   name: string
   role: string

@@ -1,7 +1,6 @@
 .about {
   display: grid;
-  // The card is the fixed element and the text runs beside it; the focus
-  // cards below span both tracks.
+  // The card holds a fixed width and the text runs beside it.
   grid-template-columns: minmax(0, 340px) minmax(0, 1fr);
   gap: var(--space-7);
   align-items: start;
@@ -36,12 +35,6 @@
   // The surname carries the accent on its own: the name is one phrase, and
   // colouring a word inside a line would break it into two.
   &__surname { color: var(--accent-ink); }
-
-  &__card-lede {
-    margin: 0;
-    color: var(--muted);
-    font-size: var(--step-small);
-  }
 
   &__card-facts {
     width: 100%;
@@ -117,24 +110,6 @@
     gap: var(--space-5);
   }
 
-  &__facts {
-    display: flex;
-    flex-wrap: wrap;
-    gap: var(--space-2);
-  }
-
-  &__fact {
-    display: flex;
-    align-items: center;
-    gap: var(--space-2);
-    padding: var(--space-2) var(--space-4);
-    border: 1px solid color-mix(in srgb, var(--accent) 22%, transparent);
-    border-radius: var(--radius-pill);
-    background: color-mix(in srgb, var(--accent) 7%, transparent);
-    font-size: var(--step-small);
-    color: var(--muted);
-  }
-
   &__edu {
     margin: 0;
     display: flex;
@@ -178,58 +153,4 @@
   &__code-key { color: var(--accent-ink); }
   &__code-str { color: var(--ok); }
   &__code-bool { color: var(--accent-ink); font-weight: 600; }
-
-  // ── Focus cards ──────────────────────────────────────────────────────────
-
-  &__focus {
-    grid-column: 1 / -1;
-    display: grid;
-    grid-template-columns: repeat(3, minmax(0, 1fr));
-    gap: var(--space-4);
-
-    @media (max-width: 768px) { grid-template-columns: minmax(0, 1fr); }
-  }
-
-  &__area {
-    position: relative;
-    overflow: hidden;
-    padding: var(--space-5);
-    border: 1px solid var(--line);
-    border-radius: var(--radius-md);
-    background: var(--surface);
-    display: flex;
-    flex-direction: column;
-    gap: var(--space-2);
-  }
-
-  // Its own number, set large and faint in the far corner — the same device
-  // the section heads use, at the scale a card can carry.
-  &__area-number {
-    position: absolute;
-    top: var(--space-2);
-    right: var(--space-4);
-    font-family: var(--font-body);
-    font-weight: 700;
-    font-size: 3rem;
-    line-height: 1;
-    color: var(--ghost);
-  }
-
-  &__area-mark {
-    width: 22px;
-    height: 6px;
-    background: var(--accent);
-    clip-path: polygon(30% 0, 100% 0, 70% 100%, 0 100%);
-  }
-
-  &__area-title {
-    margin: 0;
-    font-size: var(--step-h3);
-  }
-
-  &__area-items {
-    margin: 0;
-    color: var(--muted);
-    font-size: var(--step-small);
-  }
 }

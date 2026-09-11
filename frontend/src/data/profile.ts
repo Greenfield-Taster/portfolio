@@ -8,7 +8,7 @@ export const profile: Profile = {
   availability: 'Available for work',
   workAuthorization: 'EU work authorization',
   lede:
-    'I build full-stack React and Node applications — from a storefront with payments and three delivery carriers to a real-time support chat that reconnects on its own.',
+    'An experienced full-stack developer who takes a project end to end — I agree the work with the client myself, then build all of it: the interface, the server behind it and the database under that.',
   email: 'horbachova.site@gmail.com',
   linkedin: 'https://www.linkedin.com/in/anastasiia-horbachova',
   github: 'https://github.com/Greenfield-Taster',
