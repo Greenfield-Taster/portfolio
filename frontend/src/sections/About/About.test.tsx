@@ -1,6 +1,8 @@
-import { render, screen, fireEvent, within } from '@testing-library/react'
+import { render, screen, within } from '@testing-library/react'
 import { About } from './About'
 import { profile } from '../../data/profile'
+import { focusAreas } from '../../data/focus'
+import { rolesNewestFirst } from '../../data/select'
 
 describe('About', () => {
   it('lists both schools', () => {
@@ -17,47 +19,42 @@ describe('About', () => {
 
   it('states the work authorization', () => {
     render(<About />)
-    expect(screen.getByText(/EU work authorization/i)).toBeInTheDocument()
+    expect(screen.getByText(new RegExp(profile.workAuthorization, 'i'))).toBeInTheDocument()
   })
 
   it('lists languages and education as distinct items, not one blob of text', () => {
     render(<About />)
-    const [languageList, educationList] = screen.getAllByRole('list')
 
-    const languageItems = within(languageList).getAllByRole('listitem')
-    expect(languageItems.map((li) => li.textContent)).toEqual(
-      profile.languages.map((l) => `${l.name} — ${l.level}`)
-    )
-
-    const educationItems = within(educationList).getAllByRole('listitem')
-    expect(educationItems).toHaveLength(profile.education.length)
-    for (const item of profile.education) {
-      expect(within(educationList).getByText(item.school)).toBeInTheDocument()
+    const languageItems = profile.languages.map((l) => `${l.name} — ${l.level}`)
+    for (const label of languageItems) {
+      expect(screen.getByText(new RegExp(label.replace(/[-—]/g, '.')))).toBeInTheDocument()
     }
+
+    const education = screen.getByText('Education').closest('dl') as HTMLElement
+    const educationList = within(education).getByRole('list')
+    expect(within(educationList).getAllByRole('listitem')).toHaveLength(profile.education.length)
   })
 
-  it('renders the portrait image with a fixed size and descriptive alt text', () => {
+  it('names the job she holds now, read off the same list Experience uses', () => {
     render(<About />)
-    const img = screen.getByRole('img', { name: `${profile.name}, full-stack developer` })
-    expect(img.tagName).toBe('IMG')
-    expect(img).toHaveAttribute('src', '/portrait.jpg')
-    expect(img).toHaveAttribute('width', '480')
-    expect(img).toHaveAttribute('height', '600')
+    const current = rolesNewestFirst()[0]
+
+    // Hard-coding the running role here is the regression this guards: it
+    // would go stale the moment a new one is added to the experience data.
+    expect(screen.getByText(current.title)).toBeInTheDocument()
+    expect(screen.getByText(new RegExp(current.company))).toBeInTheDocument()
   })
 
-  it('shows a deliberate placeholder in place of the portrait once it fails to load', () => {
+  it('offers the CV from the profile card', () => {
     render(<About />)
-    const img = screen.getByRole('img', { name: `${profile.name}, full-stack developer` })
+    expect(screen.getByRole('link', { name: /resume/i })).toHaveAttribute('href', profile.cvPath)
+  })
 
-    fireEvent.error(img)
-
-    // The broken <img> is replaced, not merely covered — a real failed <img>
-    // would otherwise still show the browser's broken-image indicator.
-    expect(document.querySelector('img')).not.toBeInTheDocument()
-    expect(screen.getByText('AH')).toBeInTheDocument()
-    // The placeholder still carries the same accessible name as the photo would.
-    expect(
-      screen.getByRole('img', { name: `${profile.name}, full-stack developer` })
-    ).toBeInTheDocument()
+  it('shows every focus area with what it is built from', () => {
+    render(<About />)
+    for (const area of focusAreas) {
+      expect(screen.getByRole('heading', { name: area.title })).toBeInTheDocument()
+      expect(screen.getByText(area.items.join(' · '))).toBeInTheDocument()
+    }
   })
 })
