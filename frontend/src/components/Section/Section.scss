@@ -4,11 +4,38 @@
 $mark-width: 12px;
 
 .section {
+  position: relative;
+  // Holds the watermark numeral to the section it belongs to: it is set to
+  // overhang the top-left corner, and without this it would push the page
+  // sideways instead of being cut off by the edge.
+  overflow: hidden;
   padding-block: var(--section-top) var(--space-9);
   // Sheer, so the landscape fixed behind the page keeps going underneath.
   background: color-mix(in srgb, var(--bg) var(--scrim), transparent);
 
+  // Big enough to read as texture rather than as a label, cropped by the
+  // section edge so it sits in the page instead of on it. Set in the face the
+  // hero uses for its name — the site's one heavy voice.
+  &__ghost {
+    position: absolute;
+    top: -.22em;
+    left: -.06em;
+    z-index: 0;
+    pointer-events: none;
+    user-select: none;
+    font-family: var(--font-body);
+    font-weight: 700;
+    font-size: clamp(7rem, 15vw, 13rem);
+    line-height: 1;
+    letter-spacing: -.035em;
+    color: var(--ghost);
+  }
+
   &__inner {
+    // Above the watermark: an absolutely positioned sibling would otherwise
+    // paint over ordinary block content that comes after it.
+    position: relative;
+    z-index: 1;
     max-width: var(--content-max);
     margin-inline: auto;
     padding-inline: var(--space-5);

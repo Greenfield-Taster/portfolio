@@ -15,6 +15,11 @@ export function Section({ id, eyebrow, title, lede, children }: SectionProps) {
 
   return (
     <section id={id} className="section" aria-labelledby={`${id}-title`}>
+      {/* The same number again, as a watermark. It says nothing the eyebrow
+          has not already said, so it is decoration and stays out of the
+          accessibility tree and out of a text selection. */}
+      {number && <span className="section__ghost" aria-hidden="true">{number}</span>}
+
       <div className="section__inner">
         <header className="section__head" data-reveal>
           <p className="u-label section__eyebrow">

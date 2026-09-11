@@ -31,6 +31,12 @@
   // Cream over a pale landscape swallows it fast, so light lets more through.
   --scrim: 78%;
 
+  // The watermark numeral behind a section head. Held as a colour rather than
+  // an opacity because the two themes need different amounts of it: the pale
+  // ground gives a tint far less to work with than near-black does, and the
+  // brand orange is too light to register on cream at all.
+  --ghost: color-mix(in srgb, var(--accent-ink) 13%, transparent);
+
   --shadow-card: 0 1px 2px rgba(37, 33, 28, .06), 0 12px 32px -16px rgba(37, 33, 28, .22);
 }
 
@@ -56,6 +62,7 @@
     --hero-glow: #F56F0D;
 
     --scrim: 82%;
+    --ghost: color-mix(in srgb, var(--accent) 7%, transparent);
 
     --shadow-card: 0 1px 2px rgba(0, 0, 0, .5), 0 12px 32px -16px rgba(0, 0, 0, .8);
   }
@@ -82,6 +89,7 @@
   --hero-glow: #F56F0D;
 
   --scrim: 82%;
+  --ghost: color-mix(in srgb, var(--accent) 7%, transparent);
 
   --shadow-card: 0 1px 2px rgba(0, 0, 0, .5), 0 12px 32px -16px rgba(0, 0, 0, .8);
 }
