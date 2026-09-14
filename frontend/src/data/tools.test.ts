@@ -1,4 +1,4 @@
-import { findToolIcon, tools } from './tools'
+import { findToolIcon } from './tools'
 
 describe('findToolIcon', () => {
   it('finds a logo by the name the stack data uses', () => {
@@ -31,13 +31,5 @@ describe('findToolIcon', () => {
   it('drops a black brand colour so the logo survives the dark theme', () => {
     expect(findToolIcon('Three.js')?.color).toBeNull()
     expect(findToolIcon('Express.js')?.color).toBeNull()
-  })
-
-  it('gives every strip icon a drawable path', () => {
-    expect(tools.length).toBeGreaterThan(0)
-    for (const tool of tools) {
-      expect(tool.path.length).toBeGreaterThan(0)
-      expect(tool.name).not.toBe('')
-    }
   })
 })

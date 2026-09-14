@@ -52,11 +52,13 @@ $mark-width: 12px;
     gap: var(--space-3);
   }
 
-  // Wider tracking than the page's other labels, and in the accent rather
-  // than the muted ink: this is the line that announces a new section, so it
-  // should read as a marker rather than as another caption.
+  // The line that announces a new section: the display face at caption
+  // size, tracked wide, in the page's ink rather than the muted grey the
+  // other labels use.
   &__eyebrow {
-    color: var(--accent-ink);
+    font-family: var(--font-display);
+    font-weight: 400;
+    color: var(--ink);
     letter-spacing: .4em;
   }
 
@@ -80,7 +82,7 @@ $mark-width: 12px;
   &__mark {
     flex: none;
     width: $mark-width;
-    height: clamp(2rem, 4.5vw, 3rem);
+    height: clamp(2.25rem, 4.5vw, 3.25rem);
     background: var(--accent);
     clip-path: polygon(60% 0, 100% 0, 40% 100%, 0 100%);
   }
@@ -91,7 +93,7 @@ $mark-width: 12px;
   }
 
   &__lede {
-    color: var(--muted);
+    color: var(--ink);
     padding-inline-start: calc(#{$mark-width} + var(--space-4));
   }
 }

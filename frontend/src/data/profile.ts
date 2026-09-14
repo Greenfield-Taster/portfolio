@@ -7,6 +7,7 @@ export const profile: Profile = {
   tagline: 'Building React and Node applications',
   availability: 'Available for work',
   workAuthorization: 'EU work authorization',
+  intro: 'Full-stack developer who builds the whole product, end to end.',
   lede:
     'For three years I’ve been the developer small businesses hire to build the whole thing — usually as the only engineer on the project. I take the brief myself, then ship every layer: the React storefront, the Node API behind it, the PostgreSQL schema under that, and the parts nobody notices until they fail — payment webhooks, OTP sign-in, delivery integrations, a support chat that reconnects on its own. I started in an agile team untangling a legacy codebase; today I hand clients products that survive real users.',
   email: 'horbachova.site@gmail.com',

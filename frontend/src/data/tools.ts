@@ -128,10 +128,3 @@ export function findToolIcon(name: string): Tool | undefined {
   const icon = BY_NAME.get(name.toLowerCase())
   return icon && toTool(icon)
 }
-
-/** The headline tools, for the strip that drifts under the About section. */
-export const tools: Tool[] = [
-  siReact, siTypescript, siJavascript, siNodedotjs, siPostgresql, siMongodb,
-  siRedux, siSass, siThreedotjs, siVuedotjs, siTailwindcss, siExpress,
-  siDocker, siGit, siVite, siFigma, siPostman, siFirebase,
-].map(toTool)

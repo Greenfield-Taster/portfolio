@@ -33,7 +33,7 @@ export function Experience() {
                 Professional <em className="xp__accent">Experience</em>
               </>
             }
-            lede="From a junior seat in an agile team to owning products alone, requirements to deploy — every role in full, newest first."
+            lede="From a junior seat in an agile team to owning products alone, requirements to deploy."
           />
 
           <p className="xp__count u-display">{roles.length} roles</p>

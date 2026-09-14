@@ -54,6 +54,8 @@ export interface Profile {
   tagline: string
   availability: string
   workAuthorization: string
+  /** One line under the About title; the lede is the paragraph that follows. */
+  intro: string
   lede: string
   email: string
   linkedin: string

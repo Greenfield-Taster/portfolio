@@ -1,61 +1,57 @@
 import { Section } from '../../components/Section/Section'
-import { BusinessCard } from '../../components/BusinessCard/BusinessCard'
 import { ToolMarquee } from '../../components/ToolMarquee/ToolMarquee'
 import { profile } from '../../data/profile'
 import './About.scss'
 
+/** A string value inside the code block, quoted the way the code would quote it. */
+function Str({ children }: { children: string }) {
+  return <span className="about__code-str">&apos;{children}&apos;</span>
+}
+
 export function About() {
-  // Quick facts, in the order a recruiter scans them. The card beside these
-  // carries who she is and how to reach her; none of it is repeated here.
-  const facts = [
-    profile.workAuthorization,
-    ...profile.languages.map((language) => `${language.name} — ${language.level}`),
-  ]
+  const english = profile.languages.find((language) => language.name === 'English')
+  const ukrainian = profile.languages.find((language) => language.name === 'Ukrainian')
 
   return (
-    <Section id="about" eyebrow="About" title="About me" lede={profile.lede}>
-      {/* Two rows: the card and the summary-as-code side by side at one
-          height, then the facts and the schooling as one band under them. */}
-      <div className="about" data-reveal>
-        <BusinessCard />
+    <Section id="about" eyebrow="About" title="About me" lede={profile.intro}>
+      <div className="about">
+        {/* The story beside the facts: the paragraph on the left, and on the
+            right the same person as an object literal — the one notation a
+            developer reading this page already knows how to skim. */}
+        <div className="about__intro" data-reveal>
+          <p className="about__text">{profile.lede}</p>
 
-        {/* Her own summary of the work, in the one notation a developer
-            reading this page already knows how to skim. Every key here is
-            something the card beside it does not already say. */}
-        <pre className="about__code" aria-label="Summary of the work, as code">
-          <code>
-            <span className="about__code-key">const</span> anastasiia = {'{'}{'\n'}
-            {'  '}available: <span className="about__code-bool">true</span>,{'\n'}
-            {'  '}location: <span className="about__code-str">&apos;Europe&apos;</span>,{'\n'}
-            {'  '}focus: <span className="about__code-str">&apos;React &amp; Node&apos;</span>,{'\n'}
-            {'  '}ships: <span className="about__code-str">&apos;requirements to deployment&apos;</span>,{'\n'}
-            {'}'}
-          </code>
-        </pre>
+          <pre className="about__code" aria-label="Summary, as code">
+            <code>
+              <span className="about__code-key">const</span> anastasiia = {'{'}{'\n'}
+              {'  '}available: <span className="about__code-bool">true</span>,{'\n'}
+              {'  '}location: <Str>Europe</Str>,{'\n'}
+              {'  '}workPermit: <Str>{profile.workAuthorization}</Str>,{'\n'}
+              {'  '}focus: <Str>React &amp; Node</Str>,{'\n'}
+              {'  '}ships: <Str>requirements to deployment</Str>,{'\n'}
+              {english && <>{'  '}english: <Str>{english.level}</Str>,{'\n'}</>}
+              {ukrainian && <>{'  '}ukrainian: <Str>{ukrainian.level}</Str>,{'\n'}</>}
+              {'}'}
+            </code>
+          </pre>
+        </div>
 
-        <div className="about__body">
-          <ul className="about__facts">
-            {facts.map((fact) => (
-              <li key={fact} className="about__fact">{fact}</li>
+        <section className="about__edu" aria-labelledby="about-edu-title" data-reveal>
+          <h3 id="about-edu-title" className="u-label about__edu-title">Education</h3>
+          <ul className="about__schools">
+            {profile.education.map((item, index) => (
+              <li key={item.school} className="about__school">
+                <span className="about__school-number" aria-hidden="true">
+                  {String(index + 1).padStart(2, '0')}
+                </span>
+                <span className="about__school-mark" aria-hidden="true" />
+                <strong className="about__degree">{item.degree}</strong>
+                <span className="about__school-name">{item.school}</span>
+                <span className="about__school-years">{item.years}</span>
+              </li>
             ))}
           </ul>
-
-          <dl className="about__edu">
-            <dt>Education</dt>
-            <dd>
-              {/* A list, not a run-on paragraph: two schools with their own
-                  degrees and years need real item boundaries read aloud. */}
-              <ul>
-                {profile.education.map((item) => (
-                  <li key={item.school}>
-                    <strong>{item.school}</strong>
-                    <span>{item.degree} · {item.years}</span>
-                  </li>
-                ))}
-              </ul>
-            </dd>
-          </dl>
-        </div>
+        </section>
 
         <ToolMarquee />
       </div>

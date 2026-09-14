@@ -1,15 +1,26 @@
 .marquee {
-  overflow: hidden;
-  // Fades the strip out at both ends instead of cutting it, so items arrive
-  // and leave rather than appearing at a hard edge.
-  mask-image: linear-gradient(to right, transparent, #000 8%, #000 92%, transparent);
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+  padding-top: var(--space-4);
+
+  &__lane {
+    overflow: hidden;
+    // Fades the strip out at both ends instead of cutting it, so chips
+    // arrive and leave rather than appearing at a hard edge.
+    mask-image: linear-gradient(to right, transparent, #000 6%, #000 94%, transparent);
+  }
 
   &__track {
     display: flex;
     width: max-content;
-    // One row's width, which is half the track: at -50% the second row sits
-    // exactly where the first one started, so the reset is invisible.
-    animation: marquee-drift 46s linear infinite;
+
+    // One copy's width, which is half the track: at -50% the second copy
+    // sits exactly where the first one started, so the reset is invisible.
+    // The two rows run against each other, at slightly different speeds, so
+    // they never fall into step.
+    &--forth { animation: marquee-forth 45s linear infinite; }
+    &--back { animation: marquee-back 40s linear infinite; }
 
     &:hover { animation-play-state: paused; }
   }
@@ -18,41 +29,52 @@
     display: flex;
     flex-shrink: 0;
     align-items: center;
-    gap: var(--space-6);
-    padding-right: var(--space-6);
+    gap: var(--space-3);
+    padding-right: var(--space-3);
   }
 
   // Still version, for reduced motion: the same list, wrapped and at rest.
-  & > .marquee__row {
+  &__lane > .marquee__row {
     flex-wrap: wrap;
-    row-gap: var(--space-4);
     padding-right: 0;
   }
 
-  &__item {
+  &__chip {
     display: flex;
     align-items: center;
-    gap: var(--space-2);
+    gap: 10px;
+    padding: 10px var(--space-4);
+    border: 1px solid var(--line);
+    border-radius: var(--radius-pill);
+    background: var(--surface);
     white-space: nowrap;
-    font-family: var(--font-mono);
-    font-size: var(--step-label);
-    letter-spacing: .1em;
-    text-transform: uppercase;
-    color: var(--muted);
+    font-family: var(--font-display);
+    font-size: .875rem;
+    font-weight: 500;
+    color: var(--ink);
+    transition: border-color var(--dur-fast) var(--ease), box-shadow var(--dur-fast) var(--ease);
+
+    &:hover {
+      border-color: color-mix(in srgb, var(--accent) 45%, transparent);
+      box-shadow: 0 0 18px color-mix(in srgb, var(--accent) 30%, transparent);
+    }
   }
 
-  // Monochrome on purpose. Eighteen brand colours at once would fight the
-  // page's own palette and read as a sponsor wall; drawn in the page's ink
-  // they read as one set of tools.
+  // Each logo in its own brand colour, set inline from the data; a black
+  // brand arrives as currentColor and takes the chip's ink.
   &__logo {
     width: 22px;
     height: 22px;
     flex: none;
-    color: var(--accent-ink);
   }
 }
 
-@keyframes marquee-drift {
+@keyframes marquee-forth {
   from { transform: translateX(0); }
   to { transform: translateX(-50%); }
+}
+
+@keyframes marquee-back {
+  from { transform: translateX(-50%); }
+  to { transform: translateX(0); }
 }
