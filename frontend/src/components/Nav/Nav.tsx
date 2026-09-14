@@ -1,6 +1,7 @@
 import { useState } from 'react'
 import { ThemeToggle } from '../ThemeToggle/ThemeToggle'
 import { Button } from '../Button/Button'
+import { Icon } from '../Icon/Icon'
 import { useActiveSection } from '../../hooks/useActiveSection'
 import { profile } from '../../data/profile'
 import { SECTIONS } from '../../data/sections'
@@ -43,6 +44,7 @@ export function Nav() {
         <div className="nav__actions">
           <ThemeToggle />
           <Button variant="ghost" href={profile.cvPath} download>
+            <Icon name="download" />
             Resume
           </Button>
           <button

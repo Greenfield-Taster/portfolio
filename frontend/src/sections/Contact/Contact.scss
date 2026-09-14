@@ -107,16 +107,6 @@
       font-size: var(--step-small);
       font-weight: 500;
       text-decoration: none;
-
-      svg {
-        width: 18px;
-        height: 18px;
-        fill: none;
-        stroke: currentColor;
-        stroke-width: 2;
-        stroke-linecap: round;
-        stroke-linejoin: round;
-      }
       transition:
         background var(--dur-fast) var(--ease),
         color var(--dur-fast) var(--ease),

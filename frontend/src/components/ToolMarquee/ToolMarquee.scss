@@ -18,9 +18,10 @@
     // One copy's width, which is half the track: at -50% the second copy
     // sits exactly where the first one started, so the reset is invisible.
     // The two rows run against each other, at slightly different speeds, so
-    // they never fall into step.
-    &--forth { animation: marquee-forth 45s linear infinite; }
-    &--back { animation: marquee-back 40s linear infinite; }
+    // they never fall into step. Forty-odd chips a row is a long track: at
+    // these durations it drifts at about 70px a second, slow enough to read.
+    &--forth { animation: marquee-forth 100s linear infinite; }
+    &--back { animation: marquee-back 90s linear infinite; }
 
     &:hover { animation-play-state: paused; }
   }

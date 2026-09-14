@@ -1,4 +1,5 @@
 import { Button } from '../../components/Button/Button'
+import { Icon } from '../../components/Icon/Icon'
 import { RotatingRole } from '../../components/RotatingRole/RotatingRole'
 import { StatTile } from '../../components/StatTile/StatTile'
 import { TypedLine } from '../../components/TypedLine/TypedLine'
@@ -53,6 +54,7 @@ export function Hero() {
         <div className="hero__cta" data-testid="hero-cta">
           <Button href="#projects">View projects</Button>
           <Button variant="ghost" href={profile.cvPath} download>
+            <Icon name="download" />
             Download CV
           </Button>
         </div>

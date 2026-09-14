@@ -28,9 +28,10 @@ export function About() {
               {'  '}location: <Str>Europe</Str>,{'\n'}
               {'  '}workPermit: <Str>{profile.workAuthorization}</Str>,{'\n'}
               {'  '}focus: <Str>React &amp; Node</Str>,{'\n'}
-              {'  '}ships: <Str>requirements to deployment</Str>,{'\n'}
-              {english && <>{'  '}english: <Str>{english.level}</Str>,{'\n'}</>}
-              {ukrainian && <>{'  '}ukrainian: <Str>{ukrainian.level}</Str>,{'\n'}</>}
+              {'  '}languages: {'{'}{'\n'}
+              {english && <>{'    '}english: <Str>{english.level}</Str>,{'\n'}</>}
+              {ukrainian && <>{'    '}ukrainian: <Str>{ukrainian.level}</Str>,{'\n'}</>}
+              {'  }'},{'\n'}
               {'}'}
             </code>
           </pre>

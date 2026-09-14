@@ -39,8 +39,9 @@
     overflow-x: auto;
   }
 
-  &__code-key { color: var(--accent-ink); }
-  &__code-str { color: var(--ok); }
+  // The values light up in the accent; the keys and the syntax stay quiet.
+  &__code-key { color: var(--muted); }
+  &__code-str { color: var(--accent-ink); }
   &__code-bool { color: var(--accent-ink); font-weight: 600; }
 
   // ── Education ────────────────────────────────────────────────────────────
