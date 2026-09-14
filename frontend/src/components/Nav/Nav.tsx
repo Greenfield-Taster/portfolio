@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import { ThemeToggle } from '../ThemeToggle/ThemeToggle'
 import { Button } from '../Button/Button'
 import { Icon } from '../Icon/Icon'
@@ -14,9 +14,28 @@ const TRACKED_IDS = NAV_ITEMS.map((item) => item.id)
 export function Nav() {
   const active = useActiveSection(TRACKED_IDS)
   const [menuOpen, setMenuOpen] = useState(false)
+  const bar = useRef<HTMLElement>(null)
+
+  useEffect(() => {
+    if (!menuOpen) return
+
+    const onPointerDown = (event: PointerEvent) => {
+      if (!bar.current?.contains(event.target as Node)) setMenuOpen(false)
+    }
+    const onKeyDown = (event: KeyboardEvent) => {
+      if (event.key === 'Escape') setMenuOpen(false)
+    }
+
+    document.addEventListener('pointerdown', onPointerDown)
+    document.addEventListener('keydown', onKeyDown)
+    return () => {
+      document.removeEventListener('pointerdown', onPointerDown)
+      document.removeEventListener('keydown', onKeyDown)
+    }
+  }, [menuOpen])
 
   return (
-    <header className="nav-bar">
+    <header className="nav-bar" ref={bar}>
       <nav className="nav" aria-label="Main">
         <a className="nav__mark" href="#top" aria-label="Anastasiia Horbachova — back to top">
           AH<span aria-hidden="true">.</span>
@@ -38,7 +57,7 @@ export function Nav() {
           <ThemeToggle />
           <Button variant="ghost" href={profile.cvPath} download>
             <Icon name="download" />
-            Resume
+            <span className="btn__label">Resume</span>
           </Button>
           <button
             type="button"

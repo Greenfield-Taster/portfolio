@@ -100,4 +100,36 @@ describe('Nav', () => {
     await user.click(screen.getByRole('link', { name: 'Projects' }))
     expect(toggle).toHaveAttribute('aria-expanded', 'false')
   })
+
+  it('closes the menu when the reader taps anywhere outside it', async () => {
+    const user = userEvent.setup()
+    render(<Nav />)
+
+    const toggle = screen.getByRole('button', { name: /menu/i })
+    await user.click(toggle)
+    expect(toggle).toHaveAttribute('aria-expanded', 'true')
+
+    await user.click(document.body)
+    expect(toggle).toHaveAttribute('aria-expanded', 'false')
+  })
+
+  it('closes the menu on Escape', async () => {
+    const user = userEvent.setup()
+    render(<Nav />)
+
+    const toggle = screen.getByRole('button', { name: /menu/i })
+    await user.click(toggle)
+    await user.keyboard('{Escape}')
+    expect(toggle).toHaveAttribute('aria-expanded', 'false')
+  })
+
+  it('keeps the menu open when the tap lands inside the header itself', async () => {
+    const user = userEvent.setup()
+    render(<Nav />)
+
+    const toggle = screen.getByRole('button', { name: /menu/i })
+    await user.click(toggle)
+    await user.click(screen.getByRole('button', { name: /switch to .* theme/i }))
+    expect(toggle).toHaveAttribute('aria-expanded', 'true')
+  })
 })
