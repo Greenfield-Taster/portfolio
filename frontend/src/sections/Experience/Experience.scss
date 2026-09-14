@@ -38,10 +38,17 @@ $rail-gap: 44px;
     // the slash mark's indent under a lede that already sits in a card.
     .section__head { gap: var(--space-3); }
     .section__lede { padding-inline-start: 0; }
+    // A step down from the page-level size: the card is a third of the
+    // width the other heads have, and the bold grotesk fills it fast.
+    .section__title { font-size: clamp(1.75rem, 3vw, 2.375rem); }
   }
 
-  // The second word of the title, in the accent that may carry text.
-  &__accent { color: var(--accent-ink); }
+  // The second word of the title, in the accent that may carry text. Upright:
+  // the grotesk has no italic, and a synthesised slant would be a fake one.
+  &__accent {
+    font-style: normal;
+    color: var(--accent-ink);
+  }
 
   &__count {
     margin: var(--space-2) 0 0;
