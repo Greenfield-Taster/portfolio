@@ -7,6 +7,14 @@ import { useReducedMotion } from './useReducedMotion'
 const MARKER = '[data-timeline-marker]'
 
 /**
+ * Where on the screen the line's tip sits, as a fraction of the viewport.
+ * Low on purpose: a card lights up as it arrives near the bottom of the
+ * screen, so the reader never looks at an unlit card. Anchored at the middle
+ * the line stopped short of whatever was being read.
+ */
+const ANCHOR = 0.8
+
+/**
  * Draws a timeline as the reader scrolls through it: writes the travelled
  * fraction to `--timeline-progress` on the element, and flags each marker the
  * line has reached with `data-reached`.
@@ -38,7 +46,7 @@ export function useTimelineProgress(ref: RefObject<HTMLElement | null>): void {
     const update = () => {
       frame = 0
       const rect = el.getBoundingClientRect()
-      const anchor = window.innerHeight / 2
+      const anchor = window.innerHeight * ANCHOR
 
       el.style.setProperty(
         '--timeline-progress',
@@ -47,6 +55,7 @@ export function useTimelineProgress(ref: RefObject<HTMLElement | null>): void {
             top: rect.top,
             height: rect.height,
             viewportHeight: window.innerHeight,
+            anchor: ANCHOR,
           })
         )
       )

@@ -1,5 +1,5 @@
 import { useRef } from 'react'
-import { Section } from '../../components/Section/Section'
+import { Section, SectionHead } from '../../components/Section/Section'
 import { Badge } from '../../components/Badge/Badge'
 import { rolesNewestFirst, formatPeriod } from '../../data/select'
 import { useTimelineProgress } from '../../hooks/useTimelineProgress'
@@ -17,17 +17,29 @@ export function Experience() {
   const span = `${earliest.start.slice(0, 4)} — present`
 
   return (
-    <Section
-      id="experience"
-      eyebrow="Experience"
-      title="Professional Experience"
-      lede="Every role in full, newest first — what the work was and what came out of it."
-    >
+    // No head of its own: the head lives in the intro card, which stays put
+    // while the roles scroll past it, so the section keeps announcing itself
+    // for as long as the reader is in it.
+    <Section id="experience">
       <div className="xp">
-        <aside className="xp__intro">
+        <aside className="xp__intro" data-reveal>
           <Badge>Journey</Badge>
+
+          <SectionHead
+            id="experience"
+            eyebrow="Experience"
+            title={
+              <>
+                Professional <em className="xp__accent">Experience</em>
+              </>
+            }
+            lede="From a junior seat in an agile team to owning products alone, requirements to deploy — every role in full, newest first."
+          />
+
           <p className="xp__count u-display">{roles.length} roles</p>
           <p className="xp__span">{span}</p>
+
+          <p className="xp__next">And the next one is open.</p>
         </aside>
 
         <div className="xp__timeline" ref={timeline}>

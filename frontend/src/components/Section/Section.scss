@@ -7,8 +7,10 @@ $mark-width: 12px;
   position: relative;
   // Holds the watermark numeral to the section it belongs to: it is set to
   // overhang the top-left corner, and without this it would push the page
-  // sideways instead of being cut off by the edge.
-  overflow: hidden;
+  // sideways instead of being cut off by the edge. Clip rather than hidden:
+  // hidden makes the section a scroll container, and a sticky column inside
+  // it would then stick to the section rather than to the screen.
+  overflow: clip;
   padding-block: var(--section-top) var(--space-9);
   // Sheer, so the landscape fixed behind the page keeps going underneath.
   background: color-mix(in srgb, var(--bg) var(--scrim), transparent);

@@ -30,4 +30,24 @@ describe('computeScrollProgress', () => {
     // would put NaN into a transform and drop the line off the page.
     expect(computeScrollProgress({ top: 0, height: 0, viewportHeight })).toBe(0)
   })
+
+  describe('with the anchor lower on the screen', () => {
+    // The timeline anchors at 80% of the viewport: the drawn line's tip sits
+    // near the bottom of the screen, so a card is lit as it comes into view
+    // rather than only once the reader has scrolled it halfway up.
+    const anchor = 0.8
+
+    it('starts counting when the top reaches the anchor, not the middle', () => {
+      expect(computeScrollProgress({ top: 800, height: 2000, viewportHeight, anchor })).toBe(0)
+      expect(computeScrollProgress({ top: 799, height: 2000, viewportHeight, anchor })).toBeGreaterThan(0)
+    })
+
+    it('is half done when half the element has passed the anchor', () => {
+      expect(computeScrollProgress({ top: -200, height: 2000, viewportHeight, anchor })).toBe(0.5)
+    })
+
+    it('is finished once the bottom has risen past the anchor', () => {
+      expect(computeScrollProgress({ top: -1200, height: 2000, viewportHeight, anchor })).toBe(1)
+    })
+  })
 })

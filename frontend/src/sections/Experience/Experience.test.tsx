@@ -71,4 +71,12 @@ describe('Experience', () => {
       ).toBeInTheDocument()
     })
   })
+  it('keeps the section title inside the intro that stays on screen', () => {
+    render(<Experience />)
+
+    // The head lives in the sticky column rather than above both columns, so
+    // the section keeps announcing itself while the roles scroll past.
+    const title = screen.getByRole('heading', { level: 2, name: 'Professional Experience' })
+    expect(title.closest('.xp__intro')).not.toBeNull()
+  })
 })

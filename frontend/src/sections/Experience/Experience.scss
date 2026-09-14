@@ -5,15 +5,18 @@ $rail-gap: 44px;
 
 .xp {
   display: grid;
-  grid-template-columns: minmax(0, 240px) minmax(0, 1fr);
+  grid-template-columns: minmax(0, 340px) minmax(0, 1fr);
   gap: var(--space-7);
   align-items: start;
 
   @media (max-width: 900px) { grid-template-columns: minmax(0, 1fr); }
 
-  // Stays with the reader while the roles scroll past it, which is the whole
-  // point of the two columns: the heading keeps its place in view instead of
-  // scrolling away from the list it belongs to.
+  // ── Intro card ───────────────────────────────────────────────────────────
+
+  // Holds the section's head and stays with the reader while the roles
+  // scroll past it: the section keeps announcing itself for as long as the
+  // reader is in it, instead of the title scrolling away from the list it
+  // belongs to.
   &__intro {
     position: sticky;
     // Clears the fixed nav pill plus a little air.
@@ -21,13 +24,31 @@ $rail-gap: 44px;
     display: flex;
     flex-direction: column;
     align-items: flex-start;
-    gap: var(--space-3);
+    gap: var(--space-4);
+    padding: var(--space-6);
+    border: 1px solid var(--line);
+    border-radius: var(--radius-lg);
+    background: var(--surface);
+    box-shadow: var(--shadow-card);
 
     @media (max-width: 900px) { position: static; }
+
+    // The head inside the card is the card's own content, not a page-level
+    // head: no reveal of its own (the card reveals as one) and no room for
+    // the slash mark's indent under a lede that already sits in a card.
+    .section__head { gap: var(--space-3); }
+    .section__lede { padding-inline-start: 0; }
+  }
+
+  // The second word of the title, in the display face's italic and the
+  // accent that may carry text.
+  &__accent {
+    font-style: italic;
+    color: var(--accent-ink);
   }
 
   &__count {
-    margin: 0;
+    margin: var(--space-2) 0 0;
     font-size: clamp(2rem, 3.4vw, 2.75rem);
     line-height: 1;
   }
@@ -39,6 +60,17 @@ $rail-gap: 44px;
     letter-spacing: .14em;
     text-transform: uppercase;
     color: var(--muted);
+  }
+
+  &__next {
+    margin: var(--space-2) 0 0;
+    padding-top: var(--space-4);
+    border-top: 1px solid var(--line);
+    align-self: stretch;
+    font-family: var(--font-display);
+    font-style: italic;
+    font-size: 1.25rem;
+    color: var(--ink);
   }
 
   // ── Timeline ─────────────────────────────────────────────────────────────
@@ -63,7 +95,8 @@ $rail-gap: 44px;
 
   // Drawn from the top down by scaling rather than by changing height: a
   // transform is composited, so the line follows the scroll without asking
-  // for layout on every frame.
+  // for layout on every frame. The glow is what makes it read as lit rather
+  // than merely coloured.
   &__rail-fill {
     position: absolute;
     inset: 0;
@@ -71,6 +104,7 @@ $rail-gap: 44px;
     transform: scaleY(var(--timeline-progress));
     border-radius: inherit;
     background: var(--accent);
+    box-shadow: 0 0 12px 1px color-mix(in srgb, var(--accent) 55%, transparent);
   }
 
   &__list {
@@ -85,7 +119,7 @@ $rail-gap: 44px;
     min-width: 0;
   }
 
-  // Sits on the rail, and fills in as the drawn line reaches it.
+  // Sits on the rail, and lights up as the drawn line reaches it.
   &__dot {
     position: absolute;
     left: 0;
@@ -96,11 +130,17 @@ $rail-gap: 44px;
     border-radius: 50%;
     border: 2px solid var(--line);
     background: var(--bg);
-    transition: border-color var(--dur) var(--ease), background var(--dur) var(--ease);
+    transition:
+      border-color var(--dur) var(--ease),
+      background var(--dur) var(--ease),
+      box-shadow var(--dur) var(--ease);
 
     &[data-reached] {
       border-color: var(--accent);
       background: color-mix(in srgb, var(--accent) 28%, var(--bg));
+      box-shadow:
+        0 0 0 4px color-mix(in srgb, var(--accent) 16%, transparent),
+        0 0 14px color-mix(in srgb, var(--accent) 60%, transparent);
     }
   }
 
