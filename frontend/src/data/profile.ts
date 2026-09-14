@@ -8,7 +8,7 @@ export const profile: Profile = {
   availability: 'Available for work',
   workAuthorization: 'EU work authorization',
   lede:
-    'An experienced full-stack developer who takes a project end to end — I agree the work with the client myself, then build all of it: the interface, the server behind it and the database under that.',
+    'For three years I’ve been the developer small businesses hire to build the whole thing — usually as the only engineer on the project. I take the brief myself, then ship every layer: the React storefront, the Node API behind it, the PostgreSQL schema under that, and the parts nobody notices until they fail — payment webhooks, OTP sign-in, delivery integrations, a support chat that reconnects on its own. I started in an agile team untangling a legacy codebase; today I hand clients products that survive real users.',
   email: 'horbachova.site@gmail.com',
   linkedin: 'https://www.linkedin.com/in/anastasiia-horbachova',
   github: 'https://github.com/Greenfield-Taster',
