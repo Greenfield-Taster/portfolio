@@ -40,12 +40,8 @@ $rail-gap: 44px;
     .section__lede { padding-inline-start: 0; }
   }
 
-  // The second word of the title, in the display face's italic and the
-  // accent that may carry text.
-  &__accent {
-    font-style: italic;
-    color: var(--accent-ink);
-  }
+  // The second word of the title, in the accent that may carry text.
+  &__accent { color: var(--accent-ink); }
 
   &__count {
     margin: var(--space-2) 0 0;
@@ -68,8 +64,8 @@ $rail-gap: 44px;
     border-top: 1px solid var(--line);
     align-self: stretch;
     font-family: var(--font-display);
-    font-style: italic;
-    font-size: 1.25rem;
+    font-weight: 500;
+    font-size: 1.125rem;
     color: var(--ink);
   }
 

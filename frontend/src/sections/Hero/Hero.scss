@@ -52,7 +52,7 @@
   &__greeting {
     margin: 0;
     font-family: var(--font-display);
-    font-style: italic;
+    font-weight: 500;
     font-size: clamp(1.25rem, 2.4vw, 1.75rem);
     color: var(--muted);
   }
@@ -61,7 +61,7 @@
   // around it.
   &__name {
     margin: 0;
-    font-family: var(--font-body);
+    font-family: var(--font-display);
     font-weight: 700;
     font-size: clamp(2.75rem, 9.4vw, 7rem);
     line-height: .92;

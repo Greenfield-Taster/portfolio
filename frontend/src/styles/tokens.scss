@@ -13,11 +13,11 @@
   // padding is what clears the fixed nav pill and gives the heading air.
   --section-top: clamp(7rem, 9vw, 8rem);
 
-  --font-display: 'Instrument Serif', 'Instrument Serif Fallback', Georgia, 'Times New Roman', serif;
-  // 'Instrument Sans Variable' is the family name @fontsource-variable actually
-  // declares. Asking for 'Instrument Sans' matched nothing, so the body face
-  // silently never rendered and the woff2 was never even fetched.
-  --font-body: 'Instrument Sans Variable', 'Instrument Sans Fallback', ui-sans-serif, system-ui, -apple-system, 'Segoe UI', sans-serif;
+  // The '… Variable' names are what @fontsource-variable actually declares;
+  // asking for the bare family name matches nothing and the woff2 is never
+  // fetched. Space Grotesk carries the headings, Inter everything else.
+  --font-display: 'Space Grotesk Variable', 'Space Grotesk Fallback', ui-sans-serif, system-ui, sans-serif;
+  --font-body: 'Inter Variable', 'Inter Fallback', ui-sans-serif, system-ui, -apple-system, 'Segoe UI', sans-serif;
   --font-mono: 'JetBrains Mono', ui-monospace, 'SFMono-Regular', Consolas, monospace;
 
   --step-display: clamp(2.75rem, 8vw, 6rem);

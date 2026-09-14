@@ -13,7 +13,7 @@
     gap: var(--space-5);
   }
 
-  &__name { font-family: var(--font-display); font-size: var(--step-h3); }
+  &__name { font-family: var(--font-display); font-weight: 700; font-size: var(--step-h3); }
 
   &__links {
     display: flex;
