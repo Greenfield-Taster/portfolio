@@ -5,7 +5,7 @@ import { HeroCanvas } from './components/HeroCanvas/HeroCanvas'
 import { Hero } from './sections/Hero/Hero'
 import { About } from './sections/About/About'
 import { Experience } from './sections/Experience/Experience'
-import { Work } from './sections/Work/Work'
+import { Projects } from './sections/Projects/Projects'
 import { Stack } from './sections/Stack/Stack'
 import { Contact } from './sections/Contact/Contact'
 import { useLenis } from './hooks/useLenis'
@@ -27,7 +27,7 @@ export default function App() {
         <Hero />
         <About />
         <Experience />
-        <Work />
+        <Projects />
         <Stack />
         <Contact />
       </main>

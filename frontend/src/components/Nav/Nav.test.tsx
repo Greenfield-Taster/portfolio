@@ -68,7 +68,7 @@ describe('Nav', () => {
     render(<Nav />)
 
     expect(screen.getByRole('link', { name: 'About' })).toHaveAttribute('aria-current', 'true')
-    expect(screen.getByRole('link', { name: 'Work' })).not.toHaveAttribute('aria-current')
+    expect(screen.getByRole('link', { name: 'Projects' })).not.toHaveAttribute('aria-current')
   })
 
   it('marks Home while the hero is still on screen', () => {
@@ -100,7 +100,7 @@ describe('Nav', () => {
     await user.click(toggle)
     expect(toggle).toHaveAttribute('aria-expanded', 'true')
 
-    await user.click(screen.getByRole('link', { name: 'Work' }))
+    await user.click(screen.getByRole('link', { name: 'Projects' }))
     expect(toggle).toHaveAttribute('aria-expanded', 'false')
   })
 })

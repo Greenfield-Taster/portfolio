@@ -17,7 +17,6 @@ export const roles: Role[] = [
       '7 sections on React Router, accessibility (semantic ARIA, :focus-visible, prefers-reduced-motion), and JSON-LD SEO, Open Graph, sitemap',
     ],
     stack: ['React', 'TypeScript', 'React Router', 'SCSS', 'Cloudflare Pages'],
-    projectId: 'kryla-nadii',
   },
   {
     id: 'just-sleep',
@@ -37,7 +36,6 @@ export const roles: Role[] = [
       'SEO: dynamic meta, Open Graph, Twitter Cards, JSON-LD (Product, Organization, FAQ, BreadcrumbList); transactional emails via Resend + React Email, Zod validation, Multer uploads',
     ],
     stack: ['React 19', 'MedusaJS v2', 'PostgreSQL', 'Node.js', 'Zod', 'Resend'],
-    projectId: 'just-sleep',
   },
   {
     id: 'biosafe',
@@ -55,7 +53,6 @@ export const roles: Role[] = [
       'EmailJS with templated variables and retry-on-failure logic; interactive Google Maps with platform-aware deep linking (iOS Maps, Android Google Maps, desktop fallback)',
     ],
     stack: ['React', 'TypeScript', 'Node.js', 'Express', 'reCAPTCHA v3', 'EmailJS'],
-    projectId: 'biosafe',
   },
   {
     id: 'td-capital-market',
@@ -72,7 +69,6 @@ export const roles: Role[] = [
       'Optimized performance for a portfolio with 350+ photos using lazy loading via Intersection Observer API, WebP image compression, responsive srcset, and scroll-reveal animations; deployed via GitHub Actions CI/CD',
     ],
     stack: ['React', 'TypeScript', 'i18next', 'GitHub Actions'],
-    projectId: 'td-capital-market',
   },
   {
     id: 'cryptobit',
@@ -90,7 +86,6 @@ export const roles: Role[] = [
       'Admin dashboard with Recharts analytics, user/order management tables with server-side pagination and filtering, bilingual UI (EN/RU) via i18next; containerized with Docker and deployed via Azure Static Web Apps CI/CD',
     ],
     stack: ['React', 'TypeScript', 'Redux Toolkit', 'SignalR', 'Docker', 'Azure'],
-    projectId: 'cryptobit',
   },
   {
     id: 'bustour',
@@ -108,6 +103,5 @@ export const roles: Role[] = [
       'Refactored legacy JavaScript callback-hell to modern async/await across 10+ modules and covered critical flows with unit tests',
     ],
     stack: ['Vue.js', 'JavaScript', 'Vee-Validate', 'JWT'],
-    projectId: 'bustour',
   },
 ]

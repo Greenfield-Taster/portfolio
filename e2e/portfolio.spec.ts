@@ -18,7 +18,7 @@ test('the whole page is readable without scrolling to trigger anything', async (
   await page.goto('/')
   await expect(page.getByRole('heading', { level: 1 })).toBeVisible()
 
-  for (const id of ['about', 'experience', 'work', 'stack', 'contact']) {
+  for (const id of ['about', 'experience', 'projects', 'stack', 'contact']) {
     await expect(page.locator(`#${id}`)).toBeAttached()
   }
 
@@ -56,26 +56,19 @@ test('the theme choice survives a reload', async ({ page }) => {
   await expect(html).toHaveAttribute('data-theme', expected)
 })
 
-test('a project panel opens, shares and closes', async ({ page }) => {
+test('every side project links out to its code', async ({ page }) => {
   await page.goto('/')
-  await page.getByRole('button', { name: /open details for woodtrick/i }).click()
+  const cards = page.getByTestId('project-card')
+  await expect(cards).toHaveCount(3)
 
-  // The panel is a labelled region rendered inline in the section flow, not
-  // an overlay — it does not claim role="dialog" or trap focus.
-  const panel = page.getByTestId('project-panel')
-  await expect(panel).toBeVisible()
-  await expect(panel).toContainText('woodtrick')
-  expect(page.url()).toContain('#work/woodtrick')
-
-  await page.keyboard.press('Escape')
-  // The panel is conditionally rendered — closing it removes it from the
-  // DOM rather than just hiding it, and toBeHidden() accepts both.
-  await expect(panel).toBeHidden()
-})
-
-test('a shared project link opens that project', async ({ page }) => {
-  await page.goto('/#work/contrlve')
-  await expect(page.getByTestId('project-panel')).toContainText('contrlve')
+  // Nothing is folded away behind a click: the detail is on the page, and
+  // the only thing to follow is the link to the repository.
+  for (const card of await cards.all()) {
+    await expect(card.getByRole('link', { name: 'GitHub' })).toHaveAttribute(
+      'href',
+      /github\.com\/Greenfield-Taster\//
+    )
+  }
 })
 
 test('reduced motion turns the animation off', async ({ page }) => {
@@ -113,8 +106,8 @@ test('the header follows the reader down the page', async ({ page }) => {
   await expect(nav.getByRole('link', { name: 'Home' })).toHaveAttribute('aria-current', 'true')
   await expect(nav.locator('a[aria-current]')).toHaveCount(1)
 
-  await page.locator('#work').scrollIntoViewIfNeeded()
-  await expect(nav.getByRole('link', { name: 'Work' })).toHaveAttribute('aria-current', 'true')
+  await page.locator('#projects').scrollIntoViewIfNeeded()
+  await expect(nav.getByRole('link', { name: 'Projects' })).toHaveAttribute('aria-current', 'true')
   await expect(nav.locator('a[aria-current]')).toHaveCount(1)
 })
 

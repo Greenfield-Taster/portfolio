@@ -9,19 +9,19 @@ export interface Role {
   summary: string
   highlights: string[]
   stack: string[]
-  projectId?: string
 }
 
-export type ProjectSource = 'cv' | 'github'
-export type ProjectStatus = 'live' | 'demo' | 'archived'
+/** What a project's cover is drawn as; each is a small piece of generated art. */
+export type ProjectArt = 'marker' | 'puzzle' | 'terminal'
+
+/** Where a project stands: on a live site, published as a package, or a design concept. */
+export type ProjectStatus = 'live' | 'published' | 'concept'
 
 export interface Project {
   id: string
   name: string
   tagline: string
-  source: ProjectSource
-  featured: boolean
-  order: number
+  art: ProjectArt
   year: string
   role: string
   summary: string
@@ -29,7 +29,6 @@ export interface Project {
   stack: string[]
   status: ProjectStatus
   links: { live?: string; repo?: string; npm?: string }
-  cover?: { src: string; alt: string }
 }
 
 /** How well a group of tools is known. Ways of working carry no level. */

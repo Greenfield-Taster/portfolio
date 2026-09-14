@@ -1,9 +1,10 @@
 import { render, screen, within } from '../../test/renderWithTheme'
 import { Hero } from './Hero'
 import { projects } from '../../data/projects'
+import { roles } from '../../data/experience'
 import { profile } from '../../data/profile'
 
-// Deliberately a different length than the real data (11 entries): if Hero
+// Deliberately a different length than the real data (3 entries): if Hero
 // ever hard-codes the projects stat instead of calling projectCount(), this
 // mock makes that regression fail loudly instead of coincidentally passing.
 vi.mock('../../data/projects', () => ({
@@ -50,7 +51,7 @@ describe('Hero', () => {
 
   it('derives the project count from the data, not a literal', () => {
     render(<Hero />)
-    expect(screen.getByText(`${projects.length}+`)).toBeInTheDocument()
+    expect(screen.getByText(`${roles.length + projects.length}+`)).toBeInTheDocument()
   })
 
   it('offers the CV as a download', () => {
@@ -61,11 +62,11 @@ describe('Hero', () => {
     )
   })
 
-  it('links to the work section', () => {
+  it('links to the projects section', () => {
     render(<Hero />)
     expect(screen.getByRole('link', { name: /view projects/i })).toHaveAttribute(
       'href',
-      '#work'
+      '#projects'
     )
   })
 

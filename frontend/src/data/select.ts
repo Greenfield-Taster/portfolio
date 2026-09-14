@@ -1,4 +1,4 @@
-import { projects as allProjects } from './projects'
+import { projects as ownProjects } from './projects'
 import { roles as allRoles } from './experience'
 import type { Project, Role } from './types'
 
@@ -7,24 +7,12 @@ const MONTHS = [
   'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec',
 ]
 
-function byOrder(a: Project, b: Project) {
-  return a.order - b.order
-}
-
-export function featuredProjects(list: Project[] = allProjects): Project[] {
-  return list.filter((p) => p.featured).sort(byOrder)
-}
-
-export function compactProjects(list: Project[] = allProjects): Project[] {
-  return list.filter((p) => !p.featured).sort(byOrder)
-}
-
-export function projectCount(list: Project[] = allProjects): number {
-  return list.length
-}
-
-export function findProject(id: string, list: Project[] = allProjects): Project | undefined {
-  return list.find((p) => p.id === id)
+/**
+ * How many projects the page can vouch for: every client role in Experience
+ * was one product, and the side projects are the rest.
+ */
+export function projectCount(own: Project[] = ownProjects, client: Role[] = allRoles): number {
+  return client.length + own.length
 }
 
 function formatMonth(value: string): string {

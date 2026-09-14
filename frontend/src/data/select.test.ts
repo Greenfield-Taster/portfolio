@@ -1,86 +1,27 @@
-import {
-  featuredProjects,
-  compactProjects,
-  projectCount,
-  formatPeriod,
-  rolesNewestFirst,
-  findProject,
-} from './select'
+import { projectCount, formatPeriod, rolesNewestFirst } from './select'
 import { projects } from './projects'
 import { roles } from './experience'
-import type { Project } from './types'
-
-describe('featuredProjects', () => {
-  it('returns exactly the projects marked featured', () => {
-    const expected = projects.filter((p) => p.featured)
-    expect(expected.length).toBeGreaterThan(0)
-    expect(featuredProjects()).toHaveLength(expected.length)
-    expect(featuredProjects().map((p) => p.id).sort()).toEqual(
-      expected.map((p) => p.id).sort()
-    )
-  })
-
-  it('puts every CV project before every GitHub project, even from reversed input', () => {
-    const sources = featuredProjects([...projects].reverse()).map((p) => p.source)
-    const firstGithub = sources.indexOf('github')
-    const lastCv = sources.lastIndexOf('cv')
-    expect(lastCv).toBeLessThan(firstGithub)
-  })
-
-  it('orders by the explicit order field, even from reversed input', () => {
-    const orders = featuredProjects([...projects].reverse()).map((p) => p.order)
-    expect(orders).toEqual([...orders].sort((a, b) => a - b))
-  })
-
-  it('does not mutate the source array', () => {
-    const before = projects.map((p) => p.id)
-    featuredProjects()
-    expect(projects.map((p) => p.id)).toEqual(before)
-  })
-})
-
-describe('compactProjects', () => {
-  it('returns exactly the projects not marked featured', () => {
-    const expected = projects.filter((p) => !p.featured)
-    expect(expected.length).toBeGreaterThan(0)
-    expect(compactProjects()).toHaveLength(expected.length)
-    expect(compactProjects().map((p) => p.id).sort()).toEqual(
-      expected.map((p) => p.id).sort()
-    )
-  })
-
-  it('together with the featured list accounts for every project', () => {
-    expect(featuredProjects().length + compactProjects().length).toBe(projects.length)
-  })
-
-  it('shares no project with the featured list', () => {
-    const featured = new Set(featuredProjects().map((p) => p.id))
-    expect(compactProjects().some((p) => featured.has(p.id))).toBe(false)
-  })
-
-  it('orders by the explicit order field, even from reversed input', () => {
-    const orders = compactProjects([...projects].reverse()).map((p) => p.order)
-    expect(orders).toEqual([...orders].sort((a, b) => a - b))
-  })
-})
+import type { Project, Role } from './types'
 
 describe('projectCount', () => {
-  it('counts every project, featured and compact together', () => {
-    expect(projectCount()).toBe(projects.length)
+  it('counts every client role and every side project together', () => {
+    expect(projectCount()).toBe(roles.length + projects.length)
   })
 
   // CONTENT-CHANGE TRIPWIRE — the one deliberately hard-coded count in this
   // file. The Hero renders projectCount() as a headline stat, so this number
-  // is copy the visitor reads. If you added or removed a project, this failure
-  // is expected: update the literal here and re-check the Hero stats. Every
-  // other count in this file is derived from the data on purpose.
-  it('still shows eleven projects in the hero stat', () => {
-    expect(projectCount()).toBe(11)
+  // is copy the visitor reads. If you added or removed a role or a project,
+  // this failure is expected: update the literal here and re-check the Hero
+  // stats. Every other count in this file is derived from the data on purpose.
+  it('still shows nine projects in the hero stat', () => {
+    expect(projectCount()).toBe(9)
   })
 
   it('tracks the data rather than a hard-coded number', () => {
-    const extra: Project = { ...projects[0], id: 'extra', order: 99 }
-    expect(projectCount([...projects, extra])).toBe(projects.length + 1)
+    const extra: Project = { ...projects[0], id: 'extra' }
+    const role: Role = { ...roles[0], id: 'extra-role' }
+    expect(projectCount([...projects, extra], roles)).toBe(roles.length + projects.length + 1)
+    expect(projectCount(projects, [...roles, role])).toBe(roles.length + projects.length + 1)
   })
 })
 
@@ -120,31 +61,20 @@ describe('rolesNewestFirst', () => {
   })
 })
 
-describe('findProject', () => {
-  it('finds a project by id', () => {
-    expect(findProject('woodtrick')?.name).toBe('woodtrick')
-  })
-
-  it('returns undefined for an unknown id', () => {
-    expect(findProject('nope')).toBeUndefined()
-  })
-})
-
 describe('data integrity', () => {
   it('gives every project a unique id', () => {
     const ids = projects.map((p) => p.id)
     expect(new Set(ids).size).toBe(ids.length)
   })
 
-  it('gives every project a unique order', () => {
-    const orders = projects.map((p) => p.order)
-    expect(new Set(orders).size).toBe(orders.length)
+  it('gives every role a unique id', () => {
+    const ids = roles.map((r) => r.id)
+    expect(new Set(ids).size).toBe(ids.length)
   })
 
-  it('points every role projectId at a real project', () => {
-    const ids = new Set(projects.map((p) => p.id))
-    for (const role of roles) {
-      if (role.projectId) expect(ids.has(role.projectId)).toBe(true)
+  it('gives every project somewhere to go', () => {
+    for (const project of projects) {
+      expect(project.links.repo ?? project.links.live).toBeTruthy()
     }
   })
 })
