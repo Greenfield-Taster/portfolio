@@ -1,11 +1,18 @@
 import { stackGroups } from '../../data/stack'
 import { findToolIcon } from '../../data/tools'
+import { useMediaQuery } from '../../hooks/useMediaQuery'
 import { useReducedMotion } from '../../hooks/useReducedMotion'
 import './ToolMarquee.scss'
 
 const TOOLS = stackGroups.filter((group) => group.level).flatMap((group) => group.items)
-const HALF = Math.ceil(TOOLS.length / 2)
-const ROWS = [TOOLS.slice(0, HALF), TOOLS.slice(HALF)]
+
+function splitRows(count: number): string[][] {
+  const size = Math.ceil(TOOLS.length / count)
+  return Array.from({ length: count }, (_, i) => TOOLS.slice(i * size, (i + 1) * size))
+}
+
+const WIDE_ROWS = splitRows(2)
+const NARROW_ROWS = splitRows(4)
 
 function Chip({ name }: { name: string }) {
   const icon = findToolIcon(name)
@@ -39,10 +46,12 @@ function Row({ items, hidden }: { items: string[]; hidden?: boolean }) {
 
 export function ToolMarquee() {
   const reduced = useReducedMotion()
+  const narrow = useMediaQuery('(max-width: 640px)')
+  const rows = narrow ? NARROW_ROWS : WIDE_ROWS
 
   return (
     <div className="marquee" data-testid="tool-marquee">
-      {ROWS.map((items, index) => (
+      {rows.map((items, index) => (
         <div key={index} className="marquee__lane">
           {reduced ? (
             <Row items={items} />

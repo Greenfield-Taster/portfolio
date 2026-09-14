@@ -5,8 +5,29 @@
   padding-top: var(--space-4);
 
   &__lane {
+    position: relative;
     overflow: hidden;
-    mask-image: linear-gradient(to right, transparent, #000 6%, #000 94%, transparent);
+    contain: paint;
+
+    &::before,
+    &::after {
+      content: '';
+      position: absolute;
+      inset-block: 0;
+      width: 48px;
+      z-index: 1;
+      pointer-events: none;
+    }
+
+    &::before {
+      left: 0;
+      background: linear-gradient(to right, var(--bg), transparent);
+    }
+
+    &::after {
+      right: 0;
+      background: linear-gradient(to left, var(--bg), transparent);
+    }
   }
 
   &__track {
@@ -17,6 +38,11 @@
     &--back { animation: marquee-back 90s linear infinite; }
 
     &:hover { animation-play-state: paused; }
+
+    @media (max-width: 640px) {
+      &--forth { animation-duration: 60s; }
+      &--back { animation-duration: 54s; }
+    }
   }
 
   &__row {
