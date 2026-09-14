@@ -63,16 +63,25 @@ function createStarTexture(): THREE.Texture {
   return new THREE.CanvasTexture(canvas)
 }
 
-export function createHeroScene(canvas: HTMLCanvasElement, tier: QualityTier) {
+interface Built {
+  renderer: THREE.WebGLRenderer
+  render(time: number): void
+  resize(width: number, height: number): void
+  setPointer(x: number, y: number): void
+  refreshTheme(): void
+  animateTerrain: boolean
+  dispose(): void
+}
+
+function build(target: HTMLCanvasElement, tier: QualityTier, pixelRatio: number): Built {
   const settings = TIERS[tier]
-  const dpr = window.devicePixelRatio || 1
   const renderer = new THREE.WebGLRenderer({
-    canvas,
+    canvas: target,
     alpha: true,
-    antialias: tier === 'high' && dpr <= 1,
+    antialias: tier === 'high' && pixelRatio <= 1,
     powerPreference: 'high-performance',
   })
-  renderer.setPixelRatio(Math.min(dpr, tier === 'high' ? 1.5 : 1))
+  renderer.setPixelRatio(pixelRatio)
 
   const scene = new THREE.Scene()
   const fog = new THREE.Fog(readToken('bg'), 55, 175)
@@ -180,85 +189,26 @@ export function createHeroScene(canvas: HTMLCanvasElement, tier: QualityTier) {
   scene.add(sky)
 
   const pointer = { x: 0, y: 0 }
-  const onPointerMove = (event: PointerEvent) => {
-    pointer.x = (event.clientX / window.innerWidth - 0.5) * 2
-    pointer.y = (event.clientY / window.innerHeight - 0.5) * 2
-  }
-
-  function resize() {
-    const { clientWidth: w, clientHeight: h } = canvas
-    if (w === 0 || h === 0) return
-    renderer.setSize(w, h, false)
-    camera.aspect = w / h
-    camera.updateProjectionMatrix()
-  }
-
-  resize()
-  const observer = new ResizeObserver(resize)
-  observer.observe(canvas)
-
-  let paused = false
-  let frame = 0
-  let lastTime = 0
-
-  function render(time: number) {
-    lastTime = time
-    const seconds = time / 1000
-
-    if (tier !== 'still') {
-      applyHeights(seconds * FLOW)
-    }
-
-    camera.position.x = pointer.x * 1.1
-    camera.position.y = 8.5 - pointer.y * 0.5
-    camera.lookAt(0, 14.1, -40)
-
-    renderer.render(scene, camera)
-  }
-
-  function loop(time: number) {
-    render(time)
-    frame = requestAnimationFrame(loop)
-  }
-
-  function resume() {
-    if (tier === 'still') {
-      render(lastTime)
-    } else if (!paused && !frame) {
-      frame = requestAnimationFrame(loop)
-    }
-  }
-
-  const onContextLost = (event: Event) => {
-    event.preventDefault()
-    cancelAnimationFrame(frame)
-    frame = 0
-    canvas.dataset.lost = 'true'
-  }
-  const onContextRestored = () => {
-    delete canvas.dataset.lost
-    resume()
-  }
-  canvas.addEventListener('webglcontextlost', onContextLost)
-  canvas.addEventListener('webglcontextrestored', onContextRestored)
-
-  if (tier === 'still') {
-    render(0)
-  } else {
-    window.addEventListener('pointermove', onPointerMove, { passive: true })
-    frame = requestAnimationFrame(loop)
-  }
 
   return {
-    setPaused(next: boolean) {
-      if (tier === 'still' || next === paused) return
-      paused = next
-      if (paused) {
-        cancelAnimationFrame(frame)
-        frame = 0
-      } else if (!canvas.dataset.lost) {
-        frame = requestAnimationFrame(loop)
-      }
+    renderer,
+    animateTerrain: tier !== 'still',
+    render(time: number) {
+      if (tier !== 'still') applyHeights((time / 1000) * FLOW)
+      camera.position.x = pointer.x * 1.1
+      camera.position.y = 8.5 - pointer.y * 0.5
+      camera.lookAt(0, 14.1, -40)
+      renderer.render(scene, camera)
+    },
+    resize(width: number, height: number) {
+      if (width === 0 || height === 0) return
+      renderer.setSize(width, height, false)
+      camera.aspect = width / height
+      camera.updateProjectionMatrix()
+    },
+    setPointer(x: number, y: number) {
+      pointer.x = x
+      pointer.y = y
     },
     refreshTheme() {
       surfaceMaterial.color.set(readToken('hero-terrain'))
@@ -266,15 +216,8 @@ export function createHeroScene(canvas: HTMLCanvasElement, tier: QualityTier) {
       starMaterial.color.set(readToken('hero-star'))
       glowMaterial.color.set(readToken('hero-glow'))
       fog.color.set(readToken('bg'))
-
-      if (tier === 'still') render(lastTime)
     },
-    destroy() {
-      cancelAnimationFrame(frame)
-      observer.disconnect()
-      window.removeEventListener('pointermove', onPointerMove)
-      canvas.removeEventListener('webglcontextlost', onContextLost)
-      canvas.removeEventListener('webglcontextrestored', onContextRestored)
+    dispose() {
       groundGeometry.dispose()
       starGeometry.dispose()
       starTexture.dispose()
@@ -285,4 +228,135 @@ export function createHeroScene(canvas: HTMLCanvasElement, tier: QualityTier) {
       renderer.dispose()
     },
   }
+}
+
+export interface HeroScene {
+  destroy(): void
+  setPaused(paused: boolean): void
+  refreshTheme(): void
+}
+
+function createStillScene(canvas: HTMLCanvasElement): HeroScene {
+  let timer = 0
+  let destroyed = false
+
+  function paint() {
+    if (destroyed) return
+    const { clientWidth: w, clientHeight: h } = canvas
+    if (w === 0 || h === 0) return
+
+    const offscreen = document.createElement('canvas')
+    let built: Built | null = null
+    try {
+      built = build(offscreen, 'still', Math.min(window.devicePixelRatio || 1, 1.5))
+      built.resize(w, h)
+      built.render(0)
+      canvas.style.backgroundImage = `url(${offscreen.toDataURL('image/webp', 0.9)})`
+      delete canvas.dataset.lost
+    } catch {
+      canvas.dataset.lost = 'true'
+    } finally {
+      if (built) {
+        built.renderer.forceContextLoss()
+        built.dispose()
+      }
+    }
+  }
+
+  const schedule = () => {
+    window.clearTimeout(timer)
+    timer = window.setTimeout(paint, 150)
+  }
+
+  paint()
+  const observer = new ResizeObserver(schedule)
+  observer.observe(canvas)
+
+  return {
+    setPaused() {},
+    refreshTheme() {
+      paint()
+    },
+    destroy() {
+      destroyed = true
+      window.clearTimeout(timer)
+      observer.disconnect()
+      canvas.style.backgroundImage = ''
+    },
+  }
+}
+
+function createLiveScene(canvas: HTMLCanvasElement, tier: QualityTier): HeroScene {
+  const dpr = window.devicePixelRatio || 1
+  const built = build(canvas, tier, Math.min(dpr, tier === 'high' ? 1.5 : 1))
+
+  const onPointerMove = (event: PointerEvent) => {
+    built.setPointer(
+      (event.clientX / window.innerWidth - 0.5) * 2,
+      (event.clientY / window.innerHeight - 0.5) * 2
+    )
+  }
+
+  function resize() {
+    built.resize(canvas.clientWidth, canvas.clientHeight)
+  }
+
+  resize()
+  const observer = new ResizeObserver(resize)
+  observer.observe(canvas)
+
+  let paused = false
+  let frame = 0
+
+  function loop(time: number) {
+    built.render(time)
+    frame = requestAnimationFrame(loop)
+  }
+
+  function start() {
+    if (!paused && !frame && !canvas.dataset.lost) frame = requestAnimationFrame(loop)
+  }
+
+  function stop() {
+    cancelAnimationFrame(frame)
+    frame = 0
+  }
+
+  const onContextLost = (event: Event) => {
+    event.preventDefault()
+    stop()
+    canvas.dataset.lost = 'true'
+  }
+  const onContextRestored = () => {
+    delete canvas.dataset.lost
+    start()
+  }
+  canvas.addEventListener('webglcontextlost', onContextLost)
+  canvas.addEventListener('webglcontextrestored', onContextRestored)
+  window.addEventListener('pointermove', onPointerMove, { passive: true })
+  start()
+
+  return {
+    setPaused(next: boolean) {
+      if (next === paused) return
+      paused = next
+      if (paused) stop()
+      else start()
+    },
+    refreshTheme() {
+      built.refreshTheme()
+    },
+    destroy() {
+      stop()
+      observer.disconnect()
+      window.removeEventListener('pointermove', onPointerMove)
+      canvas.removeEventListener('webglcontextlost', onContextLost)
+      canvas.removeEventListener('webglcontextrestored', onContextRestored)
+      built.dispose()
+    },
+  }
+}
+
+export function createHeroScene(canvas: HTMLCanvasElement, tier: QualityTier): HeroScene {
+  return tier === 'still' ? createStillScene(canvas) : createLiveScene(canvas, tier)
 }
