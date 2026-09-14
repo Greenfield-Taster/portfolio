@@ -1,159 +1,98 @@
-import { useState } from 'react'
-import type { ChangeEvent, FormEvent } from 'react'
-import emailjs from '@emailjs/browser'
+import { useEffect, useState } from 'react'
 import { Section } from '../../components/Section/Section'
-import { Button } from '../../components/Button/Button'
 import { profile } from '../../data/profile'
-import { validateContact, isConfigured } from '../../lib/validate'
-import type { ContactDraft, FieldErrors } from '../../lib/validate'
 import './Contact.scss'
 
-type Status = 'idle' | 'sending' | 'sent' | 'error' | 'unconfigured'
+type Copied = 'no' | 'yes' | 'failed'
 
-const EMPTY: ContactDraft = { name: '', email: '', message: '' }
+/** How long "Copied" stays up before the button goes back to its offer. */
+const COPIED_FOR = 2400
 
 export function Contact() {
-  const [draft, setDraft] = useState<ContactDraft>(EMPTY)
-  const [errors, setErrors] = useState<FieldErrors>({})
-  const [status, setStatus] = useState<Status>('idle')
+  const [copied, setCopied] = useState<Copied>('no')
 
-  const set = (field: keyof ContactDraft) => (
-    event: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
-  ) => setDraft((prev) => ({ ...prev, [field]: event.target.value }))
+  useEffect(() => {
+    if (copied === 'no') return
+    const timer = window.setTimeout(() => setCopied('no'), COPIED_FOR)
+    return () => window.clearTimeout(timer)
+  }, [copied])
 
-  async function onSubmit(event: FormEvent) {
-    event.preventDefault()
-
-    // In-flight guard: a disabled submit button does not stop a second
-    // submission triggered by pressing Enter in a focused text field, so
-    // this check is the real backstop against overlapping sends.
-    if (status === 'sending') return
-
-    const found = validateContact(draft)
-    setErrors(found)
-    if (Object.keys(found).length > 0) {
-      setStatus('idle')
-      return
-    }
-
-    const env = import.meta.env as unknown as Record<string, string | undefined>
-    if (!isConfigured(env)) {
-      setStatus('unconfigured')
-      return
-    }
-
-    setStatus('sending')
+  async function copyEmail() {
     try {
-      await emailjs.send(
-        env.VITE_EMAILJS_SERVICE_ID!,
-        env.VITE_EMAILJS_TEMPLATE_ID!,
-        { from_name: draft.name, reply_to: draft.email, message: draft.message },
-        { publicKey: env.VITE_EMAILJS_PUBLIC_KEY! }
-      )
-      setStatus('sent')
-      setDraft(EMPTY)
+      await navigator.clipboard.writeText(profile.email)
+      setCopied('yes')
     } catch {
-      // The visitor's message is kept in `draft` on purpose — a failed send
-      // must never discard what they wrote.
-      setStatus('error')
+      // No clipboard — an old browser, or a page not allowed one. The address
+      // is printed right there on the button; say so rather than fail quietly.
+      setCopied('failed')
     }
   }
 
+  const stats = [
+    { value: profile.years, label: 'years' },
+    { value: String(profile.clients), label: 'clients' },
+    { value: String(profile.npmPackages), label: 'npm packages' },
+  ]
+
   return (
-    <Section
-      id="contact"
-      eyebrow="Contact"
-      title="Get in touch"
-      lede="Open to full-time roles and to project work. I reply to everything."
-    >
+    <Section id="contact" eyebrow="Contact" title="Get in touch">
       <div className="contact" data-reveal>
-        <ul className="contact__direct">
-          <li>
-            <span className="u-label">Email</span>
-            <a href={`mailto:${profile.email}`}>{profile.email}</a>
-          </li>
-          <li>
-            <span className="u-label">LinkedIn</span>
-            <a href={profile.linkedin} target="_blank" rel="noreferrer">
-              anastasiia-horbachova
-            </a>
-          </li>
-          <li>
-            <span className="u-label">GitHub</span>
-            <a href={profile.github} target="_blank" rel="noreferrer">
-              Greenfield-Taster
-            </a>
-          </li>
-          <li>
-            <span className="u-label">CV</span>
-            <a href={profile.cvPath} download>
-              Download PDF
-            </a>
-          </li>
-        </ul>
+        <h3 className="contact__ask u-display">
+          {/* Kept on one line so the compound never breaks at its own hyphen. */}
+          Looking for a <span className="contact__nowrap">full-stack</span> developer?
+        </h3>
 
-        <form className="contact__form" onSubmit={onSubmit} noValidate>
-          <label className="field">
-            <span>Name</span>
-            <input
-              type="text"
-              value={draft.name}
-              onChange={set('name')}
-              aria-invalid={Boolean(errors.name)}
-              aria-describedby={errors.name ? 'err-name' : undefined}
-            />
-            {errors.name && (
-              <em id="err-name" className="field__error">
-                {errors.name}
-              </em>
-            )}
-          </label>
+        <div className="contact__grid">
+          <div className="contact__main">
+            <p className="u-label contact__label">Write me at</p>
 
-          <label className="field">
-            <span>Email</span>
-            <input
-              type="email"
-              value={draft.email}
-              onChange={set('email')}
-              aria-invalid={Boolean(errors.email)}
-              aria-describedby={errors.email ? 'err-email' : undefined}
-            />
-            {errors.email && (
-              <em id="err-email" className="field__error">
-                {errors.email}
-              </em>
-            )}
-          </label>
+            <button type="button" className="contact__copy" onClick={copyEmail}>
+              <span className="contact__email">{profile.email}</span>
+              <span className="contact__hint" role="status">
+                {copied === 'yes' && 'Copied to clipboard'}
+                {copied === 'failed' && 'Copy is blocked here — select the address instead'}
+                {copied === 'no' && (
+                  <>
+                    <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+                      <rect x="9" y="9" width="13" height="13" rx="2" />
+                      <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1" />
+                    </svg>
+                    Click to copy
+                  </>
+                )}
+              </span>
+            </button>
 
-          <label className="field">
-            <span>Message</span>
-            <textarea
-              rows={5}
-              value={draft.message}
-              onChange={set('message')}
-              aria-invalid={Boolean(errors.message)}
-              aria-describedby={errors.message ? 'err-message' : undefined}
-            />
-            {errors.message && (
-              <em id="err-message" className="field__error">
-                {errors.message}
-              </em>
-            )}
-          </label>
-
-          <div className="contact__actions">
-            <Button type="submit" disabled={status === 'sending'}>
-              {status === 'sending' ? 'Sending…' : 'Send message'}
-            </Button>
+            <ul className="contact__pills">
+              <li>
+                <a href={profile.github} target="_blank" rel="noreferrer">GitHub</a>
+              </li>
+              <li>
+                <a href={profile.linkedin} target="_blank" rel="noreferrer">LinkedIn</a>
+              </li>
+              <li>
+                <a href={`mailto:${profile.email}`}>Email</a>
+              </li>
+              <li>
+                <a href={profile.cvPath} download>Download CV</a>
+              </li>
+            </ul>
           </div>
 
-          <p className="contact__status" role="status">
-            {status === 'sent' && 'Thank you — your message is on its way.'}
-            {status === 'error' && `Sending failed. Please email me directly at ${profile.email}.`}
-            {status === 'unconfigured' &&
-              `The form is not connected yet — please email me directly at ${profile.email}.`}
-          </p>
-        </form>
+          <dl className="contact__stats">
+            {stats.map((stat) => (
+              <div key={stat.label} className="contact__stat">
+                <dd>{stat.value}</dd>
+                <dt>{stat.label}</dt>
+              </div>
+            ))}
+          </dl>
+        </div>
+
+        <p className="contact__close">Bring the brief — I&rsquo;ll take it from there.</p>
+        <p className="contact__note">
+          {profile.availability}: full-time roles and project work. {profile.workAuthorization}.
+        </p>
       </div>
     </Section>
   )

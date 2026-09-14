@@ -1,96 +1,180 @@
 .contact {
-  display: grid;
-  grid-template-columns: minmax(0, 320px) minmax(0, 1fr);
+  display: flex;
+  flex-direction: column;
   gap: var(--space-7);
 
-  @media (max-width: 768px) {
-    grid-template-columns: 1fr;
+  // The one line on the page set at the hero's scale: the question the
+  // whole site exists to answer.
+  &__ask {
+    margin: 0;
+    max-width: 16ch;
+    font-size: clamp(2.5rem, 6vw, 5rem);
   }
 
-  &__direct {
+  &__nowrap { white-space: nowrap; }
+
+  &__grid {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(0, 300px);
+    gap: var(--space-7);
+    align-items: start;
+
+    @media (max-width: 900px) { grid-template-columns: minmax(0, 1fr); }
+  }
+
+  &__main {
     display: flex;
     flex-direction: column;
+    align-items: flex-start;
     gap: var(--space-5);
-
-    li {
-      display: flex;
-      flex-direction: column;
-      gap: var(--space-1);
-      padding-bottom: var(--space-4);
-      border-bottom: 1px solid var(--line);
-    }
-
-    a {
-      color: var(--ink);
-      text-decoration: none;
-      overflow-wrap: anywhere;
-      transition: color var(--dur-fast) var(--ease);
-    }
-
-    a:hover {
-      color: var(--accent-ink);
-    }
-  }
-
-  &__form {
-    display: flex;
-    flex-direction: column;
-    gap: var(--space-4);
-    max-width: 560px;
     min-width: 0;
   }
 
-  &__actions {
+  &__label { margin: 0; }
+
+  // The address, as the button that copies it. Big enough to be the thing
+  // on the screen; still one tap to put it wherever the reader is writing.
+  &__copy {
     display: flex;
-    gap: var(--space-3);
+    flex-direction: column;
+    align-items: flex-start;
+    gap: var(--space-2);
+    width: 100%;
+    max-width: 640px;
+    padding: var(--space-5) var(--space-6);
+    border: 1px solid var(--line);
+    border-radius: var(--radius-lg);
+    background: var(--surface);
+    box-shadow: var(--shadow-card);
+    text-align: left;
+    cursor: pointer;
+    transition: border-color var(--dur-fast) var(--ease), box-shadow var(--dur-fast) var(--ease);
+
+    &:hover,
+    &:focus-visible {
+      border-color: var(--accent);
+      box-shadow:
+        var(--shadow-card),
+        0 0 0 4px color-mix(in srgb, var(--accent) 14%, transparent);
+    }
+
+    &:focus-visible { outline: none; }
   }
 
-  &__status {
+  &__email {
+    font-family: var(--font-display);
+    font-size: clamp(1.5rem, 3.4vw, 2.75rem);
+    line-height: 1.1;
+    letter-spacing: -.02em;
+    color: var(--accent-ink);
+    overflow-wrap: anywhere;
+  }
+
+  &__hint {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--space-2);
     min-height: 1.5em;
-    font-size: var(--step-small);
-    color: var(--muted);
-  }
-}
-
-.field {
-  display: flex;
-  flex-direction: column;
-  gap: var(--space-2);
-
-  > span {
     font-family: var(--font-mono);
     font-size: var(--step-label);
-    letter-spacing: .14em;
+    letter-spacing: .1em;
     text-transform: uppercase;
     color: var(--muted);
+
+    svg {
+      width: 12px;
+      height: 12px;
+      fill: none;
+      stroke: currentColor;
+      stroke-width: 2;
+    }
   }
 
-  input,
-  textarea {
-    width: 100%;
-    padding: var(--space-3) var(--space-4);
+  &__pills {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-3);
+
+    a {
+      display: inline-flex;
+      align-items: center;
+      padding: var(--space-2) var(--space-5);
+      border: 1px solid color-mix(in srgb, var(--accent) 45%, transparent);
+      border-radius: var(--radius-pill);
+      color: var(--accent-ink);
+      font-size: var(--step-small);
+      font-weight: 500;
+      text-decoration: none;
+      transition:
+        background var(--dur-fast) var(--ease),
+        color var(--dur-fast) var(--ease),
+        box-shadow var(--dur-fast) var(--ease);
+    }
+
+    a:hover,
+    a:focus-visible {
+      background: var(--accent);
+      color: var(--on-accent);
+      box-shadow: 0 0 18px color-mix(in srgb, var(--accent) 40%, transparent);
+    }
+  }
+
+  // Three numbers the hero already showed, kept here so the reader who
+  // scrolled straight to the bottom still has the shape of the work.
+  &__stats {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-5);
+    margin: 0;
+    padding: var(--space-6);
     border: 1px solid var(--line);
-    border-radius: var(--radius-sm);
-    background: var(--surface);
-    color: var(--ink);
-    resize: vertical;
-    transition: border-color var(--dur-fast) var(--ease), background var(--dur-fast) var(--ease);
+    border-radius: var(--radius-lg);
+    background: color-mix(in srgb, var(--surface) 70%, transparent);
+    backdrop-filter: blur(10px);
+
+    @media (max-width: 900px) {
+      flex-direction: row;
+      justify-content: space-around;
+      padding: var(--space-5);
+    }
   }
 
-  input:focus-visible,
-  textarea:focus-visible {
-    border-color: var(--accent);
+  &__stat {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-1);
+
+    dd {
+      margin: 0;
+      font-family: var(--font-display);
+      font-size: clamp(2rem, 3.4vw, 2.75rem);
+      line-height: 1;
+      color: var(--accent-ink);
+      font-variant-numeric: tabular-nums;
+    }
+
+    dt {
+      font-family: var(--font-mono);
+      font-size: var(--step-label);
+      letter-spacing: .14em;
+      text-transform: uppercase;
+      color: var(--muted);
+    }
   }
 
-  input[aria-invalid='true'],
-  textarea[aria-invalid='true'] {
-    border-color: var(--err);
-    background: var(--err-soft);
+  &__close {
+    margin: var(--space-4) 0 0;
+    font-family: var(--font-display);
+    font-style: italic;
+    font-size: clamp(1.375rem, 2.4vw, 1.75rem);
+    color: var(--accent-ink);
+    text-align: center;
   }
 
-  &__error {
-    font-style: normal;
+  &__note {
+    margin: calc(-1 * var(--space-6)) 0 0;
     font-size: var(--step-small);
-    color: var(--err);
+    color: var(--muted);
+    text-align: center;
   }
 }

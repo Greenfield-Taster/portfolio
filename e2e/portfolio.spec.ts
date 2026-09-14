@@ -85,15 +85,15 @@ test('reduced motion turns the animation off', async ({ page }) => {
   expect(smooth).toBe(false)
 })
 
-test('the contact form reports every empty field', async ({ page }) => {
+test('the email address copies to the clipboard on a click', async ({ page, context }) => {
+  await context.grantPermissions(['clipboard-read', 'clipboard-write'])
   await page.goto('/')
-  await page.getByRole('button', { name: /send message/i }).click()
 
-  await expect(page.getByText('Please add your name.')).toBeVisible()
-  await expect(
-    page.getByText('Please add an email address so I can reply.')
-  ).toBeVisible()
-  await expect(page.getByText('Please write a short message.')).toBeVisible()
+  await page.getByRole('button', { name: /horbachova\.site@gmail\.com/ }).click()
+  await expect(page.getByText('Copied to clipboard')).toBeVisible()
+
+  const copied = await page.evaluate(() => navigator.clipboard.readText())
+  expect(copied).toBe('horbachova.site@gmail.com')
 })
 
 test('the header follows the reader down the page', async ({ page }) => {

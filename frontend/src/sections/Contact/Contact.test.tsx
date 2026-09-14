@@ -1,114 +1,67 @@
-import { fireEvent, render, screen } from '@testing-library/react'
+import { render, screen } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
-import emailjs from '@emailjs/browser'
 import { Contact } from './Contact'
-import * as validateLib from '../../lib/validate'
-
-vi.mock('@emailjs/browser', () => ({
-  default: { send: vi.fn() },
-}))
+import { profile } from '../../data/profile'
 
 describe('Contact', () => {
-  it('always shows the email address, so the form is never the only way through', () => {
+  it('prints the email address and links it, so it is reachable without the clipboard', () => {
     render(<Contact />)
-    expect(screen.getByRole('link', { name: /horbachova\.site@gmail\.com/ })).toBeInTheDocument()
-  })
-
-  it('reports every empty field on submit', async () => {
-    const user = userEvent.setup()
-    render(<Contact />)
-    await user.click(screen.getByRole('button', { name: /send message/i }))
-    expect(screen.getByText('Please add your name.')).toBeInTheDocument()
-    expect(screen.getByText('Please add an email address so I can reply.')).toBeInTheDocument()
-    expect(screen.getByText('Please write a short message.')).toBeInTheDocument()
-  })
-
-  it('keeps everything the visitor typed when validation fails, even for a field that is not empty', async () => {
-    const user = userEvent.setup()
-    render(<Contact />)
-    await user.type(screen.getByLabelText(/name/i), 'Olena')
-    // A malformed (non-empty) email exercises the "wrong, not missing" branch
-    // of validation, distinct from the empty-field case covered above.
-    await user.type(screen.getByLabelText(/email/i), 'olena@')
-    await user.type(screen.getByLabelText(/message/i), 'I would like to work with you.')
-    await user.click(screen.getByRole('button', { name: /send message/i }))
-
-    expect(screen.getByText('That does not look like an email address.')).toBeInTheDocument()
-    expect(screen.getByLabelText(/name/i)).toHaveValue('Olena')
-    expect(screen.getByLabelText(/email/i)).toHaveValue('olena@')
-    expect(screen.getByLabelText(/message/i)).toHaveValue('I would like to work with you.')
-  })
-
-  it('ties each error to its field for screen readers', async () => {
-    const user = userEvent.setup()
-    render(<Contact />)
-    await user.click(screen.getByRole('button', { name: /send message/i }))
-    expect(screen.getByLabelText(/name/i)).toHaveAttribute('aria-invalid', 'true')
-  })
-
-  it('says plainly that the form is unavailable when it is not configured', async () => {
-    const user = userEvent.setup()
-    render(<Contact />)
-    await user.type(screen.getByLabelText(/name/i), 'Olena')
-    await user.type(screen.getByLabelText(/email/i), 'olena@example.com')
-    await user.type(screen.getByLabelText(/message/i), 'I would like to work with you.')
-    await user.click(screen.getByRole('button', { name: /send message/i }))
-    expect(
-      await screen.findByText(/form is not connected yet/i)
-    ).toBeInTheDocument()
-  })
-
-  it('keeps everything the visitor typed when the form turns out to be unconfigured', async () => {
-    const user = userEvent.setup()
-    render(<Contact />)
-    await user.type(screen.getByLabelText(/name/i), 'Olena')
-    await user.type(screen.getByLabelText(/email/i), 'olena@example.com')
-    await user.type(screen.getByLabelText(/message/i), 'I would like to work with you.')
-    await user.click(screen.getByRole('button', { name: /send message/i }))
-
-    await screen.findByText(/form is not connected yet/i)
-    expect(screen.getByLabelText(/name/i)).toHaveValue('Olena')
-    expect(screen.getByLabelText(/email/i)).toHaveValue('olena@example.com')
-    expect(screen.getByLabelText(/message/i)).toHaveValue('I would like to work with you.')
-  })
-})
-
-describe('Contact double-submit guard', () => {
-  afterEach(() => {
-    vi.restoreAllMocks()
-  })
-
-  it('never lets a second overlapping submit reach the send path', async () => {
-    // Simulate a configured install (keys present) so the code actually
-    // reaches the `sending` state instead of short-circuiting at
-    // `unconfigured` — that is the state this guard exists to protect.
-    vi.spyOn(validateLib, 'isConfigured').mockReturnValue(true)
-    let releaseSend: () => void = () => {}
-    vi.mocked(emailjs.send).mockReturnValue(
-      new Promise((resolve) => {
-        releaseSend = () => resolve(undefined as never)
-      })
+    expect(screen.getByRole('button', { name: new RegExp(profile.email) })).toBeInTheDocument()
+    expect(screen.getByRole('link', { name: 'Email' })).toHaveAttribute(
+      'href',
+      `mailto:${profile.email}`
     )
+  })
 
+  it('copies the address on a click and says so', async () => {
     const user = userEvent.setup()
     render(<Contact />)
-    await user.type(screen.getByLabelText(/name/i), 'Olena')
-    await user.type(screen.getByLabelText(/email/i), 'olena@example.com')
-    await user.type(screen.getByLabelText(/message/i), 'I would like to work with you.')
 
-    const form = screen.getByLabelText(/name/i).closest('form') as HTMLFormElement
+    await user.click(screen.getByRole('button', { name: new RegExp(profile.email) }))
 
-    await user.click(screen.getByRole('button', { name: /send message/i }))
-    expect(screen.getByRole('button', { name: /sending/i })).toBeDisabled()
+    expect(await screen.findByText('Copied to clipboard')).toBeInTheDocument()
+    expect(await navigator.clipboard.readText()).toBe(profile.email)
+  })
 
-    // A disabled submit button blocks a second *click*, but not an implicit
-    // form submission (e.g. Enter pressed in a focused text field), which
-    // fires a plain submit event that never touches the button at all. Fire
-    // that directly to prove the in-flight state guard — not the disabled
-    // attribute — is what stops the second send.
-    fireEvent.submit(form)
+  it('says plainly when the clipboard is not available', async () => {
+    const user = userEvent.setup()
+    vi.spyOn(navigator.clipboard, 'writeText').mockRejectedValueOnce(new Error('blocked'))
+    render(<Contact />)
 
-    expect(emailjs.send).toHaveBeenCalledTimes(1)
-    releaseSend()
+    await user.click(screen.getByRole('button', { name: new RegExp(profile.email) }))
+
+    expect(await screen.findByText(/select the address instead/i)).toBeInTheDocument()
+  })
+
+  it('links out to GitHub and LinkedIn in a new tab', () => {
+    render(<Contact />)
+    for (const [name, href] of [
+      ['GitHub', profile.github],
+      ['LinkedIn', profile.linkedin],
+    ]) {
+      const link = screen.getByRole('link', { name })
+      expect(link).toHaveAttribute('href', href)
+      expect(link).toHaveAttribute('target', '_blank')
+    }
+  })
+
+  it('offers the CV as a download', () => {
+    render(<Contact />)
+    const cv = screen.getByRole('link', { name: /download cv/i })
+    expect(cv).toHaveAttribute('href', profile.cvPath)
+    expect(cv).toHaveAttribute('download')
+  })
+
+  it('repeats the three numbers from the profile', () => {
+    render(<Contact />)
+    expect(screen.getByText(profile.years)).toBeInTheDocument()
+    expect(screen.getByText(String(profile.clients))).toBeInTheDocument()
+    expect(screen.getByText(String(profile.npmPackages))).toBeInTheDocument()
+  })
+
+  it('takes no messages of its own', () => {
+    render(<Contact />)
+    expect(screen.queryByRole('textbox')).not.toBeInTheDocument()
+    expect(document.querySelector('form')).toBeNull()
   })
 })
