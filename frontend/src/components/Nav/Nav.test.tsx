@@ -1,4 +1,5 @@
 import { render, screen, within } from '../../test/renderWithTheme'
+import { fireEvent } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import { Nav, NAV_ITEMS } from './Nav'
 import { profile } from '../../data/profile'
@@ -123,6 +124,18 @@ describe('Nav', () => {
     const toggle = screen.getByRole('button', { name: /menu/i })
     await user.click(toggle)
     await user.keyboard('{Escape}')
+    expect(toggle).toHaveAttribute('aria-expanded', 'false')
+  })
+
+  it('closes the menu as soon as the page scrolls', async () => {
+    const user = userEvent.setup()
+    render(<Nav />)
+
+    const toggle = screen.getByRole('button', { name: /menu/i })
+    await user.click(toggle)
+    expect(toggle).toHaveAttribute('aria-expanded', 'true')
+
+    fireEvent.scroll(window)
     expect(toggle).toHaveAttribute('aria-expanded', 'false')
   })
 
