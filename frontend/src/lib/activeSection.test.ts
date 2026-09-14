@@ -22,8 +22,6 @@ describe('pickActiveSection', () => {
   })
 
   it('marks the last section once the page is scrolled to the bottom', () => {
-    // A short trailing section never reaches the probe on a tall viewport, so
-    // reaching the end of the document has to win over the probe rule.
     const nearEnd = [
       { id: 'about', top: -2000 },
       { id: 'experience', top: -1100 },

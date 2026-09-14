@@ -8,9 +8,6 @@ export interface ThemeContextValue {
   toggle: () => void
 }
 
-// Null default on purpose: a component that reads the theme outside the
-// provider is a wiring mistake, and useTheme turns it into a loud error
-// rather than a second, private copy of the state that never updates.
 export const ThemeContext = createContext<ThemeContextValue | null>(null)
 
 const KEY = 'theme'
@@ -32,15 +29,9 @@ function persist(next: Theme) {
   try {
     localStorage.setItem(KEY, next)
   } catch {
-    // storage blocked — the theme still applies for this page view
   }
 }
 
-// Stamped synchronously from the setters rather than only from the effect
-// below. Effects run child-first, so a consumer's own [theme] effect would
-// otherwise fire while `data-theme` still held the previous value — and
-// anything that reads a resolved CSS custom property there (the hero scene
-// reads `--accent`) would pick up the old colour.
 function stamp(next: Theme) {
   document.documentElement.dataset.theme = next
 }
@@ -48,7 +39,6 @@ function stamp(next: Theme) {
 export function ThemeProvider({ children }: { children: ReactNode }) {
   const [theme, setThemeState] = useState<Theme>(() => readStored() ?? systemTheme())
 
-  // Covers the initial value; user-initiated changes have already stamped.
   useEffect(() => {
     stamp(theme)
   }, [theme])
@@ -59,9 +49,6 @@ export function ThemeProvider({ children }: { children: ReactNode }) {
     persist(next)
   }, [])
 
-  // Reads `theme` from the closure rather than using a functional update, so
-  // that stamping and persisting stay out of the state updater — React is
-  // free to call an updater more than once, and it must be pure.
   const toggle = useCallback(() => {
     setTheme(theme === 'light' ? 'dark' : 'light')
   }, [theme, setTheme])

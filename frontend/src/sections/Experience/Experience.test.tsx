@@ -36,8 +36,6 @@ describe('Experience', () => {
   it('shows every highlight of every role without asking the reader to open anything', () => {
     render(<Experience />)
 
-    // The section used to hide the detail behind a toggle. Nothing may be
-    // collapsed now, so a reader — or a search engine — gets all of it.
     const rows = screen.getAllByTestId('role-row')
     rolesNewestFirst().forEach((role, index) => {
       const row = rows[index]
@@ -63,8 +61,6 @@ describe('Experience', () => {
     render(<Experience />)
     const rows = screen.getAllByTestId('role-row')
 
-    // Scoped per row on purpose: two roles share the title 'Frontend
-    // Developer', so a page-wide query would match both.
     rolesNewestFirst().forEach((role, index) => {
       expect(
         within(rows[index]).getByRole('heading', { level: 3, name: role.title })
@@ -74,8 +70,6 @@ describe('Experience', () => {
   it('keeps the section title inside the intro that stays on screen', () => {
     render(<Experience />)
 
-    // The head lives in the sticky column rather than above both columns, so
-    // the section keeps announcing itself while the roles scroll past.
     const title = screen.getByRole('heading', { level: 2, name: 'Professional Experience' })
     expect(title.closest('.xp__intro')).not.toBeNull()
   })

@@ -3,7 +3,6 @@ import { ToolMarquee } from '../../components/ToolMarquee/ToolMarquee'
 import { profile } from '../../data/profile'
 import './About.scss'
 
-/** A string value inside the code block, quoted the way the code would quote it. */
 function Str({ children }: { children: string }) {
   return <span className="about__code-str">&apos;{children}&apos;</span>
 }
@@ -15,12 +14,8 @@ export function About() {
   return (
     <Section id="about" eyebrow="About" title="About me" lede={profile.intro}>
       <div className="about">
-        {/* The story beside the facts: the paragraph on the left, and on the
-            right the same person as an object literal — the one notation a
-            developer reading this page already knows how to skim. */}
         <div className="about__intro" data-reveal>
           <p className="about__text">{profile.lede}</p>
-
           <pre className="about__code" aria-label="Summary, as code">
             <code>
               <span className="about__code-key">const</span> anastasiia = {'{'}{'\n'}
@@ -36,7 +31,6 @@ export function About() {
             </code>
           </pre>
         </div>
-
         <section className="about__edu" aria-labelledby="about-edu-title" data-reveal>
           <h3 id="about-edu-title" className="u-label about__edu-title">Education</h3>
           <ul className="about__schools">
@@ -53,7 +47,6 @@ export function About() {
             ))}
           </ul>
         </section>
-
         <ToolMarquee />
       </div>
     </Section>

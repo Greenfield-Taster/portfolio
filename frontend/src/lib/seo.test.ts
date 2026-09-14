@@ -3,7 +3,6 @@ import { profile } from '../data/profile'
 
 describe('buildPersonJsonLd', () => {
   const ld = buildPersonJsonLd(profile) as Record<string, unknown>
-
   it('declares itself a Person', () => {
     expect(ld['@type']).toBe('Person')
     expect(ld['@context']).toBe('https://schema.org')

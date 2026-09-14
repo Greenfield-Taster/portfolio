@@ -16,7 +16,6 @@
     background: var(--accent);
   }
 
-  // Fixed box so the line above and below never shift as the roles swap.
   &__text {
     display: grid;
     place-items: center start;

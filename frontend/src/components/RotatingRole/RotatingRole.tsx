@@ -24,7 +24,6 @@ export function RotatingRole({ roles, intervalMs = 3000 }: RotatingRoleProps) {
   return (
     <p className="rotating-role">
       <span className="rotating-role__bar" aria-hidden="true" />
-      {/* `key` on the text restarts the enter animation for each new role. */}
       <span className="rotating-role__text" aria-hidden="true" data-testid="rotating-role">
         <span key={index}>{roles[index]}</span>
       </span>

@@ -1,6 +1,5 @@
 .pc {
   display: grid;
-  // The art takes the narrower column; the text needs the room.
   grid-template-columns: minmax(0, 5fr) minmax(0, 7fr);
   border: 1px solid var(--line);
   border-radius: var(--radius-lg);
@@ -10,8 +9,6 @@
 
   @media (max-width: 900px) { grid-template-columns: minmax(0, 1fr); }
 
-  // Every other card swaps sides, so the run of three reads as a page of
-  // spreads rather than a list of identical rows.
   &:nth-child(even) &__art {
     order: 2;
     border-inline-end: 0;

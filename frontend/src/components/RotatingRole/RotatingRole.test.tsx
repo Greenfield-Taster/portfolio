@@ -66,8 +66,6 @@ describe('RotatingRole', () => {
   it('names every role once for assistive technology, without the churn', () => {
     render(<RotatingRole roles={ROLES} intervalMs={3000} />)
 
-    // The animated node swaps text every few seconds; announcing each swap
-    // would be noise, so it is hidden and one static line carries the roles.
     expect(screen.getByTestId('rotating-role')).toHaveAttribute('aria-hidden', 'true')
     expect(screen.getByText(ROLES.join(', '))).toBeInTheDocument()
   })

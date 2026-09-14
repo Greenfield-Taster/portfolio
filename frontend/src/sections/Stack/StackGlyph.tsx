@@ -1,10 +1,5 @@
 import type { StackGlyph as Glyph } from '../../data/types'
 
-/**
- * The small line drawings that stand for each group of tools, drawn here
- * rather than pulled from an icon set: six outlines are cheaper than a
- * dependency, and they can share one stroke weight with the page.
- */
 const GLYPHS: Record<Glyph, React.ReactNode> = {
   layout: (
     <>

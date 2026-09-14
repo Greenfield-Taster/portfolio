@@ -35,8 +35,6 @@ describe('terrainHeights', () => {
       }
     }
 
-    // A jump between neighbours of more than a third of the full amplitude
-    // reads as noise rather than hills.
     expect(worst).toBeLessThan(base.amplitude * 0.67)
   })
 
@@ -54,8 +52,6 @@ describe('terrainHeights', () => {
     const movedOne = terrainHeights({ ...base, offset: 1 })
     const row = base.segmentsX + 1
 
-    // Row z of the shifted field is row z+1 of the resting one: the landscape
-    // slides through the grid instead of being regenerated under it.
     for (let x = 0; x <= base.segmentsX; x += 1) {
       expect(movedOne[x]).toBeCloseTo(still[row + x], 5)
     }

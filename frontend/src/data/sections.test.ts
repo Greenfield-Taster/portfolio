@@ -12,8 +12,6 @@ describe('sectionNumber', () => {
   })
 
   it('leaves the hero out of the count', () => {
-    // The hero opens the page rather than taking a place in the sequence, so
-    // numbering it would push every other section one out of step.
     expect(sectionNumber('top')).toBeNull()
   })
 

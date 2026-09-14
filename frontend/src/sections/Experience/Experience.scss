@@ -1,5 +1,3 @@
-// Where the line sits, and how far the cards clear it. One number, because
-// the rail, the markers and the card indent all have to agree.
 $rail-x: 7px;
 $rail-gap: 44px;
 
@@ -11,15 +9,8 @@ $rail-gap: 44px;
 
   @media (max-width: 900px) { grid-template-columns: minmax(0, 1fr); }
 
-  // ── Intro card ───────────────────────────────────────────────────────────
-
-  // Holds the section's head and stays with the reader while the roles
-  // scroll past it: the section keeps announcing itself for as long as the
-  // reader is in it, instead of the title scrolling away from the list it
-  // belongs to.
   &__intro {
     position: sticky;
-    // Clears the fixed nav pill plus a little air.
     top: calc(var(--space-4) + 76px);
     display: flex;
     flex-direction: column;
@@ -33,18 +24,11 @@ $rail-gap: 44px;
 
     @media (max-width: 900px) { position: static; }
 
-    // The head inside the card is the card's own content, not a page-level
-    // head: no reveal of its own (the card reveals as one) and no room for
-    // the slash mark's indent under a lede that already sits in a card.
     .section__head { gap: var(--space-3); }
     .section__lede { padding-inline-start: 0; }
-    // A step down from the page-level size: the card is a third of the
-    // width the other heads have, and the bold grotesk fills it fast.
     .section__title { font-size: clamp(1.75rem, 3vw, 2.375rem); }
   }
 
-  // The second word of the title, in the accent that may carry text. Upright:
-  // the grotesk has no italic, and a synthesised slant would be a fake one.
   &__accent {
     font-style: normal;
     color: var(--accent-ink);
@@ -76,13 +60,9 @@ $rail-gap: 44px;
     color: var(--ink);
   }
 
-  // ── Timeline ─────────────────────────────────────────────────────────────
-
   &__timeline {
     position: relative;
     min-width: 0;
-    // The hook writes over this every frame; the value here is what the line
-    // shows before JavaScript has run, and where it stays if it never does.
     --timeline-progress: 0;
   }
 
@@ -96,10 +76,6 @@ $rail-gap: 44px;
     background: var(--line);
   }
 
-  // Drawn from the top down by scaling rather than by changing height: a
-  // transform is composited, so the line follows the scroll without asking
-  // for layout on every frame. The glow is what makes it read as lit rather
-  // than merely coloured.
   &__rail-fill {
     position: absolute;
     inset: 0;
@@ -122,11 +98,9 @@ $rail-gap: 44px;
     min-width: 0;
   }
 
-  // Sits on the rail, and lights up as the drawn line reaches it.
   &__dot {
     position: absolute;
     left: 0;
-    // Lines up with the middle of the card's first line of text.
     top: calc(var(--space-5) + .6em);
     width: 16px;
     height: 16px;

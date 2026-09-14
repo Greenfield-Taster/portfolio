@@ -2,7 +2,6 @@ import { ProjectArt } from '../ProjectArt/ProjectArt'
 import type { Project, ProjectStatus } from '../../data/types'
 import './ProjectCard.scss'
 
-// Plain words for where a project stands, rather than the data's own keys.
 const STATUS: Record<ProjectStatus, string> = {
   live: 'Live',
   published: 'On npm',
@@ -15,7 +14,6 @@ export function ProjectCard({ project }: { project: Project }) {
       <div className="pc__art" aria-hidden="true" data-testid="project-art">
         <ProjectArt kind={project.art} />
       </div>
-
       <div className="pc__body">
         <p className="pc__meta">
           <span className="pc__year">{project.year}</span>
@@ -23,24 +21,20 @@ export function ProjectCard({ project }: { project: Project }) {
             {STATUS[project.status]}
           </span>
         </p>
-
         <h3 className="pc__name">{project.name}</h3>
         <p className="pc__tagline">{project.tagline}</p>
         <p className="pc__summary u-prose">{project.summary}</p>
-
         <ul className="pc__highlights">
           {project.highlights.map((highlight) => (
             <li key={highlight}>{highlight}</li>
           ))}
         </ul>
-
         <footer className="pc__foot">
           <ul className="pc__stack">
             {project.stack.map((item) => (
               <li key={item}>{item}</li>
             ))}
           </ul>
-
           <p className="pc__links">
             {project.links.live && (
               <a href={project.links.live} target="_blank" rel="noreferrer">

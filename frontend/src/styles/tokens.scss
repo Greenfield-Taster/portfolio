@@ -9,13 +9,8 @@
   --radius-pill: 999px;
 
   --content-max: 1180px;
-  // Anchor jumps land a section's top edge flush with the viewport, so this
-  // padding is what clears the fixed nav pill and gives the heading air.
   --section-top: clamp(7rem, 9vw, 8rem);
 
-  // The '… Variable' names are what @fontsource-variable actually declares;
-  // asking for the bare family name matches nothing and the woff2 is never
-  // fetched. Space Grotesk carries the headings, Inter everything else.
   --font-display: 'Space Grotesk Variable', 'Space Grotesk Fallback', ui-sans-serif, system-ui, sans-serif;
   --font-body: 'Inter Variable', 'Inter Fallback', ui-sans-serif, system-ui, -apple-system, 'Segoe UI', sans-serif;
   --font-mono: 'JetBrains Mono', ui-monospace, 'SFMono-Regular', Consolas, monospace;

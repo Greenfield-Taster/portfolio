@@ -7,7 +7,6 @@ import './Contact.scss'
 
 type Copied = 'no' | 'yes' | 'failed'
 
-/** How long "Copied" stays up before the button goes back to its offer. */
 const COPIED_FOR = 2400
 
 export function Contact() {
@@ -24,14 +23,10 @@ export function Contact() {
       await navigator.clipboard.writeText(profile.email)
       setCopied('yes')
     } catch {
-      // No clipboard — an old browser, or a page not allowed one. The address
-      // is printed right there on the button; say so rather than fail quietly.
       setCopied('failed')
     }
   }
 
-  // The same four numbers the hero opens with, for the reader who scrolled
-  // straight to the bottom.
   const stats = [
     { value: profile.years, label: 'years' },
     { value: String(profile.clients), label: 'clients' },
@@ -43,14 +38,11 @@ export function Contact() {
     <Section id="contact" eyebrow="Contact" title="Get in touch">
       <div className="contact" data-reveal>
         <h3 className="contact__ask u-display">
-          {/* Kept on one line so the compound never breaks at its own hyphen. */}
           Looking for a <span className="contact__nowrap">full-stack</span> developer?
         </h3>
-
         <div className="contact__grid">
           <div className="contact__main">
             <p className="u-label contact__label">Reach me at</p>
-
             <button type="button" className="contact__copy" onClick={copyEmail}>
               <span className="contact__email">{profile.email}</span>
               <span className="contact__hint" role="status">
@@ -67,7 +59,6 @@ export function Contact() {
                 )}
               </span>
             </button>
-
             <ul className="contact__pills">
               <li>
                 <a href={profile.github} target="_blank" rel="noreferrer">
@@ -95,7 +86,6 @@ export function Contact() {
               </li>
             </ul>
           </div>
-
           <dl className="contact__stats">
             {stats.map((stat) => (
               <div key={stat.label} className="contact__stat">
@@ -105,7 +95,6 @@ export function Contact() {
             ))}
           </dl>
         </div>
-
         <p className="contact__close">Bring the brief — I&rsquo;ll take it from there.</p>
         <p className="contact__note">
           {profile.availability}: full-time roles and project work. {profile.workAuthorization}.

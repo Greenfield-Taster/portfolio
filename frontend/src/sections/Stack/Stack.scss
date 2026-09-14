@@ -1,10 +1,6 @@
 .stack {
   display: grid;
   grid-template-columns: repeat(3, minmax(0, 1fr));
-  // Each row pairs a wide card with a narrow one whose lists are about the
-  // same height, and the cards stretch to the row, so the grid closes with
-  // no holes: the two eleven-tool groups take the wide cells, the five-tool
-  // groups the narrow ones, and Knowledge fills out the last row.
   grid-template-areas:
     'frontend frontend backend'
     'data     data     languages'
@@ -32,7 +28,6 @@
   &__group--ai { grid-area: ai; }
   &__group--knowledge { grid-area: knowledge; }
 
-  // One column: the cards follow the data's order and no area applies.
   @media (max-width: 640px) {
     [class*='stack__group--'] { grid-area: auto; }
   }
@@ -50,8 +45,6 @@
     box-shadow: var(--shadow-card);
   }
 
-  // Ways of working close the section as one strip beside the last card. Not
-  // numbered and not levelled: they are how the tools above are used.
   &__group--knowledge {
     flex-direction: row;
     flex-wrap: wrap;
@@ -65,9 +58,6 @@
     .stack__items { flex: 1 1 320px; }
   }
 
-  // A single accent edge along the top of every card. The reference gives
-  // each card its own hue; this palette has one accent, and five invented
-  // colours would say something about the groups that is not true.
   &__group::before {
     content: '';
     position: absolute;
@@ -78,8 +68,6 @@
 
   &__group--knowledge::before { content: none; }
 
-  // The card's place in the run, set large and faint in the far corner —
-  // the same device the section heads use, at the scale a card can carry.
   &__number {
     position: absolute;
     right: var(--space-4);
@@ -98,8 +86,6 @@
     gap: var(--space-3);
     padding-bottom: var(--space-4);
 
-    // A rule that fades out rather than running edge to edge: it belongs
-    // to the head above it, not to the card's border.
     &::after {
       content: '';
       position: absolute;
@@ -113,8 +99,6 @@
     }
   }
 
-  // The group's drawing, on a tile tinted with the accent so the six of them
-  // read as one set rather than as six loose icons.
   &__glyph {
     flex: none;
     display: grid;
@@ -151,8 +135,6 @@
     color: var(--muted);
   }
 
-  // How well the group is known. Two levels, two colours the page already
-  // has: the success green for expert, the accent for advanced.
   &__level {
     flex: none;
     padding: 3px var(--space-2);
@@ -191,9 +173,6 @@
       border-radius: var(--radius-sm);
       background: var(--bg);
       color: var(--muted);
-      // Safety net: nothing today is long enough to need this, but a future
-      // technology name with no natural break point must wrap, not force
-      // the page to scroll horizontally.
       overflow-wrap: anywhere;
       transition: border-color var(--dur-fast) var(--ease), color var(--dur-fast) var(--ease);
     }
@@ -201,8 +180,6 @@
     li:hover { border-color: var(--accent); color: var(--ink); }
   }
 
-  // Each logo in its own brand colour, set inline from the data. Black
-  // brands arrive as currentColor and so take the chip's ink.
   &__logo {
     width: 14px;
     height: 14px;

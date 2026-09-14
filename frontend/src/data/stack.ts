@@ -1,10 +1,5 @@
 import type { StackGroup } from './types'
 
-/**
- * Widest group first: it takes the wide cell of the grid, and the rest fill
- * in behind it. Knowledge closes the list with no level — those are ways of
- * working, not tools one is expert or advanced in.
- */
 export const stackGroups: StackGroup[] = [
   {
     id: 'frontend',

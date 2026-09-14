@@ -7,9 +7,6 @@
   overflow: hidden;
 }
 
-// ── Shared ─────────────────────────────────────────────────────────────────
-
-// A text cursor, blinking as one does. Stands still for reduced motion.
 .art__caret {
   display: inline-block;
   width: 2px;
@@ -25,8 +22,6 @@
 @keyframes art-blink {
   to { visibility: hidden; }
 }
-
-// ── Marker (contrlve) ──────────────────────────────────────────────────────
 
 .art--marker {
   align-content: center;
@@ -71,8 +66,6 @@
     color: inherit;
   }
 
-  // The selection's handles: the two small squares a selected run of text
-  // wears on a touch screen.
   mark::before,
   mark::after {
     content: '';
@@ -86,8 +79,6 @@
   mark::before { top: -6px; left: -5px; }
   mark::after { bottom: -6px; right: -5px; }
 }
-
-// ── Puzzle (woodtrick) ─────────────────────────────────────────────────────
 
 .art--puzzle {
   padding: var(--space-5);
@@ -112,8 +103,6 @@
     stroke-width: 1;
   }
 }
-
-// ── Terminal (LaunchKit) ───────────────────────────────────────────────────
 
 .art--terminal {
   padding: var(--space-5);
@@ -162,8 +151,6 @@
 .art__ask { color: var(--accent-ink); font-weight: 500; }
 .art__ok { color: var(--ok); }
 
-// The computed palette, one swatch per step, running from the page's ground
-// through the accent to its ink.
 .art__palette {
   display: grid;
   grid-template-columns: repeat(10, 1fr);

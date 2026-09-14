@@ -3,8 +3,6 @@
   flex-direction: column;
   gap: var(--space-6);
 
-  // ── Text beside the code ─────────────────────────────────────────────────
-
   &__intro {
     display: grid;
     grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
@@ -34,17 +32,12 @@
     font-size: var(--step-small);
     line-height: 1.8;
     color: var(--muted);
-    // Long enough to wrap on a phone; a code block is the one place on the
-    // page allowed its own scrollbar rather than reflowing.
     overflow-x: auto;
   }
 
-  // The values light up in the accent; the keys and the syntax stay quiet.
   &__code-key { color: var(--muted); }
   &__code-str { color: var(--accent-ink); }
   &__code-bool { color: var(--accent-ink); font-weight: 600; }
-
-  // ── Education ────────────────────────────────────────────────────────────
 
   &__edu {
     display: flex;
@@ -62,8 +55,6 @@
     @media (max-width: 720px) { grid-template-columns: minmax(0, 1fr); }
   }
 
-  // One card per school: the degree leads, in the accent, with the school
-  // and its years under it. Its place in the list sits faint in the corner.
   &__school {
     position: relative;
     overflow: hidden;

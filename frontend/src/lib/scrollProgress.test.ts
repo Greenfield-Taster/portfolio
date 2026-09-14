@@ -26,15 +26,10 @@ describe('computeScrollProgress', () => {
   })
 
   it('reports nothing for an element with no height, rather than NaN', () => {
-    // A section can measure zero before layout settles; dividing by that
-    // would put NaN into a transform and drop the line off the page.
     expect(computeScrollProgress({ top: 0, height: 0, viewportHeight })).toBe(0)
   })
 
   describe('with the anchor lower on the screen', () => {
-    // The timeline anchors at 80% of the viewport: the drawn line's tip sits
-    // near the bottom of the screen, so a card is lit as it comes into view
-    // rather than only once the reader has scrolled it halfway up.
     const anchor = 0.8
 
     it('starts counting when the top reaches the anchor, not the middle', () => {

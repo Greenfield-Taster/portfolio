@@ -7,10 +7,6 @@ const MONTHS = [
   'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec',
 ]
 
-/**
- * How many projects the page can vouch for: every client role in Experience
- * was one product, and the side projects are the rest.
- */
 export function projectCount(own: Project[] = ownProjects, client: Role[] = allRoles): number {
   return client.length + own.length
 }

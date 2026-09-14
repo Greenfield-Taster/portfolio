@@ -4,13 +4,6 @@ import { render, screen } from '../../test/renderWithTheme'
 import { HeroCanvas } from './HeroCanvas'
 import { ThemeToggle } from '../ThemeToggle/ThemeToggle'
 
-// jsdom has no WebGL, so `createHeroScene` cannot run for real here. This file
-// mocks the `heroScene` module entirely and asserts the thing that is actually
-// testable at this seam: that a theme change made by a *different* component
-// reaches the scene's `refreshTheme()`. That cross-component reach is exactly
-// what the old per-instance `useTheme` could not do — HeroCanvas had to watch
-// `document.documentElement`'s `data-theme` with a MutationObserver instead.
-// It does not (and cannot) verify that the colours change on screen.
 const refreshTheme = vi.fn()
 const setPaused = vi.fn()
 const destroy = vi.fn()
@@ -39,7 +32,6 @@ describe('HeroCanvas theme sync', () => {
       </>
     )
 
-    // The scene import is deferred to idle, so wait for it to settle first.
     await waitFor(() => expect(mockCreateHeroScene).toHaveBeenCalled())
     expect(refreshTheme).not.toHaveBeenCalled()
 
@@ -50,8 +42,6 @@ describe('HeroCanvas theme sync', () => {
 
   it('has the theme attribute already updated by the time it refreshes', async () => {
     const user = userEvent.setup()
-    // The scene reads its colour tokens off the document element, so `data-theme`
-    // has to be the new value *before* refreshTheme runs, not after.
     const seen: (string | undefined)[] = []
     refreshTheme.mockImplementation(() => {
       seen.push(document.documentElement.dataset.theme)
@@ -77,7 +67,6 @@ describe('HeroCanvas theme sync', () => {
 
     document.documentElement.setAttribute('lang', 'uk')
 
-    // Give any stray asynchronous callback a chance to fire, then confirm none did.
     await new Promise((resolve) => setTimeout(resolve, 10))
     expect(refreshTheme).not.toHaveBeenCalled()
   })

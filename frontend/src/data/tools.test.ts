@@ -13,8 +13,6 @@ describe('findToolIcon', () => {
   })
 
   it('never hands one tool another tool logo on a prefix', () => {
-    // 'GitHub Actions' starts with 'Git'. A loose match would badge it with
-    // the Git logo and quietly tell the reader something untrue.
     expect(findToolIcon('GitHub Actions')?.name).toBe('GitHub Actions')
   })
 

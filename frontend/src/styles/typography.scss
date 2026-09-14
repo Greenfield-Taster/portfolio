@@ -1,15 +1,8 @@
-// `as *` avoids the default-namespace derived from the filename: these are
-// side-effect-only CSS imports, so no namespaced access is needed anyway.
 @use '@fontsource-variable/space-grotesk/index.css' as *;
 @use '@fontsource-variable/inter/index.css' as *;
 @use '@fontsource/jetbrains-mono/400.css' as *;
 @use '@fontsource/jetbrains-mono/500.css' as *;
 
-// Metric-matched stand-in for the body face, so the pre-swap layout has the
-// same line boxes and much the same line breaks as the real one. `local()`
-// only — no extra network request. The overrides are the ones next/font
-// derives for Inter over Arial; if Arial is not installed the face has no
-// usable source and the chain falls through to the generics behind it.
 @font-face {
   font-family: 'Inter Fallback';
   font-style: normal;
@@ -21,9 +14,6 @@
   line-gap-override: 0%;
 }
 
-// The display face is set in bold and carries only headings, so it gets a
-// weight-matched stand-in rather than a measured one: the few lines it sets
-// reflow once when the real face lands, and never mid-paragraph.
 @font-face {
   font-family: 'Space Grotesk Fallback';
   font-style: normal;
@@ -33,8 +23,6 @@
   line-gap-override: 0%;
 }
 
-// Headings: the display face in its heaviest cut, tracked in a touch, the
-// way a grotesk asks to be set large.
 .u-display {
   font-family: var(--font-display);
   font-weight: 700;
@@ -53,8 +41,6 @@
 
 .u-prose { max-width: 65ch; }
 
-// Read by screen readers, never painted. Used where a moving or graphical
-// element carries meaning that needs a plain-text equivalent.
 .u-visually-hidden {
   position: absolute;
   width: 1px;

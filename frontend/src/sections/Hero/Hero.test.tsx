@@ -4,9 +4,6 @@ import { projects } from '../../data/projects'
 import { roles } from '../../data/experience'
 import { profile } from '../../data/profile'
 
-// Deliberately a different length than the real data (3 entries): if Hero
-// ever hard-codes the projects stat instead of calling projectCount(), this
-// mock makes that regression fail loudly instead of coincidentally passing.
 vi.mock('../../data/projects', () => ({
   projects: Array.from({ length: 7 }, (_, i) => ({ id: `mock-project-${i}` })),
 }))

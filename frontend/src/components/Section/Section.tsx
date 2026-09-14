@@ -9,12 +9,6 @@ interface SectionHeadProps {
   lede?: string
 }
 
-/**
- * The head a section announces itself with: its number and label, the slash
- * mark, the title and an optional lede. Sections normally get it from
- * <Section> itself; one that wants the head somewhere else in its layout —
- * inside a sticky column, say — renders this on its own instead.
- */
 export function SectionHead({ id, eyebrow, title, lede }: SectionHeadProps) {
   const number = sectionNumber(id)
 
@@ -24,8 +18,6 @@ export function SectionHead({ id, eyebrow, title, lede }: SectionHeadProps) {
         {number && (
           <>
             <span className="section__number">{number}</span>
-            {/* Punctuation between the number and the label: it separates
-                them on screen and would only be noise read aloud. */}
             <span className="section__sep" aria-hidden="true">/</span>
           </>
         )}
@@ -43,11 +35,6 @@ export function SectionHead({ id, eyebrow, title, lede }: SectionHeadProps) {
 interface SectionProps {
   id: string
   eyebrow?: string
-  /**
-   * Leave the title out and the section draws no head of its own; the
-   * children then carry a <SectionHead> with the same id, which is what the
-   * section's accessible name points at.
-   */
   title?: ReactNode
   lede?: string
   children?: ReactNode
@@ -58,9 +45,6 @@ export function Section({ id, eyebrow = '', title, lede, children }: SectionProp
 
   return (
     <section id={id} className="section" aria-labelledby={`${id}-title`}>
-      {/* The same number again, as a watermark. It says nothing the eyebrow
-          has not already said, so it is decoration and stays out of the
-          accessibility tree and out of a text selection. */}
       {number && <span className="section__ghost" aria-hidden="true">{number}</span>}
 
       <div className="section__inner">

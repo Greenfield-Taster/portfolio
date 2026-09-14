@@ -18,9 +18,6 @@ export default function App() {
 
   return (
     <ThemeProvider>
-      {/* The scene belongs to the page, not to the hero: it is fixed behind
-          everything, and each section below is a scrim the landscape carries
-          on under. Kept ahead of the content in the DOM so it paints first. */}
       <HeroCanvas />
       <Nav />
       <main>

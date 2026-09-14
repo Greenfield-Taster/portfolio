@@ -1,12 +1,6 @@
-// Fractal noise baked into an SVG data URI rather than a bitmap: it tiles at
-// any density, costs one small string, and needs no network round trip.
-// `overlay` lets it darken the lights and lift the darks instead of greying
-// the page down, which is what a flat black noise would do.
 .grain {
   position: fixed;
   inset: 0;
-  // Above the nav pill: film grain sits on the print, not under it. Nothing
-  // here takes a pointer, so the layer never intercepts a click.
   z-index: 40;
   pointer-events: none;
   opacity: .045;

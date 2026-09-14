@@ -1,7 +1,3 @@
-// Two oranges, not one. --accent is the brand colour and goes on fills, borders
-// and the landscape; --accent-ink is the one that may carry text. The brand
-// orange on the pale background is 2.2:1, far under the 4.5:1 this site holds
-// itself to, so anything that reads as words uses --accent-ink instead.
 :root {
   --bg: #F3DECD;
   --surface: #E7D2C1;
@@ -17,24 +13,13 @@
   --err: #97202B;
   --err-soft: #F6E4E6;
 
-  // Hero scene. Held apart from the accent so each theme can decide how loud the
-  // landscape and the sky are: one orange reads very differently against a warm
-  // cream than against near-black.
   --hero-terrain: #EDBE95;
   --hero-wire: #F8DFC8;
   --hero-star: #C3B2A0;
   --hero-glow: #F56F0D;
 
-  // How solid a section sits over the scene behind it. The landscape runs the
-  // full height of the page, so a section is a scrim rather than a floor:
-  // opaque enough to hold its text, sheer enough to keep the terrain visible.
-  // Cream over a pale landscape swallows it fast, so light lets more through.
   --scrim: 78%;
 
-  // The watermark numeral behind a section head. Held as a colour rather than
-  // an opacity because the two themes need different amounts of it: the pale
-  // ground gives a tint far less to work with than near-black does, and the
-  // brand orange is too light to register on cream at all.
   --ghost: color-mix(in srgb, var(--accent-ink) 13%, transparent);
 
   --shadow-card: 0 1px 2px rgba(37, 33, 28, .06), 0 12px 32px -16px rgba(37, 33, 28, .22);

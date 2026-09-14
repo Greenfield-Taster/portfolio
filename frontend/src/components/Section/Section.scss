@@ -1,23 +1,11 @@
-// The width of the slash mark and the gap after it. The lede is indented by
-// exactly this, so it starts on the same line as the title rather than under
-// the mark.
 $mark-width: 12px;
 
 .section {
   position: relative;
-  // Holds the watermark numeral to the section it belongs to: it is set to
-  // overhang the top-left corner, and without this it would push the page
-  // sideways instead of being cut off by the edge. Clip rather than hidden:
-  // hidden makes the section a scroll container, and a sticky column inside
-  // it would then stick to the section rather than to the screen.
   overflow: clip;
   padding-block: var(--section-top) var(--space-9);
-  // Sheer, so the landscape fixed behind the page keeps going underneath.
   background: color-mix(in srgb, var(--bg) var(--scrim), transparent);
 
-  // Big enough to read as texture rather than as a label, cropped by the
-  // section edge so it sits in the page instead of on it. Set in the face the
-  // hero uses for its name — the site's one heavy voice.
   &__ghost {
     position: absolute;
     top: -.22em;
@@ -34,8 +22,6 @@ $mark-width: 12px;
   }
 
   &__inner {
-    // Above the watermark: an absolutely positioned sibling would otherwise
-    // paint over ordinary block content that comes after it.
     position: relative;
     z-index: 1;
     max-width: var(--content-max);
@@ -52,9 +38,6 @@ $mark-width: 12px;
     gap: var(--space-3);
   }
 
-  // The line that announces a new section: the display face at caption
-  // size, tracked wide, in the page's ink rather than the muted grey the
-  // other labels use.
   &__eyebrow {
     font-family: var(--font-display);
     font-weight: 400;
@@ -65,8 +48,6 @@ $mark-width: 12px;
   &__number { font-variant-numeric: tabular-nums; }
 
   &__sep {
-    // Dimmer than the two things it divides, so it separates without counting
-    // as a third element in the line.
     margin-inline: .35em;
     opacity: .5;
   }
@@ -77,8 +58,6 @@ $mark-width: 12px;
     gap: var(--space-4);
   }
 
-  // A leaning bar, cut from a rectangle rather than set as a '/' character,
-  // so its weight and slant stay put whatever the display face does.
   &__mark {
     flex: none;
     width: $mark-width;

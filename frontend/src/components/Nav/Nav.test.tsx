@@ -5,9 +5,6 @@ import { profile } from '../../data/profile'
 
 beforeEach(() => {
   document.body.innerHTML = ''
-  // jsdom reports a zero-height document, which reads as "scrolled to the very
-  // bottom" and would mark the last section on every test regardless of where
-  // the sections sit. Give the page a real height instead.
   Object.defineProperty(document.documentElement, 'scrollHeight', {
     value: 5000,
     configurable: true,

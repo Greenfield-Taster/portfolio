@@ -8,10 +8,6 @@ export function useLenis(): void {
   useEffect(() => {
     if (reduced) return
 
-    // In-page links still go through Lenis so its internal scroll position
-    // stays in step with the page, but `immediate` lands them in a single
-    // frame. Picking a section from the nav is navigation, not a journey: the
-    // reader asked to be somewhere else, not to watch the way there.
     const lenis = new Lenis({
       duration: 1.1,
       smoothWheel: true,

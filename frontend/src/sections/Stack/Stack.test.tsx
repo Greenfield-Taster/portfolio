@@ -29,7 +29,6 @@ describe('Stack', () => {
       if (group.level) {
         expect(within(card).getByText(group.level, { exact: false })).toBeInTheDocument()
       } else {
-        // Ways of working carry no level: nobody is "expert" at Agile.
         expect(within(card).queryByText(/expert|advanced/i)).not.toBeInTheDocument()
       }
     }

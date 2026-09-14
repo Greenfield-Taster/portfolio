@@ -1,7 +1,6 @@
 import { useEffect, useState } from 'react'
 import { pickActiveSection } from '../lib/activeSection'
 
-/** Where down the viewport a section counts as the one being read. */
 const PROBE_RATIO = 0.3
 const BOTTOM_SLACK = 2
 

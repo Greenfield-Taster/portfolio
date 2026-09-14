@@ -5,7 +5,6 @@
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  // Clears the fixed nav pill at the top and the scroll cue at the bottom.
   padding-block: 132px 80px;
   overflow: hidden;
 
@@ -57,8 +56,6 @@
     color: var(--muted);
   }
 
-  // The name is the loudest thing on the page; everything else stays quiet
-  // around it.
   &__name {
     margin: 0;
     font-family: var(--font-display);
@@ -73,10 +70,6 @@
     }
   }
 
-  // Five tiles divide badly into columns: every fixed grid leaves a remainder
-  // stranded at one end of the last row. Wrapping centred rows instead means
-  // the leftovers sit under the middle of the row above, which reads as the
-  // shape it is rather than as a gap someone forgot to fill.
   &__stats {
     display: flex;
     flex-wrap: wrap;
@@ -86,8 +79,6 @@
     max-width: 860px;
 
     > * {
-      // Grows from a basis rather than filling the row, so a wrapped tile
-      // keeps the width of the ones above it instead of stretching across.
       flex: 1 1 140px;
       max-width: 200px;
     }
@@ -111,9 +102,6 @@
     width: 40px;
     height: 40px;
     border-radius: 50%;
-    // The cue lands on the orange landscape, not on the page background, so it
-    // takes the plain text colour: white on the dark theme, ink on the light
-    // one. The accent orange is invisible against ground of the same hue.
     color: var(--ink);
     text-decoration: none;
 
@@ -142,8 +130,6 @@
       row-gap: var(--space-2);
     }
 
-    // Once the line wraps the divider ends up dangling at the end of a row,
-    // separating nothing.
     &__divider { display: none; }
   }
 }

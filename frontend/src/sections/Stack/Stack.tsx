@@ -4,8 +4,6 @@ import { findToolIcon } from '../../data/tools'
 import { StackGlyph } from './StackGlyph'
 import './Stack.scss'
 
-// Only the groups with a level are counted: they are the tool cards, and the
-// closing strip of ways of working is not one more card in the run.
 const NUMBERED = stackGroups.filter((group) => group.level)
 
 export function Stack() {
@@ -37,23 +35,18 @@ export function Stack() {
                 <span className="stack__glyph">
                   <StackGlyph name={group.glyph} />
                 </span>
-
                 <div className="stack__naming">
                   <h3 className="stack__title">{group.title}</h3>
-                  {/* Counted rather than written down, so it cannot drift from
-                      the list underneath it. */}
                   <p className="stack__count">
                     {group.items.length} {group.level ? 'tools' : 'practices'}
                   </p>
                 </div>
-
                 {group.level && (
                   <span className={`stack__level stack__level--${group.level}`}>
                     {group.level}
                   </span>
                 )}
               </header>
-
               <ul className="stack__items">
                 {group.items.map((item) => {
                   const icon = findToolIcon(item)
@@ -65,8 +58,6 @@ export function Stack() {
                           viewBox="0 0 24 24"
                           aria-hidden="true"
                           focusable="false"
-                          // A black brand mark takes the page's ink, through
-                          // currentColor, rather than vanishing on dark.
                           style={{ color: icon.color ?? 'currentColor' }}
                         >
                           <path d={icon.path} fill="currentColor" />

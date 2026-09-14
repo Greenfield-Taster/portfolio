@@ -19,17 +19,8 @@ const TERRAIN_DEPTH = 200
 const AMPLITUDE = 6.4
 const FREQUENCY = 0.16
 const SEED = 20260910
-/** Grid rows the landscape travels per second. */
 const FLOW = 1.6
 
-// The sky is one shallow slab rather than a cloud filling the scene's depth.
-// Spread through depth, perspective made the near stars large and the far ones
-// specks; at a single depth every star is the same quiet size.
-//
-// The slab sits beyond the far end of the landscape, because anything closer
-// shares the depth range of the hills and ends up drawn across the ground.
-// Everything here is therefore sized for SKY_Z, and SKY_BOTTOM keeps the field
-// above the horizon, which sits at the camera's own height however far away.
 const SKY_Z = -150
 const SKY_JITTER = 5
 const SKY_HALF_WIDTH = 168
@@ -51,10 +42,6 @@ function readToken(name: keyof typeof FALLBACK): string {
   return value || FALLBACK[name]
 }
 
-/**
- * A soft round dot. Points render as squares by default, which reads as pixel
- * dust rather than stars; a radial falloff is what makes them look like light.
- */
 function createStarTexture(): THREE.Texture {
   const size = 64
   const canvas = document.createElement('canvas')
@@ -82,8 +69,6 @@ export function createHeroScene(canvas: HTMLCanvasElement, tier: QualityTier) {
   renderer.setPixelRatio(Math.min(window.devicePixelRatio, tier === 'high' ? 2 : 1))
 
   const scene = new THREE.Scene()
-  // Fog in the page's own background colour is what dissolves the far edge of
-  // the landscape into the sky, so no hard rectangle edge is ever visible.
   const fog = new THREE.Fog(readToken('bg'), 55, 175)
   scene.fog = fog
 
@@ -91,7 +76,6 @@ export function createHeroScene(canvas: HTMLCanvasElement, tier: QualityTier) {
   camera.position.set(0, 8.5, 14)
   camera.lookAt(0, 14.1, -40)
 
-  // --- Landscape -----------------------------------------------------------
   const terrain: TerrainOptions = {
     segmentsX: settings.segmentsX,
     segmentsZ: settings.segmentsZ,
@@ -107,8 +91,6 @@ export function createHeroScene(canvas: HTMLCanvasElement, tier: QualityTier) {
     settings.segmentsX,
     settings.segmentsZ
   )
-  // Bake the rotation into the vertices so displacement is plainly along Y and
-  // the buffer order still matches the terrain grid, row by row.
   groundGeometry.rotateX(-Math.PI / 2)
 
   const groundPosition = groundGeometry.getAttribute('position') as THREE.BufferAttribute
@@ -142,7 +124,6 @@ export function createHeroScene(canvas: HTMLCanvasElement, tier: QualityTier) {
 
   scene.add(surface, wire)
 
-  // --- Scattered stars -----------------------------------------------------
   const starTexture = createStarTexture()
 
   const starPositions = new Float32Array(settings.stars * 3)
@@ -175,8 +156,6 @@ export function createHeroScene(canvas: HTMLCanvasElement, tier: QualityTier) {
     fog: false,
   })
 
-  // A handful of out-of-focus lights. They read as depth rather than as stars,
-  // which is what stops the sky looking like a flat sheet of dots.
   const glows = Array.from({ length: 9 }, () => {
     const sprite = new THREE.Sprite(glowMaterial)
     sprite.position.set(
@@ -192,7 +171,6 @@ export function createHeroScene(canvas: HTMLCanvasElement, tier: QualityTier) {
   sky.add(stars, ...glows)
   scene.add(sky)
 
-  // --- Interaction ---------------------------------------------------------
   const pointer = { x: 0, y: 0 }
   const onPointerMove = (event: PointerEvent) => {
     pointer.x = (event.clientX / window.innerWidth - 0.5) * 2
@@ -223,7 +201,6 @@ export function createHeroScene(canvas: HTMLCanvasElement, tier: QualityTier) {
       applyHeights(seconds * FLOW)
     }
 
-    // A shallow drift, not a swivel: the horizon has to stay level.
     camera.position.x = pointer.x * 1.1
     camera.position.y = 8.5 - pointer.y * 0.5
     camera.lookAt(0, 14.1, -40)
@@ -231,9 +208,6 @@ export function createHeroScene(canvas: HTMLCanvasElement, tier: QualityTier) {
     renderer.render(scene, camera)
   }
 
-  // The loop reschedules itself only while running. Pausing cancels the
-  // pending frame and stops rescheduling entirely — an off-screen hero
-  // must not keep a requestAnimationFrame chain alive in the background.
   function loop(time: number) {
     render(time)
     frame = requestAnimationFrame(loop)
@@ -264,10 +238,6 @@ export function createHeroScene(canvas: HTMLCanvasElement, tier: QualityTier) {
       glowMaterial.color.set(readToken('hero-glow'))
       fog.color.set(readToken('bg'))
 
-      // The running loop redraws every tick and picks this up on its own. The
-      // still tier rendered exactly one frame at construction and nothing
-      // since, so without an explicit redraw the new colours would be set on
-      // the materials but never reach the screen.
       if (tier === 'still') render(lastTime)
     },
     destroy() {

@@ -1,12 +1,10 @@
 export interface SectionTop {
   id: string
-  /** Section top edge, relative to the viewport. */
   top: number
 }
 
 export interface ActiveSectionInput {
   sections: SectionTop[]
-  /** Distance from the viewport top where a section counts as "the one being read". */
   probeY: number
   atBottom: boolean
 }

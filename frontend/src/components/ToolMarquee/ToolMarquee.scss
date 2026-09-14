@@ -6,8 +6,6 @@
 
   &__lane {
     overflow: hidden;
-    // Fades the strip out at both ends instead of cutting it, so chips
-    // arrive and leave rather than appearing at a hard edge.
     mask-image: linear-gradient(to right, transparent, #000 6%, #000 94%, transparent);
   }
 
@@ -15,11 +13,6 @@
     display: flex;
     width: max-content;
 
-    // One copy's width, which is half the track: at -50% the second copy
-    // sits exactly where the first one started, so the reset is invisible.
-    // The two rows run against each other, at slightly different speeds, so
-    // they never fall into step. Forty-odd chips a row is a long track: at
-    // these durations it drifts at about 70px a second, slow enough to read.
     &--forth { animation: marquee-forth 100s linear infinite; }
     &--back { animation: marquee-back 90s linear infinite; }
 
@@ -34,7 +27,6 @@
     padding-right: var(--space-3);
   }
 
-  // Still version, for reduced motion: the same list, wrapped and at rest.
   &__lane > .marquee__row {
     flex-wrap: wrap;
     padding-right: 0;
@@ -61,8 +53,6 @@
     }
   }
 
-  // Each logo in its own brand colour, set inline from the data; a black
-  // brand arrives as currentColor and takes the chip's ink.
   &__logo {
     width: 22px;
     height: 22px;

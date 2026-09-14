@@ -3,7 +3,6 @@ import { useActiveSection } from './useActiveSection'
 
 const IDS = ['about', 'experience', 'work'] as const
 
-/** Puts real elements in the document and pins where they sit in the viewport. */
 function placeSections(tops: Record<string, number>) {
   for (const [id, top] of Object.entries(tops)) {
     const el = document.createElement('section')
@@ -22,8 +21,6 @@ function movePage(tops: Record<string, number>) {
 
 beforeEach(() => {
   document.body.innerHTML = ''
-  // jsdom reports a zero-height document, which would read as "scrolled to the
-  // bottom" on every test. Give the page a real height instead.
   Object.defineProperty(document.documentElement, 'scrollHeight', {
     value: 5000,
     configurable: true,

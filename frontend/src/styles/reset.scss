@@ -1,13 +1,7 @@
 *, *::before, *::after { box-sizing: border-box; }
 
-// Native widget chrome (scrollbars, form controls, autofill) must follow the
-// visitor's explicit choice, not the OS. Mirrors the three-way structure that
-// themes.scss uses for every colour token.
 :root {
   color-scheme: light;
-  // No scroll padding on purpose: an anchor jump puts the section's top edge
-  // flush with the top of the screen. The nav pill is cleared by the section's
-  // own `--section-top` padding instead, so nothing is hidden behind it.
   scroll-padding-top: 0;
 }
 
@@ -27,9 +21,6 @@ body {
   -webkit-font-smoothing: antialiased;
 }
 
-// The scene canvas is fixed at z-index 0, and a positioned element paints
-// above ordinary block content however late that content comes in the DOM.
-// Positioning the page's two top-level blocks puts them back on top of it.
 main, .footer { position: relative; z-index: 1; }
 
 h1, h2, h3, p, figure, ul, ol { margin: 0; }

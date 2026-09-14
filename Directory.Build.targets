@@ -9,7 +9,6 @@
 
   <Target Name="RestoreDotnetTools" BeforeTargets="Restore;Build"
           Condition="!Exists('$(_ToolsRestoredSentinel)')">
-    <!-- Ensure .config exists so we can touch sentinel files (first-run safety) -->
     <MakeDir Directories="$(MSBuildThisFileDirectory).config" />
     <Exec Command="dotnet tool restore" WorkingDirectory="$(MSBuildThisFileDirectory)" ContinueOnError="true" />
     <Touch Files="$(_ToolsRestoredSentinel)" AlwaysCreate="true" />
@@ -24,7 +23,6 @@
     <Message Text="Initializing CodeGraph index (for codegraph MCP)..." Importance="high" />
     <MakeDir Directories="$(MSBuildThisFileDirectory).config" />
 
-    <!-- Use npx to init the local codegraph index (scans source for the codegraph MCP server) -->
     <Exec Command="cmd /c &quot;npx --yes @colbymchenry/codegraph init &gt;nul 2&gt;&amp;1 || echo CodeGraph init skipped&quot;" WorkingDirectory="$(MSBuildThisFileDirectory)" ContinueOnError="true" />
     <Touch Files="$(_CodeGraphSentinel)" AlwaysCreate="true" />
   </Target>

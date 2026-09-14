@@ -8,11 +8,6 @@ describe('projectCount', () => {
     expect(projectCount()).toBe(roles.length + projects.length)
   })
 
-  // CONTENT-CHANGE TRIPWIRE — the one deliberately hard-coded count in this
-  // file. The Hero renders projectCount() as a headline stat, so this number
-  // is copy the visitor reads. If you added or removed a role or a project,
-  // this failure is expected: update the literal here and re-check the Hero
-  // stats. Every other count in this file is derived from the data on purpose.
   it('still shows nine projects in the hero stat', () => {
     expect(projectCount()).toBe(9)
   })

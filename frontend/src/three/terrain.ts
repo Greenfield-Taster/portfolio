@@ -1,27 +1,18 @@
 export interface TerrainOptions {
   segmentsX: number
   segmentsZ: number
-  /** Highest peak and deepest trough, in world units. */
   amplitude: number
-  /** Lattice cells per grid step — lower means broader, smoother hills. */
   frequency: number
   seed: number
-  /** Rows the landscape has slid through the grid; fractional values are fine. */
   offset: number
 }
 
 const OCTAVES = 3
 
-/**
- * Deterministic hash of a lattice corner. Integer mixing rather than a seeded
- * PRNG, so any corner can be sampled directly without generating the ones
- * before it — which is what lets the field scroll without regenerating.
- */
 function corner(ix: number, iz: number, seed: number): number {
   let h = ix * 374761393 + iz * 668265263 + seed * 1274126177
   h = Math.imul(h ^ (h >>> 13), 1274126177)
   h = h ^ (h >>> 16)
-  // >>> 0 lifts the sign bit out, giving an unsigned 32-bit value to scale.
   return (h >>> 0) / 4294967296
 }
 
@@ -33,7 +24,6 @@ function lerp(a: number, b: number, t: number): number {
   return a + (b - a) * t
 }
 
-/** Value noise over a unit lattice, smoothed so neighbours never jump. */
 function noise(x: number, z: number, seed: number): number {
   const ix = Math.floor(x)
   const iz = Math.floor(z)
@@ -45,7 +35,6 @@ function noise(x: number, z: number, seed: number): number {
   return lerp(top, bottom, fz)
 }
 
-/** Stacked octaves: broad hills carrying progressively finer detail. */
 function ridges(x: number, z: number, seed: number): number {
   let value = 0
   let amplitude = 1

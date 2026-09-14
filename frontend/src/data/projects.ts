@@ -1,9 +1,5 @@
 import type { Project } from './types'
 
-/**
- * Things built on my own time. The client work lives in Experience; these
- * are the projects with no client at all — made to use, or to learn from.
- */
 export const projects: Project[] = [
   {
     id: 'contrlve',

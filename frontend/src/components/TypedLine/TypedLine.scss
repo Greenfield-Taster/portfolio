@@ -16,8 +16,6 @@
   &__prompt { color: var(--accent-ink); }
 
   &__text {
-    // The line grows a character at a time; wrapping mid-word would reflow the
-    // block on almost every tick, so it breaks only between words.
     overflow-wrap: break-word;
   }
 
