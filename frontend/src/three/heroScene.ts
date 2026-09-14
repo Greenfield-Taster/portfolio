@@ -65,8 +65,14 @@ function createStarTexture(): THREE.Texture {
 
 export function createHeroScene(canvas: HTMLCanvasElement, tier: QualityTier) {
   const settings = TIERS[tier]
-  const renderer = new THREE.WebGLRenderer({ canvas, alpha: true, antialias: tier === 'high' })
-  renderer.setPixelRatio(Math.min(window.devicePixelRatio, tier === 'high' ? 2 : 1))
+  const dpr = window.devicePixelRatio || 1
+  const renderer = new THREE.WebGLRenderer({
+    canvas,
+    alpha: true,
+    antialias: tier === 'high' && dpr <= 1,
+    powerPreference: 'high-performance',
+  })
+  renderer.setPixelRatio(Math.min(dpr, tier === 'high' ? 1.5 : 1))
 
   const scene = new THREE.Scene()
   const fog = new THREE.Fog(readToken('bg'), 55, 175)
@@ -94,11 +100,13 @@ export function createHeroScene(canvas: HTMLCanvasElement, tier: QualityTier) {
   groundGeometry.rotateX(-Math.PI / 2)
 
   const groundPosition = groundGeometry.getAttribute('position') as THREE.BufferAttribute
+  const groundArray = groundPosition.array as Float32Array
+  let heights: Float32Array = new Float32Array(groundPosition.count)
 
   function applyHeights(offset: number) {
-    const heights = terrainHeights({ ...terrain, offset })
+    heights = terrainHeights({ ...terrain, offset }, heights)
     for (let i = 0; i < heights.length; i += 1) {
-      groundPosition.setY(i, heights[i])
+      groundArray[i * 3 + 1] = heights[i]
     }
     groundPosition.needsUpdate = true
   }
@@ -213,6 +221,27 @@ export function createHeroScene(canvas: HTMLCanvasElement, tier: QualityTier) {
     frame = requestAnimationFrame(loop)
   }
 
+  function resume() {
+    if (tier === 'still') {
+      render(lastTime)
+    } else if (!paused && !frame) {
+      frame = requestAnimationFrame(loop)
+    }
+  }
+
+  const onContextLost = (event: Event) => {
+    event.preventDefault()
+    cancelAnimationFrame(frame)
+    frame = 0
+    canvas.dataset.lost = 'true'
+  }
+  const onContextRestored = () => {
+    delete canvas.dataset.lost
+    resume()
+  }
+  canvas.addEventListener('webglcontextlost', onContextLost)
+  canvas.addEventListener('webglcontextrestored', onContextRestored)
+
   if (tier === 'still') {
     render(0)
   } else {
@@ -227,7 +256,7 @@ export function createHeroScene(canvas: HTMLCanvasElement, tier: QualityTier) {
       if (paused) {
         cancelAnimationFrame(frame)
         frame = 0
-      } else {
+      } else if (!canvas.dataset.lost) {
         frame = requestAnimationFrame(loop)
       }
     },
@@ -244,6 +273,8 @@ export function createHeroScene(canvas: HTMLCanvasElement, tier: QualityTier) {
       cancelAnimationFrame(frame)
       observer.disconnect()
       window.removeEventListener('pointermove', onPointerMove)
+      canvas.removeEventListener('webglcontextlost', onContextLost)
+      canvas.removeEventListener('webglcontextrestored', onContextRestored)
       groundGeometry.dispose()
       starGeometry.dispose()
       starTexture.dispose()

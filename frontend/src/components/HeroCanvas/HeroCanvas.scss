@@ -5,4 +5,23 @@
   height: 100%;
   z-index: 0;
   pointer-events: none;
+
+  &[data-lost] {
+    background:
+      radial-gradient(
+        ellipse 90% 55% at 50% 100%,
+        color-mix(in srgb, var(--hero-terrain) 55%, transparent),
+        transparent 70%
+      ),
+      radial-gradient(
+        circle at 18% 22%,
+        color-mix(in srgb, var(--hero-glow) 14%, transparent),
+        transparent 28%
+      ),
+      radial-gradient(
+        circle at 82% 30%,
+        color-mix(in srgb, var(--hero-glow) 10%, transparent),
+        transparent 24%
+      );
+  }
 }

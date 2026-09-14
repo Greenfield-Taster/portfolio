@@ -68,6 +68,7 @@ export function HeroCanvas() {
           scene.setPaused(!visible)
         })
         .catch(() => {
+          canvas.dataset.lost = 'true'
         })
     }
 

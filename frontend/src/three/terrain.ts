@@ -51,16 +51,13 @@ function ridges(x: number, z: number, seed: number): number {
   return value / total
 }
 
-export function terrainHeights({
-  segmentsX,
-  segmentsZ,
-  amplitude,
-  frequency,
-  seed,
-  offset,
-}: TerrainOptions): Float32Array {
+export function terrainHeights(
+  { segmentsX, segmentsZ, amplitude, frequency, seed, offset }: TerrainOptions,
+  into?: Float32Array
+): Float32Array {
   const row = segmentsX + 1
-  const heights = new Float32Array(row * (segmentsZ + 1))
+  const size = row * (segmentsZ + 1)
+  const heights = into && into.length === size ? into : new Float32Array(size)
 
   for (let z = 0; z <= segmentsZ; z += 1) {
     for (let x = 0; x < row; x += 1) {
