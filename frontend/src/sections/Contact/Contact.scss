@@ -55,6 +55,8 @@
     }
 
     &:focus-visible { outline: none; }
+
+    @media (max-width: 480px) { padding: var(--space-4); }
   }
 
   &__email {
@@ -65,6 +67,8 @@
     letter-spacing: -.01em;
     color: var(--ink);
     overflow-wrap: anywhere;
+
+    @media (max-width: 480px) { font-size: clamp(1rem, 5.2vw, 1.25rem); }
   }
 
   &__hint {
