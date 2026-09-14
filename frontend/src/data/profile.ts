@@ -14,7 +14,7 @@ export const profile: Profile = {
   linkedin: 'https://www.linkedin.com/in/anastasiia-horbachova',
   github: 'https://github.com/Greenfield-Taster',
   cvPath: '/Anastasiia_Horbachova_FullStack.pdf',
-  siteUrl: 'https://horbachova.com/',
+  siteUrl: 'https://horbachov.com/',
   education: [
     {
       school: 'National University «Zaporizhzhia Polytechnic»',

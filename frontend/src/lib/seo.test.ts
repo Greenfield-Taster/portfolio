@@ -35,6 +35,6 @@ describe('buildWebSiteJsonLd', () => {
   it('points at the canonical site URL', () => {
     const ld = buildWebSiteJsonLd(profile) as Record<string, unknown>
     expect(ld['@type']).toBe('WebSite')
-    expect(ld.url).toBe('https://horbachova.com/')
+    expect(ld.url).toBe('https://horbachov.com/')
   })
 })

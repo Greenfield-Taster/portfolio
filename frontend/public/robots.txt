@@ -1,4 +1,4 @@
 User-agent: *
 Allow: /
 
-Sitemap: https://horbachova.com/sitemap.xml
+Sitemap: https://horbachov.com/sitemap.xml
