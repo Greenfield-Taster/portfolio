@@ -14,8 +14,24 @@ export function About() {
 
   return (
     <Section id="about" eyebrow="About" title="About me" lede={profile.lede}>
+      {/* Two rows: the card and the summary-as-code side by side at one
+          height, then the facts and the schooling as one band under them. */}
       <div className="about" data-reveal>
         <BusinessCard />
+
+        {/* Her own summary of the work, in the one notation a developer
+            reading this page already knows how to skim. Every key here is
+            something the card beside it does not already say. */}
+        <pre className="about__code" aria-label="Summary of the work, as code">
+          <code>
+            <span className="about__code-key">const</span> anastasiia = {'{'}{'\n'}
+            {'  '}available: <span className="about__code-bool">true</span>,{'\n'}
+            {'  '}location: <span className="about__code-str">&apos;Europe&apos;</span>,{'\n'}
+            {'  '}focus: <span className="about__code-str">&apos;React &amp; Node&apos;</span>,{'\n'}
+            {'  '}ships: <span className="about__code-str">&apos;requirements to deployment&apos;</span>,{'\n'}
+            {'}'}
+          </code>
+        </pre>
 
         <div className="about__body">
           <ul className="about__facts">
@@ -32,26 +48,13 @@ export function About() {
               <ul>
                 {profile.education.map((item) => (
                   <li key={item.school}>
-                    <strong>{item.school}</strong> · {item.degree} · {item.years}
+                    <strong>{item.school}</strong>
+                    <span>{item.degree} · {item.years}</span>
                   </li>
                 ))}
               </ul>
             </dd>
           </dl>
-
-          {/* Her own summary of the work, in the one notation a developer
-              reading this page already knows how to skim. Every key here is
-              something the card beside it does not already say. */}
-          <pre className="about__code" aria-label="Summary of the work, as code">
-            <code>
-              <span className="about__code-key">const</span> anastasiia = {'{'}{'\n'}
-              {'  '}available: <span className="about__code-bool">true</span>,{'\n'}
-              {'  '}location: <span className="about__code-str">&apos;Europe&apos;</span>,{'\n'}
-              {'  '}focus: <span className="about__code-str">&apos;React &amp; Node&apos;</span>,{'\n'}
-              {'  '}ships: <span className="about__code-str">&apos;requirements to deployment&apos;</span>,{'\n'}
-              {'}'}
-            </code>
-          </pre>
         </div>
 
         <ToolMarquee />

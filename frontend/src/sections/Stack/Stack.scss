@@ -1,13 +1,41 @@
 .stack {
   display: grid;
   grid-template-columns: repeat(3, minmax(0, 1fr));
+  // Each row pairs a wide card with a narrow one whose lists are about the
+  // same height, and the cards stretch to the row, so the grid closes with
+  // no holes: the two eleven-tool groups take the wide cells, the five-tool
+  // groups the narrow ones, and Knowledge fills out the last row.
+  grid-template-areas:
+    'frontend frontend backend'
+    'data     data     languages'
+    'ai       knowledge knowledge';
   gap: var(--space-5);
-  // Groups hold different numbers of tools; letting each card end where its
-  // content ends reads better than stretching them all to the tallest.
-  align-items: start;
 
-  @media (max-width: 1024px) { grid-template-columns: repeat(2, minmax(0, 1fr)); }
-  @media (max-width: 640px) { grid-template-columns: minmax(0, 1fr); }
+  @media (max-width: 1024px) {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    grid-template-areas:
+      'frontend  frontend'
+      'backend   data'
+      'languages ai'
+      'knowledge knowledge';
+  }
+
+  @media (max-width: 640px) {
+    grid-template-columns: minmax(0, 1fr);
+    grid-template-areas: none;
+  }
+
+  &__group--frontend { grid-area: frontend; }
+  &__group--backend { grid-area: backend; }
+  &__group--languages { grid-area: languages; }
+  &__group--data-devops { grid-area: data; }
+  &__group--ai { grid-area: ai; }
+  &__group--knowledge { grid-area: knowledge; }
+
+  // One column: the cards follow the data's order and no area applies.
+  @media (max-width: 640px) {
+    [class*='stack__group--'] { grid-area: auto; }
+  }
 
   &__group {
     position: relative;
@@ -22,17 +50,9 @@
     box-shadow: var(--shadow-card);
   }
 
-  // The widest group takes the wide cell, so the grid opens with it rather
-  // than with a card too small for its own list.
-  &__group--frontend {
-    grid-column: span 2;
-    @media (max-width: 640px) { grid-column: span 1; }
-  }
-
-  // Ways of working close the section as one strip across the grid. Not
+  // Ways of working close the section as one strip beside the last card. Not
   // numbered and not levelled: they are how the tools above are used.
   &__group--knowledge {
-    grid-column: 1 / -1;
     flex-direction: row;
     flex-wrap: wrap;
     align-items: center;

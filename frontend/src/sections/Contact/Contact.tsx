@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react'
 import { Section } from '../../components/Section/Section'
 import { profile } from '../../data/profile'
+import { projectCount } from '../../data/select'
 import './Contact.scss'
 
 type Copied = 'no' | 'yes' | 'failed'
@@ -28,9 +29,12 @@ export function Contact() {
     }
   }
 
+  // The same four numbers the hero opens with, for the reader who scrolled
+  // straight to the bottom.
   const stats = [
     { value: profile.years, label: 'years' },
     { value: String(profile.clients), label: 'clients' },
+    { value: `${projectCount()}+`, label: 'projects' },
     { value: String(profile.npmPackages), label: 'npm packages' },
   ]
 

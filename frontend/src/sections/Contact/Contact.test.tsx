@@ -2,6 +2,7 @@ import { render, screen } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import { Contact } from './Contact'
 import { profile } from '../../data/profile'
+import { projectCount } from '../../data/select'
 
 describe('Contact', () => {
   it('prints the email address and links it, so it is reachable without the clipboard', () => {
@@ -52,10 +53,11 @@ describe('Contact', () => {
     expect(cv).toHaveAttribute('download')
   })
 
-  it('repeats the three numbers from the profile', () => {
+  it('repeats the four numbers the hero opens with', () => {
     render(<Contact />)
     expect(screen.getByText(profile.years)).toBeInTheDocument()
     expect(screen.getByText(String(profile.clients))).toBeInTheDocument()
+    expect(screen.getByText(`${projectCount()}+`)).toBeInTheDocument()
     expect(screen.getByText(String(profile.npmPackages))).toBeInTheDocument()
   })
 

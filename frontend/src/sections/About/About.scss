@@ -1,75 +1,35 @@
 .about {
   display: grid;
-  // The card holds a fixed width and the text runs beside it.
-  grid-template-columns: minmax(0, 420px) minmax(0, 1fr);
-  gap: var(--space-7);
-  align-items: start;
+  // Two equal columns for the first row — the card and the code block at
+  // one height — and one band across both for the facts. Rows stretch, so
+  // the card and the block finish on the same edge.
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: var(--space-5);
+  align-items: stretch;
 
   // minmax(0, …) rather than a bare 1fr: a bare fr track takes the content's
   // min-content as its floor, and the code block cannot wrap, so the column
   // grew past the page and the section's own overflow quietly clipped it.
-  @media (max-width: 768px) { grid-template-columns: minmax(0, 1fr); }
+  @media (max-width: 720px) { grid-template-columns: minmax(0, 1fr); }
 
-  // ── Text column ──────────────────────────────────────────────────────────
+  // The card fills its cell top to bottom, so it and the block beside it
+  // share one bottom edge rather than the card floating above it.
+  .bcard { display: grid; }
 
-  &__facts {
-    display: flex;
-    flex-wrap: wrap;
-    gap: var(--space-2);
-  }
-
-  &__fact {
-    padding: var(--space-2) var(--space-4);
-    border: 1px solid color-mix(in srgb, var(--accent) 22%, transparent);
-    border-radius: var(--radius-pill);
-    background: color-mix(in srgb, var(--accent) 7%, transparent);
-    font-size: var(--step-small);
-    color: var(--muted);
-  }
-
-  &__body {
-    // Lets the column shrink under the code block rather than being held
-    // open by it; the block scrolls on its own instead.
-    min-width: 0;
-    display: flex;
-    flex-direction: column;
-    gap: var(--space-5);
-  }
-
-  &__edu {
-    margin: 0;
-    display: flex;
-    flex-direction: column;
-    gap: var(--space-2);
-    padding-bottom: var(--space-5);
-    border-bottom: 1px solid var(--line);
-
-    dt {
-      font-family: var(--font-mono);
-      font-size: var(--step-label);
-      letter-spacing: .14em;
-      text-transform: uppercase;
-      color: var(--muted);
-    }
-
-    dd { margin: 0; }
-
-    ul {
-      display: flex;
-      flex-direction: column;
-      gap: var(--space-1);
-    }
-  }
+  // ── Code block ───────────────────────────────────────────────────────────
 
   &__code {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
     margin: 0;
-    padding: var(--space-4);
+    padding: var(--space-5) var(--space-6);
     border: 1px solid var(--line);
-    border-radius: var(--radius-md);
+    border-radius: var(--radius-lg);
     background: color-mix(in srgb, var(--ink) 5%, transparent);
     font-family: var(--font-mono);
     font-size: var(--step-small);
-    line-height: 1.7;
+    line-height: 1.8;
     color: var(--muted);
     // Long enough to wrap on a phone; a code block is the one place on the
     // page allowed its own scrollbar rather than reflowing.
@@ -80,7 +40,79 @@
   &__code-str { color: var(--ok); }
   &__code-bool { color: var(--accent-ink); font-weight: 600; }
 
-  // The tools strip runs the full width under both columns.
+  // ── Facts band ───────────────────────────────────────────────────────────
+
+  &__body {
+    grid-column: 1 / -1;
+    display: grid;
+    grid-template-columns: minmax(0, 2fr) minmax(0, 3fr);
+    gap: var(--space-5) var(--space-6);
+    align-items: start;
+    padding: var(--space-5);
+    border: 1px solid var(--line);
+    border-radius: var(--radius-lg);
+    background: color-mix(in srgb, var(--surface) 70%, transparent);
+
+    @media (max-width: 900px) { grid-template-columns: minmax(0, 1fr); }
+  }
+
+  &__facts {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-2);
+  }
+
+  &__fact {
+    padding: var(--space-1) var(--space-3);
+    border: 1px solid color-mix(in srgb, var(--accent) 22%, transparent);
+    border-radius: var(--radius-pill);
+    background: color-mix(in srgb, var(--accent) 7%, transparent);
+    font-size: var(--step-small);
+    color: var(--muted);
+  }
+
+  &__edu {
+    margin: 0;
+    display: grid;
+    grid-template-columns: auto minmax(0, 1fr);
+    gap: var(--space-4);
+    align-items: start;
+
+    @media (max-width: 520px) { grid-template-columns: minmax(0, 1fr); }
+
+    dt {
+      padding-top: 3px;
+      font-family: var(--font-mono);
+      font-size: var(--step-label);
+      letter-spacing: .14em;
+      text-transform: uppercase;
+      color: var(--muted);
+    }
+
+    dd { margin: 0; }
+
+    // The two schools side by side, each with its degree under its name.
+    ul {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: var(--space-4);
+
+      @media (max-width: 520px) { grid-template-columns: minmax(0, 1fr); }
+    }
+
+    li {
+      display: flex;
+      flex-direction: column;
+      gap: 2px;
+      font-size: var(--step-small);
+      line-height: 1.4;
+    }
+
+    strong { color: var(--ink); }
+    span { color: var(--muted); }
+  }
+
+  // The tools strip runs the full width under everything.
   .marquee {
     grid-column: 1 / -1;
     margin-top: var(--space-3);
