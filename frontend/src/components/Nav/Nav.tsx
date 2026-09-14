@@ -40,24 +40,30 @@ export function Nav() {
         <a className="nav__mark" href="#top" aria-label="Anastasiia Horbachova — back to top">
           AH<span aria-hidden="true">.</span>
         </a>
-        <ul className="nav__links" id="nav-links" data-open={menuOpen ? 'true' : 'false'}>
-          {NAV_ITEMS.map((item) => (
-            <li key={item.id}>
-              <a
-                href={`#${item.id}`}
-                aria-current={active === item.id ? 'true' : undefined}
-                onClick={() => setMenuOpen(false)}
-              >
-                {item.label}
-              </a>
-            </li>
-          ))}
-        </ul>
+        <div className="nav__links" id="nav-links" data-open={menuOpen ? 'true' : 'false'}>
+          <ul className="nav__list">
+            {NAV_ITEMS.map((item) => (
+              <li key={item.id}>
+                <a
+                  href={`#${item.id}`}
+                  aria-current={active === item.id ? 'true' : undefined}
+                  onClick={() => setMenuOpen(false)}
+                >
+                  {item.label}
+                </a>
+              </li>
+            ))}
+          </ul>
+          <a className="nav__resume" href={profile.cvPath} download onClick={() => setMenuOpen(false)}>
+            <Icon name="download" />
+            Resume
+          </a>
+        </div>
         <div className="nav__actions">
           <ThemeToggle />
           <Button variant="ghost" href={profile.cvPath} download>
             <Icon name="download" />
-            <span className="btn__label">Resume</span>
+            Resume
           </Button>
           <button
             type="button"

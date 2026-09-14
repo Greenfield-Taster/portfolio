@@ -42,9 +42,12 @@ describe('Nav', () => {
   it('downloads the CV straight from the header', () => {
     render(<Nav />)
 
-    const resume = screen.getByRole('link', { name: /resume/i })
-    expect(resume).toHaveAttribute('href', profile.cvPath)
-    expect(resume).toHaveAttribute('download')
+    const resumes = screen.getAllByRole('link', { name: /resume/i })
+    expect(resumes.length).toBeGreaterThan(0)
+    for (const resume of resumes) {
+      expect(resume).toHaveAttribute('href', profile.cvPath)
+      expect(resume).toHaveAttribute('download')
+    }
   })
 
   it('offers no way to send mail, because the site takes no messages', () => {
