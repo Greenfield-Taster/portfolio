@@ -1,12 +1,13 @@
 .stack {
   display: grid;
-  // Cards take the width they can get rather than a fixed column count, so
-  // the grid reflows from three across to one without a breakpoint per step.
-  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  grid-template-columns: repeat(3, minmax(0, 1fr));
   gap: var(--space-5);
   // Groups hold different numbers of tools; letting each card end where its
   // content ends reads better than stretching them all to the tallest.
   align-items: start;
+
+  @media (max-width: 1024px) { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  @media (max-width: 640px) { grid-template-columns: minmax(0, 1fr); }
 
   &__group {
     position: relative;
@@ -21,6 +22,29 @@
     box-shadow: var(--shadow-card);
   }
 
+  // The widest group takes the wide cell, so the grid opens with it rather
+  // than with a card too small for its own list.
+  &__group--frontend {
+    grid-column: span 2;
+    @media (max-width: 640px) { grid-column: span 1; }
+  }
+
+  // Ways of working close the section as one strip across the grid. Not
+  // numbered and not levelled: they are how the tools above are used.
+  &__group--knowledge {
+    grid-column: 1 / -1;
+    flex-direction: row;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: var(--space-4) var(--space-6);
+    background: color-mix(in srgb, var(--surface) 55%, transparent);
+    box-shadow: none;
+
+    .stack__head { flex: none; padding-bottom: 0; }
+    .stack__head::after { content: none; }
+    .stack__items { flex: 1 1 320px; }
+  }
+
   // A single accent edge along the top of every card. The reference gives
   // each card its own hue; this palette has one accent, and five invented
   // colours would say something about the groups that is not true.
@@ -31,6 +55,8 @@
     height: 2px;
     background: linear-gradient(to right, var(--accent), transparent 70%);
   }
+
+  &__group--knowledge::before { content: none; }
 
   // The card's place in the run, set large and faint in the far corner —
   // the same device the section heads use, at the scale a card can carry.
@@ -46,11 +72,46 @@
   }
 
   &__head {
+    position: relative;
     display: flex;
-    flex-wrap: wrap;
-    align-items: baseline;
-    justify-content: space-between;
+    align-items: center;
     gap: var(--space-3);
+    padding-bottom: var(--space-4);
+
+    // A rule that fades out rather than running edge to edge: it belongs
+    // to the head above it, not to the card's border.
+    &::after {
+      content: '';
+      position: absolute;
+      inset: auto 0 0;
+      height: 1px;
+      background: linear-gradient(
+        to right,
+        color-mix(in srgb, var(--accent) 45%, transparent),
+        transparent
+      );
+    }
+  }
+
+  // The group's drawing, on a tile tinted with the accent so the six of them
+  // read as one set rather than as six loose icons.
+  &__glyph {
+    flex: none;
+    display: grid;
+    place-items: center;
+    width: 44px;
+    height: 44px;
+    border-radius: var(--radius-md);
+    border: 1px solid color-mix(in srgb, var(--accent) 24%, transparent);
+    background: color-mix(in srgb, var(--accent) 10%, transparent);
+    color: var(--accent-ink);
+
+    svg { width: 20px; height: 20px; }
+  }
+
+  &__naming {
+    flex: 1 1 auto;
+    min-width: 0;
   }
 
   &__title {
@@ -58,15 +119,40 @@
     font-size: var(--step-h3);
     font-weight: 600;
     letter-spacing: -.015em;
+    line-height: 1.2;
   }
 
   &__count {
-    margin: 0;
+    margin: 2px 0 0;
     font-family: var(--font-mono);
     font-size: var(--step-label);
-    letter-spacing: .14em;
+    letter-spacing: .1em;
     text-transform: uppercase;
     color: var(--muted);
+  }
+
+  // How well the group is known. Two levels, two colours the page already
+  // has: the success green for expert, the accent for advanced.
+  &__level {
+    flex: none;
+    padding: 3px var(--space-2);
+    border: 1px solid currentColor;
+    border-radius: var(--radius-pill);
+    font-family: var(--font-mono);
+    font-size: var(--step-label);
+    font-weight: 500;
+    letter-spacing: .1em;
+    text-transform: uppercase;
+
+    &--expert {
+      color: var(--ok);
+      background: color-mix(in srgb, var(--ok) 10%, transparent);
+    }
+
+    &--advanced {
+      color: var(--accent-ink);
+      background: color-mix(in srgb, var(--accent) 10%, transparent);
+    }
   }
 
   &__items {
@@ -82,7 +168,7 @@
       font-size: var(--step-label);
       padding: var(--space-2) var(--space-3);
       border: 1px solid var(--line);
-      border-radius: var(--radius-pill);
+      border-radius: var(--radius-sm);
       background: var(--bg);
       color: var(--muted);
       // Safety net: nothing today is long enough to need this, but a future
@@ -95,10 +181,11 @@
     li:hover { border-color: var(--accent); color: var(--ink); }
   }
 
+  // Each logo in its own brand colour, set inline from the data. Black
+  // brands arrive as currentColor and so take the chip's ink.
   &__logo {
     width: 14px;
     height: 14px;
     flex: none;
-    color: var(--accent-ink);
   }
 }

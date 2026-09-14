@@ -32,9 +32,17 @@ export interface Project {
   cover?: { src: string; alt: string }
 }
 
+/** How well a group of tools is known. Ways of working carry no level. */
+export type StackLevel = 'expert' | 'advanced'
+
+/** The small drawing that stands for a group of tools. */
+export type StackGlyph = 'layout' | 'server' | 'braces' | 'database' | 'sparkles' | 'compass'
+
 export interface StackGroup {
   id: string
   title: string
+  glyph: StackGlyph
+  level?: StackLevel
   items: string[]
 }
 
