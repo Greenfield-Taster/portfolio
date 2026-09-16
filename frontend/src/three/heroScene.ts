@@ -20,6 +20,9 @@ const AMPLITUDE = 6.4
 const FREQUENCY = 0.16
 const SEED = 20260910
 const FLOW = 1.6
+const SWAY_X = 0.45
+const SWAY_Y = 0.3
+const POINTER_EASE = 0.04
 
 const SKY_Z = -150
 const SKY_JITTER = 5
@@ -188,7 +191,8 @@ function build(target: HTMLCanvasElement, tier: QualityTier, pixelRatio: number)
   sky.add(stars, ...glows)
   scene.add(sky)
 
-  const pointer = { x: 0, y: 0 }
+  const pointer = { x: 0, y: 0, seen: false }
+  const eased = { x: 0, y: 0 }
   let sizedTo = { width: 0, height: 0 }
 
   return {
@@ -196,8 +200,12 @@ function build(target: HTMLCanvasElement, tier: QualityTier, pixelRatio: number)
     animateTerrain: tier !== 'still',
     render(time: number) {
       if (tier !== 'still') applyHeights((time / 1000) * FLOW)
-      camera.position.x = pointer.x * 1.1
-      camera.position.y = 8.5 - pointer.y * 0.5
+      const targetX = pointer.seen ? pointer.x : Math.sin(time * 0.00021) * SWAY_X
+      const targetY = pointer.seen ? pointer.y : Math.sin(time * 0.00013) * SWAY_Y
+      eased.x += (targetX - eased.x) * POINTER_EASE
+      eased.y += (targetY - eased.y) * POINTER_EASE
+      camera.position.x = eased.x * 1.1
+      camera.position.y = 8.5 - eased.y * 0.5
       camera.lookAt(0, 14.1, -40)
       renderer.render(scene, camera)
     },
@@ -212,6 +220,7 @@ function build(target: HTMLCanvasElement, tier: QualityTier, pixelRatio: number)
     setPointer(x: number, y: number) {
       pointer.x = x
       pointer.y = y
+      pointer.seen = true
     },
     refreshTheme() {
       surfaceMaterial.color.set(readToken('hero-terrain'))
