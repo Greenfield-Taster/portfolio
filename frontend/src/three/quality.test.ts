@@ -29,11 +29,11 @@ describe('resolveQualityTier', () => {
     ).toBe('high')
   })
 
-  it('stops animating on a coarse pointer, which never emits pointermove', () => {
-    expect(resolveQualityTier({ ...desktop, coarsePointer: true })).toBe('still')
+  it('keeps a live low-tier scene on a coarse pointer instead of a still frame', () => {
+    expect(resolveQualityTier({ ...desktop, coarsePointer: true })).toBe('low')
   })
 
-  it('stops animating on a coarse pointer even on a wide, capable device', () => {
+  it('stays on the low tier on a coarse pointer even on a wide, capable device', () => {
     expect(
       resolveQualityTier({
         reducedMotion: false,
@@ -42,7 +42,7 @@ describe('resolveQualityTier', () => {
         deviceMemory: 16,
         hardwareConcurrency: 16,
       })
-    ).toBe('still')
+    ).toBe('low')
   })
 
   it('keeps reduced motion ahead of the coarse-pointer rule', () => {

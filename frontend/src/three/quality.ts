@@ -14,7 +14,7 @@ const MIN_CORES = 4
 
 export function resolveQualityTier(input: QualityInput): QualityTier {
   if (input.reducedMotion) return 'still'
-  if (input.coarsePointer) return 'still'
+  if (input.coarsePointer) return 'low'
   if (input.width < NARROW) return 'low'
   if (input.deviceMemory !== undefined && input.deviceMemory < MIN_MEMORY_GB) return 'low'
   if (input.hardwareConcurrency !== undefined && input.hardwareConcurrency < MIN_CORES) {

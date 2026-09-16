@@ -79,7 +79,7 @@ function build(target: HTMLCanvasElement, tier: QualityTier, pixelRatio: number)
     canvas: target,
     alpha: true,
     antialias: tier === 'high' && pixelRatio <= 1,
-    powerPreference: 'high-performance',
+    powerPreference: tier === 'high' ? 'high-performance' : 'low-power',
   })
   renderer.setPixelRatio(pixelRatio)
 
