@@ -1,115 +1,127 @@
-# Портфоліо — Anastasiia Horbachova
+# Anastasiia Horbachova — portfolio
 
-Персональний сайт-портфоліо: досвід, проєкти та стек. Англійською.
-Живе на https://horbachova.com
+The personal site of a full-stack developer: experience, side projects and stack, on one page.
 
-**Стек:** React 19 · Vite · TypeScript · SCSS · GSAP + ScrollTrigger · Lenis ·
-three · EmailJS. Локально все піднімає .NET Aspire.
+- **Live:** https://horbachov.com
+- **Author:** [Anastasiia Horbachova](https://github.com/Greenfield-Taster) · [LinkedIn](https://www.linkedin.com/in/anastasiia-horbachova)
 
-## Структура
+## Overview
 
-- `frontend/` — сам сайт. Тільки ця тека їде в продакшн.
-- `WebStarter.AppHost/` — Aspire AppHost, піднімає Vite разом із сервером.
-- `WebStarter.Server/` — ASP.NET Core. Для локальної розробки; сайт від нього
-  не залежить.
-- `docs/` — спека, план і дизайн-напрямки.
+The page opens with a loading screen that scrambles the AH. initials into place, then a hero over a live Three.js scene: a wireframe terrain flowing toward the camera under a field of stars, drawn in the palette of whichever theme is on. Below it: About, Professional Experience on a glowing timeline, Side Projects, Technical Stack and Contact. Light and dark themes follow the system until the visitor picks one; the choice is remembered.
 
-## Запуск
+Everything on the page is data. The text lives in `frontend/src/data/`; a new project or role is one object in a file, and no component needs to change.
 
-```powershell
-aspire start          # усе разом
-```
+## Highlights
 
-Тільки фронтенд:
+- **A hero that runs everywhere.** The WebGL scene resolves a quality tier at startup — `high`, `low` for phones and weak GPUs, `still` for visitors who ask for reduced motion — and pauses whenever it leaves the viewport. On a phone the canvas is held at the large viewport height so the address bar cannot resize it, and the GPU is asked for low power. If the context is ever lost, a painted CSS sky takes over.
+- **Motion that respects the reader.** Section reveals use an `IntersectionObserver`, the loading screen and the reveals are skipped under `prefers-reduced-motion`, and Lenis smooths the wheel on desktop only.
+- **Accessible by default.** Semantic landmarks and heading order, visible focus on every control, `aria` labels on icon buttons, the theme toggle and the burger menu announced correctly, and the decorative scene hidden from assistive technology.
+- **SEO.** Canonical URL, Open Graph and Twitter cards, `robots.txt`, `sitemap.xml`, and Person and WebSite JSON-LD.
+- **Tested.** 170 unit tests with Vitest and Testing Library, 8 end-to-end tests with Playwright.
 
-```powershell
+## Tech stack
+
+| Layer | Choice |
+|---|---|
+| UI | React 19, TypeScript 6 |
+| Build | Vite 8 |
+| Styling | SCSS with design tokens; Space Grotesk, Inter and JetBrains Mono from Fontsource |
+| 3D | three r186 |
+| Motion | GSAP (with ScrambleText for the loading screen), Lenis |
+| Icons | simple-icons for the tool strip |
+| Tests | Vitest 4, Testing Library, Playwright |
+| Lint | oxlint |
+| Local orchestration | .NET Aspire AppHost (optional) |
+| Hosting | Cloudflare Pages |
+
+## Getting started
+
+Requirements: Node.js 22. For the Aspire path you also need the .NET 10 SDK and the Aspire CLI.
+
+Frontend only:
+
+```bash
 cd frontend
 npm install
 npm run dev
 ```
 
-### Відоме: `npm install` тут падає
+Everything together, through Aspire:
 
-На цій машині звичайний `npm install` / `npm i` (npm 11.4.2) падає з
-помилкою arborist `Cannot read properties of null (reading 'edgesOut')`.
-Робочий обхід:
-
-```powershell
-npx --yes npm@12 install
+```bash
+aspire start
 ```
 
-**Не додавайте `--legacy-peer-deps`** — цей прапорець мовчки не ставить
-транзитивні peer-залежності, і тести потім падають незрозуміло чому. Це вже
-коштувало часу кілька разів під час збірки цього сайту.
+The AppHost starts the Vite dev server next to the .NET server. The site never calls that server; it is kept only for local orchestration, and only `frontend/` ships.
 
-## Тести
+## Scripts
 
-```powershell
-cd frontend
-npm test              # модульні (161 тест)
-npm run lint
+From `frontend/`:
 
-npm run e2e           # з кореня: наскрізні, Playwright (9 тестів)
+| Script | What it does |
+|---|---|
+| `npm run dev` | Vite dev server |
+| `npm run build` | Type-check and build to `frontend/dist` |
+| `npm run preview` | Serve the production build locally |
+| `npm test` | Unit tests, once |
+| `npm run test:watch` | Unit tests in watch mode |
+| `npm run lint` | oxlint |
+
+From the repository root:
+
+| Script | What it does |
+|---|---|
+| `npm run e2e` | Playwright end-to-end tests against a fresh production build |
+
+Playwright is pinned to `channel: 'chromium'`; in CI install it explicitly with `npx playwright install chromium`.
+
+## Project structure
+
+```
+portfolio/
+├── frontend/                   # the site; the only folder that ships
+│   ├── public/                 # CV, favicons, og.png, robots.txt, sitemap.xml, _headers, _redirects
+│   └── src/
+│       ├── components/         # Nav, HeroCanvas, Loader, ProjectCard, ToolMarquee, …
+│       ├── sections/           # Hero, About, Experience, Projects, Stack, Contact
+│       ├── data/               # profile, experience, projects, stack, tools
+│       ├── hooks/              # theme, reduced motion, scroll reveal, Lenis, timeline progress
+│       ├── lib/                # pure helpers: reveal rules, scroll progress, SEO builders
+│       ├── three/              # the hero scene, terrain noise, quality tiers
+│       └── styles/             # tokens, themes, typography, reset
+├── e2e/                        # Playwright tests
+├── docs/                       # design directions
+├── WebStarter.AppHost/         # .NET Aspire AppHost for local runs
+└── WebStarter.Server/          # ASP.NET Core server; not used by the site
 ```
 
-CI в репозиторії наразі немає. Якщо колись з'явиться, `playwright.config.ts`
-пінить `channel: 'chromium'` — тут скорочений `chromium-headless-shell` не
-завантажився (мережеві таймаути до CDN Playwright), тож тести запускаються
-через повний Chrome for Testing замість окремого shell-бінарника. У CI цей
-канал треба встановити явно кроком `npx playwright install chromium`, інакше
-пін не спрацює.
+## Content
 
-## Контент
+| File | Holds |
+|---|---|
+| `data/profile.ts` | Name, roles, tagline, contacts, education, languages, headline numbers |
+| `data/experience.ts` | Roles, newest first on the page |
+| `data/projects.ts` | Side projects with highlights, stack, status and links |
+| `data/stack.ts` | Stack groups and their items |
+| `data/tools.ts` | The tool strip and its icons |
 
-Увесь текст сайту лежить у `frontend/src/data/`. Новий проєкт — це один
-об'єкт у `projects.ts`; компоненти чіпати не треба. Порядок задається полем
-`order`: усе з резюме має менші номери, ніж проєкти з GitHub.
+The CV served by the Resume and Download CV buttons is `frontend/public/Anastasiia_Horbachova_FullStack.pdf`.
 
-## Матеріали, яких ще бракує
+## Deployment
 
-Кожен пункт — просто файл, який треба покласти на місце; код міняти не треба.
+Cloudflare Pages builds and deploys `main` on every push.
 
-| Матеріал | Куди покласти | Що зміниться, коли з'явиться |
-|---|---|---|
-| Портрет | `frontend/public/portrait.jpg` | Секція About зараз показує навмисний плейсхолдер «AH» замість фото |
-| Скриншоти проєктів | `frontend/public/projects/*.webp`, тоді `cover` у відповідному проєкті в `projects.ts` | Картки зараз показують згенерований плейсхолдер |
-| Соцпревʼю (OG-картинка) | `frontend/public/og.png` | Вже є згенероване зображення; замінити на актуальне за потреби |
-| Ключі EmailJS | `frontend/.env` (за зразком `frontend/.env.example`) | Форма зараз валідна, але чесно повідомляє, що не підключена |
-| Опис `citadel-roof-tech` | `frontend/src/data/projects.ts` | Картка проєкту зараз має короткий підсумок замість розгорнутого опису |
-
-## Відоме обмеження: JSON-LD і бот-прев'ю
-
-JSON-LD у `<head>` вставляється клієнтським JavaScript, тому в HTML, який
-віддає сервер, його немає. Google виконує JavaScript і побачить розмітку;
-більшість ботів, що генерують прев'ю посилань (Telegram, LinkedIn, Slack),
-JavaScript не виконують і JSON-LD не побачать. Для них картку несуть звичайні
-теги Open Graph у `index.html` — саме тому існує `og.png`. Це свідома ціна
-статичного сайту без пререндеру.
-
-## Деплой
-
-Cloudflare Pages, тека `frontend/dist`. В продакшн їде тільки ця тека —
-`WebStarter.AppHost` і `WebStarter.Server` лишаються в репозиторії лише для
-локального оркестрування.
-
-```powershell
-cd frontend
-npm run build
-```
-
-Налаштування збірки в Cloudflare Pages:
-
+- Root directory: `frontend`
 - Build command: `npm run build`
 - Build output directory: `dist`
-- Root directory: `frontend`
+- Node version: 22
 
-Змінні середовища для форми — з `frontend/.env.example`.
+`frontend/public/_headers` sets a one-year immutable cache on hashed assets plus `X-Content-Type-Options` and `Referrer-Policy`; Cloudflare Pages picks the file up automatically.
 
-`frontend/public/_headers` вже задає кешування для хешованих ассетів і базові
-security-заголовки; Cloudflare Pages підхоплює цей файл автоматично.
-`_redirects` не потрібен: сайт — одна сторінка без клієнтського роутера.
+### A known limitation
 
-Підключення репозиторію до Cloudflare Pages та перемикання домену
-`horbachova.com` на новий деплой — окремий крок, який виконує сама
-Анастасія, коли буде готова. Старий деплой на HIC.UA FTP та репозиторій
-`horbachova` лишаються недоторканими, доки новий сайт не підтверджено живим.
+JSON-LD is injected into `<head>` by client-side JavaScript, so it is absent from the HTML the server sends. Google executes JavaScript and sees it; most link-preview bots (Telegram, LinkedIn, Slack) do not, and for them the card is carried by the plain Open Graph tags in `index.html`, which is why `og.png` exists. This is the deliberate cost of a static site without pre-rendering.
+
+## License
+
+[MIT](LICENSE)
