@@ -189,6 +189,7 @@ function build(target: HTMLCanvasElement, tier: QualityTier, pixelRatio: number)
   scene.add(sky)
 
   const pointer = { x: 0, y: 0 }
+  let sizedTo = { width: 0, height: 0 }
 
   return {
     renderer,
@@ -202,6 +203,8 @@ function build(target: HTMLCanvasElement, tier: QualityTier, pixelRatio: number)
     },
     resize(width: number, height: number) {
       if (width === 0 || height === 0) return
+      if (width === sizedTo.width && height === sizedTo.height) return
+      sizedTo = { width, height }
       renderer.setSize(width, height, false)
       camera.aspect = width / height
       camera.updateProjectionMatrix()
