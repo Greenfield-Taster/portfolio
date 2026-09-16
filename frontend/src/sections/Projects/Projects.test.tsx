@@ -59,6 +59,21 @@ describe('Projects', () => {
   it('says where each project stands in plain words', () => {
     render(<Projects />)
     expect(screen.getByText('On npm')).toBeInTheDocument()
-    expect(screen.getAllByText('Design concept')).toHaveLength(2)
+    expect(screen.getAllByText('Live')).toHaveLength(2)
+    expect(screen.queryByText('Design concept')).toBeNull()
+  })
+
+  it('links every deployed project to its live site, in a new tab', () => {
+    render(<Projects />)
+    const cards = screen.getAllByTestId('project-card')
+    const deployed = projects.filter((p) => p.links.live)
+    expect(deployed.map((p) => p.id)).toEqual(['contrlve', 'woodtrick'])
+
+    for (const project of deployed) {
+      const card = cards[projects.indexOf(project)]
+      const link = within(card).getByRole('link', { name: /live site/i })
+      expect(link).toHaveAttribute('href', project.links.live)
+      expect(link).toHaveAttribute('target', '_blank')
+    }
   })
 })

@@ -17,8 +17,11 @@ export const projects: Project[] = [
       'Static build on Cloudflare Pages, no backend',
     ],
     stack: ['React 19', 'Vite', 'TypeScript', 'Tailwind v4'],
-    status: 'concept',
-    links: { repo: 'https://github.com/Greenfield-Taster/contrlve' },
+    status: 'live',
+    links: {
+      live: 'https://contrlve.pages.dev',
+      repo: 'https://github.com/Greenfield-Taster/contrlve',
+    },
   },
   {
     id: 'woodtrick',
@@ -37,8 +40,11 @@ export const projects: Project[] = [
       'Quality tiers resolve at startup — high, low, and a still tier that honours prefers-reduced-motion; every canvas pauses off screen',
     ],
     stack: ['React 19', 'three', '@react-three/fiber', 'TypeScript', 'zustand', 'WebRTC'],
-    status: 'concept',
-    links: { repo: 'https://github.com/Greenfield-Taster/woodtrick' },
+    status: 'live',
+    links: {
+      live: 'https://unidragon.pages.dev',
+      repo: 'https://github.com/Greenfield-Taster/woodtrick',
+    },
   },
   {
     id: 'launchkit',
