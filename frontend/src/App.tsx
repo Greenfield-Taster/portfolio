@@ -2,6 +2,7 @@ import { Nav } from './components/Nav/Nav'
 import { Footer } from './components/Footer/Footer'
 import { Grain } from './components/Grain/Grain'
 import { HeroCanvas } from './components/HeroCanvas/HeroCanvas'
+import { Loader } from './components/Loader/Loader'
 import { Hero } from './sections/Hero/Hero'
 import { About } from './sections/About/About'
 import { Experience } from './sections/Experience/Experience'
@@ -18,6 +19,7 @@ export default function App() {
 
   return (
     <ThemeProvider>
+      <Loader />
       <HeroCanvas />
       <Nav />
       <main>
